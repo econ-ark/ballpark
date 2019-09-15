@@ -170,4 +170,28 @@
 # The welfare effects are largely possitive except for retirees, who face a higher tax rate on their wealth with their pensions held constant.
 
 # %% [markdown]
+# #### Optimal taxation
+#
+# In this section the authors consider a government that is maximizing the welfare of a newborn by choosing either
+# 1. The capital income tax rate and the labor income tax rate. Denoted OCIT.
+# 2. The wealth tax rate and the labor income tax rate. Denoted OWT.
+# subject to the constraint of raising enough revenues to pay for its expenditures and for social security.
+#
+# The following table presents the results optimal tax rates and average welfare gains from each of the experiments (OCIT in the column labeled $\tau_k$ and OWT in the column labeled $\tau_a$).
+#
+# <center><img src="Table10.png" style="height:400px"></center>
+#
+# The table shows that both reforms produce average welfare gains, that the optimal income capital tax in the OCIT case is a large subsidy, and that the optimal wealth tax in the OWT case is just above 3%.
+#
+# The following table examines the welfare changes in macroeconomic variables under the two scenarios (on the columns $\tau_k$ and $\tau_a$)
+#
+# <center><img src="Table11.png" style="height:400px"></center>
+#
+# The table shows that under OCIT a very large increase in the stock of capital occurs, given that its returns are subsidized. Also, as the government needs to balance its budget given the subsidies, labor income taxes are increased and thus, the increase in after-tax wages is modest, so there are level gains with distributional losses. On the other hand, under OWT, there is a very modest increase in the stock of capital, but a large gain in efficiency (compare $Q$ with K and see and TFP) due to the reallocation mechanism. Since the wealth tax allows for a lower labor income tax rates, higher after-tax wages and a labor increase.
+#
+# This experiment shows that the OCIT shifts the tax burden from capital to labor, and the OWT does the opposite.
+#
+# An important point to consider is that since under OCIT the capital stock must dramatically increase, accounting for a transition period generates short term welfare losses given that higher savings are required. The required thightening is much softer under OWT, since the increase in the capital stock is subtle. This point strenghtes
+
+# %% [markdown]
 # ### Conclusion
