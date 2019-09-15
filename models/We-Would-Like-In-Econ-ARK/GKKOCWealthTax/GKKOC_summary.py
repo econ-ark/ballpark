@@ -149,6 +149,25 @@
 
 # %% [markdown]
 # ### Results
+#
+# The authors conduct various experiments. We now report the main ones.
+
+# %% [markdown]
+# #### Substituting capital income taxes for wealth taxes
+#
+# Here, the authors ask what would happen if the government left consumption and labor income taxes at their current levels, eliminates capital income taxes ($\tau_k=0$) and introduced wealth taxes ($\tau_a$) at a rate enough to keep pension payments constant at their pre-reform levels.
+#
+# The following table presents the equilibrium changes of macroeconomic variables induced by this change (in the columns labeled RN).
+#
+# <center><img src="Table5.png" style="height:400px"></center>
+#
+# The results show that output and consumption increase through an increase in the quality-adjusted capital stock and labor. Intuitively, the tax change leads not only to both an increase and a reallocation of $K$ towards more efficient entrepreneurs ($\Delta Q > \Delta K$). This gain in efficiency allows for higher wages and incentivizes a greater labor supply.
+#
+# The next table (on the RN panel) shows how the welfare changes from the experiment are distributed across age and entrepreneurial ability. The welfare change is calculated as the perpetual percentage change in consumption that would make agents indifferent between the pre and post-change equilibria.
+#
+# <center><img src="Table9.png" style="height:400px"></center>
+#
+# The welfare effects are largely possitive except for retirees, who face a higher tax rate on their wealth with their pensions held constant.
 
 # %% [markdown]
 # ### Conclusion
