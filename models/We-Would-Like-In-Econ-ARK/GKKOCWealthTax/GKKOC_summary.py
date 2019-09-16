@@ -21,7 +21,7 @@
 # # "[Use it or lose it: efficiency gains from wealth taxation](https://fguvenendotcom.files.wordpress.com/2019/09/gkkoc-2019_v208_nber_wp_submit.pdf)" (Draft)
 #
 # - Notebook created by Mateo Velásquez-Giraldo
-#
+# - All figures and tables were taken from https://fguvenendotcom.files.wordpress.com/2019/09/gkkoc-2019_v208_nber_wp_submit.pdf on 09/15/2019.
 
 # %% [markdown]
 # ### Summary
@@ -46,7 +46,7 @@
 #
 # #### Non-technical methodological overview
 #
-# To assess the effects of wealth and capital income taxation, the authors construct a model in which agents have different entrepreneurial ability which also varies over time and generations. Therefore, unproductive agents can end up with large wealth from their predecesors or their youth. There are financial constraints that prevent wealth from perfectly reallocating to efficient entrepreneurs.
+# To assess the effects of wealth and capital income taxation, the authors construct a model in which agents have different degrees of entrepreneurial ability which also varies over time and generations. Therefore, unproductive agents can end up with large wealth from their predecesors or their youth. Futhermote, there are financial constraints that prevent wealth from perfectly reallocating to efficient entrepreneurs.
 #
 # The authors use simulations of the model under different tax policies to find their welfare implications.
 #
@@ -85,7 +85,7 @@
 #
 # ##### Final good
 #
-# A profit-maximizing, price-taking firm uses labor and intermediate goods to produce the final good according to $$Y = Q^\alpha L^{1-\alpha}$$ where $\left( \int x_{i,h}^\mu di dh \right)^{1/\mu}$.
+# A profit-maximizing, price-taking firm uses labor and intermediate goods to produce the final good according to $$Y = Q^\alpha L^{1-\alpha}$$ where $Q=\left( \int x_{i,h}^\mu di dh \right)^{1/\mu}$ and L is aggregate labor.
 #
 # Notice that Q serves as a quality-adjusted index of capital stock.
 #
@@ -181,7 +181,7 @@
 #
 # <center><img src="Table10.png" style="height:400px"></center>
 #
-# The table shows that both reforms produce average welfare gains, that the optimal income capital tax in the OCIT case is a large subsidy, and that the optimal wealth tax in the OWT case is just above 3%.
+# The table shows that both reforms produce average welfare gains, that the optimal income capital tax in the OCIT case is a large subsidy, and that the optimal wealth tax in the OWT case is just above 3%. The average welfare gain is greater under wealth taxation.
 #
 # The following table examines the welfare changes in macroeconomic variables under the two scenarios (on the columns $\tau_k$ and $\tau_a$)
 #
