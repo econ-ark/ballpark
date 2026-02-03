@@ -28,6 +28,30 @@ As an example of the kinds of things we are looking for, see the [paper](https:/
 
 The papers listed herein are a small subset of the ones that we would welcome into the Econ-ARK. If you want to work on a paper that is not listed here, post an "issue" on the repo asking (and providing a link and bibliographical reference for the paper in question). If it is likely to prove interesting to our audience, we are very likely to encourage you to replicate it.
 
+## Environment Setup
+
+This repo uses [uv](https://docs.astral.sh/uv/) for dependency management and keeps per-platform environments in directories named `.venv-<os>-<arch>` (matching the pattern used in `HAFiscal-Latest`). Install uv first (`brew install uv` or `curl -LsSf https://astral.sh/uv/install.sh | sh`).
+
+**Local setup:**
+```bash
+# 1. Create / update the platform + architecture specific environment
+bash scripts/setup_env.sh
+
+# 2. Activate the environment that was created (example shown for macOS arm64)
+source .venv-darwin-arm64/bin/activate
+
+# 3. Work inside the environment
+uv run jupyter lab
+```
+
+Run `scripts/setup_env.sh` again whenever dependencies change; it is idempotent and will reuse the existing `.venv-<os>-<arch>/` directory.
+
+**Binder:** Launch from [mybinder.org](https://mybinder.org) using this repo; the build installs uv and uses it to install dependencies.
+
+## Citation Management in Notebooks
+
+Some notebooks use the legacy `cite2c` format (`<cite data-cite="..."></cite>`) for Zotero citations. The environment includes **jupyterlab-citation-manager**, which supports cite2c migration: when you open such a notebook in JupyterLab, the extension will detect the old format and offer to migrate it. After migration, citations and bibliographies render using your Zotero library. To use Zotero integration, add your [Zotero API key](https://www.zotero.org/settings/keys/new) in the extension settings (Settings → Advanced Settings → Citation Manager).
+
 References:
 
 Iskhakov, F., Jørgensen, T.H., Rust, J., Schjerning, B., others, 2017. The endogenous grid method for discrete-continuous dynamic choice models with (or without) taste shocks. Quantitative Economics 8, 317–365.

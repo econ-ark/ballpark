@@ -90,6 +90,12 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+# Architecture-specific virtual environments (created by scripts/setup_env.sh)
+.venv*/
+.venv-*/
+venv-*/
+.env-*/
+env-*/
 
 # Spyder project settings
 .spyderproject

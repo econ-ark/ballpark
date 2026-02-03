@@ -1,0 +1,17 @@
+[project]
+name = "ballpark"
+version = "0.1.0"
+description = "Papers and models in the ballpark of Econ-ARK"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "econ-ark",
+    "jupyter",
+    "jupyterlab",
+    "jupyterlab-citation-manager",
+]
+
+[project.optional-dependencies]
+dev = []
+
+# No [build-system] - this is a dependency-only project for notebooks.
