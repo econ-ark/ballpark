@@ -1,0 +1,13 @@
+# Proposed Revisions: [Paper Title]
+
+The paper builds on three strands of work. First, Bewley–Aiyagari models (Aiyagari 1994, Huggett 1993, Krusell & Smith 1998) show how uninsurable risk and borrowing constraints generate precautionary saving and inequality, but they cannot explain why wealth is much more concentrated than income. Second, introduce wealth-dependent returns: Benhabib, Bisin & Zhu (2015) show that capital income risk generates a Pareto tail; Cagetti & De Nardi (2006) model entrepreneurship and top wealth; Stachurski & Toda (2018) prove that in the standard setup (risk-free saving, constant discount factors) the wealth distribution cannot have a heavier tail than income, so such extensions are necessary. Third, empirical work documents long-run U.S. inequality (Piketty & Saez 2003, Saez & Zucman 2016) and motivates a comprehensive model that combines these ingredients to match the full distribution.
+
+## Subsequent Literature section to add
+
+Work citing HKS (2018) has moved in three directions. (1) Policy analysis: The same type of wealth heterogeneity is used to study how monetary policy (e.g. QE) and tax reform affect inequality—e.g. Lenza & Slačálek (2020, 2024) on monetary policy and inequality in the euro area, and Guner et al. (2021) on income tax reform in Spain. (2) Empirical discipline: Micro evidence on saving and returns by wealth (e.g. Fagereng, Holm, Moll & Natvik 2019 on capital gains across the wealth distribution) is used to validate and refine the mechanisms that generate the right tail. (3) New channels and theory: Markups and market power (Boar & Midrigan 2019), culture and portfolios (Fleck & Monninger 2020), and deeper theory for income-fluctuation problems and state-dependent discounting (Ma, Stachurski & Toda 2019; Stachurski & Zhang 2019) extend the framework. Together, this suggests the field is heading toward policy-relevant, empirically disciplined models that integrate multiple mechanisms.
+
+
+## Other improvements
+Title: Change “Hubmer, Krusell, and Smith (Forthcoming)” to “Hubmer, Krusell, and Smith (2018)”.
+Summary: After the first paragraph, add one sentence on the gap: “Prior work had shown that standard incomplete-markets models cannot generate wealth more concentrated than income, and had proposed separate mechanisms (return risk, entrepreneurship, tax progressivity); this paper provides a single quantitative model that unifies these channels and matches the full U.S. wealth distribution.”
+Placement: Insert Prior Literature after Overview, before The model. Insert Subsequent Literature after Conclusion, at the end of the notebook.
