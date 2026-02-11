@@ -110,5 +110,13 @@ env-*/
 # mypy
 .mypy_cache/
 
+# Dotfiles
+dotfiles/to
+
+# Project-specific (local only)
+researcher-requirements.md
+scripts/create_paperpile_bib.py
+scripts/ipynb_to_myst.py
+
 # Mac
 .DS_Store
