@@ -9,7 +9,7 @@ project:
   toc:
     - file: Benhabib_et_al_2019_intro.ipynb
     - file: Benhabib_et_al_2019_prior-literature.ipynb
-    - file: Benhabib_et_al_2019_digest.ipynb
+    - file: Benhabib_et_al_2019_summary.ipynb
     - file: Benhabib_et_al_2019_subsequent-literature.ipynb
 
 site:
