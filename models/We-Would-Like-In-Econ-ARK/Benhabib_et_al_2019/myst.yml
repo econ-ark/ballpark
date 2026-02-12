@@ -1,0 +1,16 @@
+version: 1
+
+project:
+  title: "Wealth Distribution and Social Mobility in the U.S. — Ballpark Entry"
+  bibliography:
+    - self.bib
+    - references.bib
+    - subsequent-literature.bib
+  toc:
+    - file: Benhabib_et_al_2019_intro.ipynb
+    - file: Benhabib_et_al_2019_prior-literature.ipynb
+    - file: Benhabib_et_al_2019_summary.ipynb
+    - file: Benhabib_et_al_2019_subsequent-literature.ipynb
+
+site:
+  title: "Wealth Distribution and Social Mobility in the U.S. — Ballpark Entry"
