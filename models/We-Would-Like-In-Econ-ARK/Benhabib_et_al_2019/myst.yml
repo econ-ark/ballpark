@@ -3,6 +3,7 @@ version: 1
 project:
   title: "Wealth Distribution and Social Mobility in the US — Ballpark Entry"
   bibliography:
+    - self.bib
     - references.bib
     - subsequent-literature.bib
   toc:
