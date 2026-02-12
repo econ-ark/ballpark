@@ -112,3 +112,6 @@ env-*/
 
 # Mac
 .DS_Store
+
+# Local editor / Anaconda project artifacts
+anaconda_projects/
