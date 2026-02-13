@@ -112,3 +112,6 @@ env-*/
 
 # Mac
 .DS_Store
+
+# Project-local dotfiles (personal shell config)
+dotfiles/
