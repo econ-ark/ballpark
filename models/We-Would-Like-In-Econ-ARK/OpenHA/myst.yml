@@ -1,0 +1,11 @@
+version: 1
+project:
+  title: "Exchange rates and monetary policy with heterogeneous agents: Sizing up the real income channel"
+  bibliography:
+    - self.bib
+    - references.bib
+    - subsequent-literature.bib
+  toc:
+    - file: index.md
+site:
+  template: book-theme
