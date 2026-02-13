@@ -1,0 +1,13 @@
+version: 1
+
+project:
+  title: "The Optimum Quantity of Debt — Ballpark Entry"
+  bibliography:
+    - self.bib
+    - references.bib
+    - subsequent-literature.bib
+  toc:
+    - file: index.md
+
+site:
+  title: "The Optimum Quantity of Debt — Ballpark Entry"
