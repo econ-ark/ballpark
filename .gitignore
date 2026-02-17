@@ -67,6 +67,9 @@ instance/
 # Sphinx documentation
 docs/_build/
 
+# MyST Markdown build output
+_build/
+
 # PyBuilder
 target/
 
@@ -112,3 +115,7 @@ env-*/
 
 # Mac
 .DS_Store
+
+# Cursor / SpecStory
+.cursor*
+.specstory*/
