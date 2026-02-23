@@ -122,3 +122,6 @@ dotfiles/
 # Cursor / SpecStory
 .cursor*
 .specstory*/
+
+# Copyrighted source material (papers, LaTeX from MathPix, etc.)
+source/
