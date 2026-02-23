@@ -1,6 +1,4 @@
-# myst.yml in models/We-Would-Like-In-Econ-ARK/HKSWealthDistribution/
 version: 1
-
 project:
   title: "A Comprehensive Quantitative Theory of the U.S. Wealth Distribution — Ballpark Entry"
   bibliography:
@@ -12,6 +10,5 @@ project:
     - file: HKSWealthDistribution_prior-literature.ipynb
     - file: HKSWealthDistribution_summary.ipynb
     - file: HKSWealthDistribution_subsequent-literature.ipynb
-
 site:
   title: "A Comprehensive Quantitative Theory of the U.S. Wealth Distribution — Ballpark Entry"
