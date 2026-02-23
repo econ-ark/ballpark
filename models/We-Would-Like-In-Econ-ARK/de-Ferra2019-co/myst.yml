@@ -7,7 +7,10 @@ project:
     - references.bib
     - subsequent-literature.bib
   toc:
-    - file: index.md
+    - file: de-Ferra2019-co_intro.ipynb
+    - file: de-Ferra2019-co_prior-literature.ipynb
+    - file: de-Ferra2019-co_summary.ipynb
+    - file: de-Ferra2019-co_subsequent-literature.ipynb
 
 site:
   title: "Household heterogeneity and the transmission of foreign shocks — Ballpark Entry"
