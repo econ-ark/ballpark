@@ -1,0 +1,14 @@
+version: 1
+project:
+  title: "Monetary Policy with Heterogeneous Agents and Borrowing Constraints — Ballpark Entry"
+  bibliography:
+    - self.bib
+    - references.bib
+    - subsequent-literature.bib
+  toc:
+    - file: ARMonetaryPolicyHABC_intro.ipynb
+    - file: ARMonetaryPolicyHABC_prior-literature.ipynb
+    - file: ARMonetaryPolicyHABC_summary.ipynb
+    - file: ARMonetaryPolicyHABC_subsequent-literature.ipynb
+site:
+  title: "Monetary Policy with Heterogeneous Agents and Borrowing Constraints — Ballpark Entry"
