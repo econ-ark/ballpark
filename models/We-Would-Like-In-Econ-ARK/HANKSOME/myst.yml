@@ -1,0 +1,12 @@
+version: 1
+
+project:
+  title: "HANKSOME — Bellman Stage Decomposition"
+  bibliography:
+    - self.bib
+    - references.bib
+  toc:
+    - file: deFerra2020_bellman-stages.ipynb
+
+site:
+  title: "HANKSOME — Bellman Stage Decomposition"
