@@ -63,17 +63,17 @@ $$
 
 | Operator | Direction | Role |
 |----------|-----------|------|
-| $\mathbb{B}$: cntn to dcsn | backward | Optimise: $v(m, e) = \max_c \{ u(c) + \beta \, v_{\succ}(m - c, e) \}$ |
-| $\mathbb{I}$: dcsn to arvl | backward | Integrate: $v_{\prec}(a, e) = \mathbb{E}_{e' \mid e} [ v((1+r)a + e'wN, e') ]$ |
+| $\mathbb{B}$: cntn to dcsn | backward | Optimise: $v_{\sim}(m, e) = \max_c \{ u(c) + \beta \, v_{\succ}(m - c, e) \}$ |
+| $\mathbb{I}$: dcsn to arvl | backward | Integrate: $v_{\prec}(a, e) = \mathbb{E}_{e' \mid e} [ v_{\sim}((1+r)a + e'wN, e') ]$ |
 
 ### Perch Table
 
 | Perch | Indicator | State vector | Objects | Key transition |
 |-------|-----------|-------------|---------|----------------|
 | **Arrival** | $\prec$ | $(a, e)$ | $v_{\prec}(a,e)$, $v'_{\prec}(a,e)$ | Entry point; receives identity wiring from previous period's continuation |
-| | | | | $g_{\prec\circ}$: $m = (1+r)a + ewN$ |
-| **Decision** | $\circ$ | $(m, e)$ | $v(m,e)$, $v'(m,e)$, control $c \in [0, m - \underline{a}]$ | $v(m,e) = \max_c \{ u(c) + \beta \, v_{\succ}(m - c, e) \}$ |
-| | | | | $g_{\circ\succ}$: $a' = m - c$, $a' \geq \underline{a}$ |
+| | | | | $g_{\prec\sim}$: $m = (1+r)a + ewN$ |
+| **Decision** | $\sim$ | $(m, e)$ | $v_{\sim}(m,e)$, $v'_{\sim}(m,e)$, control $c \in [0, m - \underline{a}]$ | $v_{\sim}(m,e) = \max_c \{ u(c) + \beta \, v_{\succ}(m - c, e) \}$ |
+| | | | | $g_{\sim\succ}$: $a' = m - c$, $a' \geq \underline{a}$ |
 | **Continuation** | $\succ$ | $(a', e)$ | $v_{\succ}(a',e)$, $v'_{\succ}(a',e)$ | $v_{\succ}(a',e) = \mathbb{E}_{e' \mid e} [ v_{\prec}^{+}(a', e') ]$ |
 
 where $v_{\prec}^{+}$ denotes the **next-period** arrival value.
@@ -85,9 +85,9 @@ where $v_{\prec}^{+}$ denotes the **next-period** arrival value.
 2. **EGM compatibility.** Because preferences are CRRA and the budget constraint $a' = m - c$ is additively separable, the Endogenous Grid Method applies:
    - InvEuler: $c_{[\succ]} = (\beta \, v'_{\succ}(a', e))^{-1/\sigma}$
    - Reverse transition: $m_{[\succ]} = a' + c_{[\succ]}$
-   - Envelope: $v'(m,e) = u'(c) = c^{-\sigma}$
+   - Envelope: $v'_{\sim}(m,e) = u'(c) = c^{-\sigma}$
 
-3. **Borrowing constraint.** The constraint $a' \geq \underline{a}$ binds when $m$ is low. At the constraint, $c = m - \underline{a}$ and the marginal value $v'(m,e) = (m - \underline{a})^{-\sigma}$ exceeds the unconstrained envelope, producing the kink that EGM must handle.
+3. **Borrowing constraint.** The constraint $a' \geq \underline{a}$ binds when $m$ is low. At the constraint, $c = m - \underline{a}$ and the marginal value $v'_{\sim}(m,e) = (m - \underline{a})^{-\sigma}$ exceeds the unconstrained envelope, producing the kink that EGM must handle.
 
 4. **Identity wiring.** The consumption stage produces continuation variable $a'$ and the next stage expects an arrival variable also called $a$. The two periods snap together: $(a', e)_{\succ} \mapsto (a, e)_{\prec}^{+}$.
 
