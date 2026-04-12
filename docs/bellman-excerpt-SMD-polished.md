@@ -75,11 +75,12 @@ Here $\bullet$ is a generic passthrough state whose type ($\psi$-type or $m$-typ
 
 **Table 2. Shocks-only Stage Perches**
 
-| Perch | Indicator | State | Value functions | Explanation |
-|-------|-----------|-------|-----------------|-------------|
-| Arrival | $\prec$ | $a$ | $$v_{\prec} = \mathbb{E}_{\prec}[v_{\succ}]$$ | pre-shock value |
-| Decision(s) | $\sim$ | $a$ | (none) | no choice |
-| Continuation | $\succ$ | $\check{m}$ | $v_{\succ}$ | post-shock value |
+<table>
+<tr><th>Perch</th><th>Indicator</th><th>State</th><th>Value functions</th><th>Explanation</th></tr>
+<tr><td>Arrival</td><td>≺</td><td><i>a</i></td><td>v<sub>≺</sub> = 𝔼<sub>≺</sub>[v<sub>≻</sub>]</td><td>pre-shock value</td></tr>
+<tr><td>Decision(s)</td><td>∼</td><td><i>a</i></td><td>(none)</td><td>no choice</td></tr>
+<tr><td>Continuation</td><td>≻</td><td>m̌</td><td>v<sub>≻</sub></td><td>post-shock value</td></tr>
+</table>
 
 The arrival value function takes the expectation over the productivity shocks:
 
