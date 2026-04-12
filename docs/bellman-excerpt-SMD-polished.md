@@ -39,7 +39,7 @@ This split is mechanical given relative prices, so the household effectively cho
 
 ### Idiosyncratic productivity shock $e$
 
-Each household is subject to an idiosyncratic shock to its productivity $e$. This risk cannot be insured. The Bellman equation conditions on the current realization $e$ and takes expectations over $e'$. We assume a stationary process for $e$ that can be discretized into a finite-state Markov chain with transition probabilities $\Pi(e' \mid e)$.
+Each household is subject to an idiosyncratic shock to its productivity $e$. This risk cannot be insured. The ballpark notebook does not specify the exact stochastic process for $e$, but the [paper](https://web.stanford.edu/~aauclert/ha_oe.pdf) states that productivity shocks $e_{it}$ follow a **first-order Markov chain** with mean $E e_{it} = 1$. The calibration section further specifies an AR(1) process for log income with persistence $\rho_e$ and cross-sectional standard deviation $\sigma_e$, discretized into a finite-state Markov chain with transition probabilities $\Pi(e' \mid e)$.
 
 ## Stage Decomposition: ARSS Consumption-Savings
 
@@ -77,7 +77,7 @@ Here $\bullet$ is a generic passthrough state whose type ($\psi$-type or $m$-typ
 
 | Perch | Indicator | State | Value functions | Explanation |
 |-------|-----------|-------|-----------------|-------------|
-| Arrival | $\prec$ | $a$ | See formula below | pre-shock value |
+| Arrival | $\prec$ | $a$ | $v_\prec = \mathbb{E}_\prec[v_\succ]$ | pre-shock value |
 | Decision(s) | $\sim$ | $a$ | (none) | no choice |
 | Continuation | $\succ$ | $\check{m}$ | $v_{\succ}$ | post-shock value |
 
