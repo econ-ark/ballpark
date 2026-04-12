@@ -37,6 +37,14 @@ $$
 |----------|-------------|
 | $e'$ | Idiosyncratic productivity shock (realized at start of next period) |
 
+**Markov process for $e$:** Log productivity follows a stationary AR(1):
+
+$$
+\log e' = \rho_e \log e + \varepsilon, \quad \varepsilon \sim \mathcal{N}(0, \sigma_\varepsilon^2)
+$$
+
+This is discretized into a finite-state Markov chain with transition matrix $\Pi(e'|e)$ (e.g. via Rouwenhorst). The number of grid points and the parameters $(\rho_e, \sigma_\varepsilon)$ are calibration choices.
+
 Aggregate prices ($P_{Ft}, P_{Ht}, P_t, W_t, r_t^p, N_t$) are taken as given by the household.
 
 ### Utility
