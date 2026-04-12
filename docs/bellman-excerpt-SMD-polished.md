@@ -52,10 +52,15 @@ Discretized into a finite-state Markov chain with transition matrix $\Pi(e'|e)$ 
 The household problem is a **single-stage period**. One consumption-savings stage handles both the Markov shock realisation (at the arrival-to-decision transition) and the consumption-saving optimisation (at the decision perch). The continuation perch of period $t$ connects to the arrival perch of period $t+1$ via **identity wiring**: the outgoing state $(a', e)$ matches the incoming state $(a, e)$ of the successor period.
 
 $$
-\underbrace{\text{Arrival} \xrightarrow{g_{\prec\circ}} \text{Decision} \xrightarrow{g_{\circ\succ}} \text{Continuation}}_{\text{single stage } \mathbb{S}} = \text{Period } \mathbb{T}
+\underbrace{\text{Arrival} \xrightarrow{g_{\prec\sim}} \text{Decision} \xrightarrow{g_{\sim\succ}} \text{Continuation}}_{\text{single stage } \mathbb{S}} = \text{Period } \mathbb{T}
 $$
 
-The **backward** (Bellman) pass composes two movers:
+The **backward** (Bellman) pass composes two movers. We use the following abbreviations for perch names: **arvl** = arrival, **dcsn** = decision, **cntn** = continuation. These label the direction of each mover:
+
+- $\mathbb{B}$ (the **cntn-to-dcsn** mover): maps the continuation value function backward to the decision perch by solving the optimization problem.
+- $\mathbb{I}$ (the **dcsn-to-arvl** mover): maps the decision value function backward to the arrival perch by applying the expectation over future shocks and the deterministic arrival-to-decision transition.
+
+The full period operator is their composition:
 
 $$
 \mathbb{T} = \mathbb{I} \circ \mathbb{B}
@@ -63,20 +68,20 @@ $$
 
 | Operator | Direction | Role |
 |----------|-----------|------|
-| $\mathbb{B}$: cntn to dcsn | backward | Optimise: $v_{\sim}(m, e) = \max_c \{ u(c) + \beta \, v_{\succ}(m - c, e) \}$ |
-| $\mathbb{I}$: dcsn to arvl | backward | Integrate: $v_{\prec}(a, e) = \mathbb{E}_{e' \mid e} [ v_{\sim}((1+r)a + e'wN, e') ]$ |
+| $\mathbb{B}$ (cntn-to-dcsn) | backward | Optimise: $v_\sim(m, e) = \max_c \lbrace u(c) + \beta v_\succ(m - c, e) \rbrace$ |
+| $\mathbb{I}$ (dcsn-to-arvl) | backward | Integrate: $v_\prec(a, e) = \sum_{e'} \Pi(e' \mid e) \, v_\sim((1+r)a + e'wN, \, e')$ |
 
 ### Perch Table
 
 | Perch | Indicator | State vector | Objects | Key transition |
 |-------|-----------|-------------|---------|----------------|
-| **Arrival** | $\prec$ | $(a, e)$ | $v_{\prec}(a,e)$, $v'_{\prec}(a,e)$ | Entry point; receives identity wiring from previous period's continuation |
+| **Arrival** | $\prec$ | $(a, e)$ | $v_\prec(a,e)$, $v'_\prec(a,e)$ | Entry point; receives identity wiring from previous period's continuation |
 | | | | | $g_{\prec\sim}$: $m = (1+r)a + ewN$ |
-| **Decision** | $\sim$ | $(m, e)$ | $v_{\sim}(m,e)$, $v'_{\sim}(m,e)$, control $c \in [0, m - \underline{a}]$ | $v_{\sim}(m,e) = \max_c \{ u(c) + \beta \, v_{\succ}(m - c, e) \}$ |
+| **Decision** | $\sim$ | $(m, e)$ | $v_\sim(m,e)$, $v'_\sim(m,e)$, control $c \in [0, m - \underline{a}]$ | $v_\sim(m,e) = \max_c \lbrace u(c) + \beta v_\succ(m - c, e) \rbrace$ |
 | | | | | $g_{\sim\succ}$: $a' = m - c$, $a' \geq \underline{a}$ |
-| **Continuation** | $\succ$ | $(a', e)$ | $v_{\succ}(a',e)$, $v'_{\succ}(a',e)$ | $v_{\succ}(a',e) = \mathbb{E}_{e' \mid e} [ v_{\prec}^{+}(a', e') ]$ |
+| **Continuation** | $\succ$ | $(a', e)$ | $v_\succ(a',e)$, $v'_\succ(a',e)$ | $v_\succ(a',e) = \sum_{e'} \Pi(e' \mid e) \, v_\prec^{+}(a', e')$ |
 
-where $v_{\prec}^{+}$ denotes the **next-period** arrival value.
+where $v_\prec^{+}$ denotes the **next-period** arrival value.
 
 ### Key Structural Notes
 
@@ -89,7 +94,7 @@ where $v_{\prec}^{+}$ denotes the **next-period** arrival value.
 
 3. **Borrowing constraint.** The constraint $a' \geq \underline{a}$ binds when $m$ is low. At the constraint, $c = m - \underline{a}$ and the marginal value $v'_{\sim}(m,e) = (m - \underline{a})^{-\sigma}$ exceeds the unconstrained envelope, producing the kink that EGM must handle.
 
-4. **Identity wiring.** The consumption stage produces continuation variable $a'$ and the next stage expects an arrival variable also called $a$. The two periods snap together: $(a', e)_{\succ} \mapsto (a, e)_{\prec}^{+}$.
+4. **Identity wiring.** The consumption stage produces continuation variable $a'$ and the next stage expects an arrival variable also called $a$. The two periods snap together: $(a', e)_\succ \mapsto (a, e)_\prec^{+}$.
 
 ### Parameters
 
