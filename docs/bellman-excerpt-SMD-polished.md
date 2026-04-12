@@ -47,54 +47,97 @@ Discretized into a finite-state Markov chain with transition matrix $\Pi(e'|e)$ 
 
 ## Stage Decomposition: ARSS Consumption-Savings
 
-### Stage Composition
+The household problem has one choice variable ($c$) together with a non-trivial shock structure (Markov productivity $e$). Following the SolvingMicroDSOPs modular architecture (Sections 4 and 9.2), we decompose a single period into **three stages**: a discounting stage, a shocks-only stage, and a shock-free consumption stage. Each stage has three perches: **arrival** ($\prec$), **decision** ($\sim$), and **continuation** ($\succ$).
 
-The household problem is a **single-stage period**. One consumption-savings stage handles both the Markov shock realisation (at the arrival-to-decision transition) and the consumption-saving optimisation (at the decision perch). The continuation perch of period $t$ connects to the arrival perch of period $t+1$ via **identity wiring**: the outgoing state $(a', e)$ matches the incoming state $(a, e)$ of the successor period.
-
-$$
-\underbrace{\text{Arrival} \xrightarrow{g_{\prec\sim}} \text{Decision} \xrightarrow{g_{\sim\succ}} \text{Continuation}}_{\text{single stage } \mathbb{S}} = \text{Period } \mathbb{T}
-$$
-
-The **backward** (Bellman) pass composes two movers. We use the following abbreviations for perch names: **arvl** = arrival, **dcsn** = decision, **cntn** = continuation. These label the direction of each mover:
-
-- $\mathbb{B}$ (the **cntn-to-dcsn** mover): maps the continuation value function backward to the decision perch by solving the optimization problem.
-- $\mathbb{I}$ (the **dcsn-to-arvl** mover): maps the decision value function backward to the arrival perch by applying the expectation over future shocks and the deterministic arrival-to-decision transition.
-
-The full period operator is their composition:
+Let $m$ denote real market resources (cash-on-hand):
 
 $$
-\mathbb{T} = \mathbb{I} \circ \mathbb{B}
+m = (1 + r^p) a + e \frac{W}{P} N
 $$
 
-| Operator | Direction | Role |
-|----------|-----------|------|
-| $\mathbb{B}$ (cntn-to-dcsn) | backward | Optimise: $v_\sim(m, e) = \max_c \lbrace u(c) + \beta v_\succ(m - c, e) \rbrace$ |
-| $\mathbb{I}$ (dcsn-to-arvl) | backward | Integrate: $v_\prec(a, e) = \sum_{e'} \Pi(e' \mid e) \, v_\sim((1+r)a + e'wN, \, e')$ |
+and let $\psi = m - c$ denote assets after the consumption decision (end-of-period savings, before discounting).
 
-### Perch Table
+### 3.1 The Discounting Stage (disc)
 
-| Perch | Indicator | State vector | Objects | Key transition |
-|-------|-----------|-------------|---------|----------------|
-| **Arrival** | $\prec$ | $(a, e)$ | $v_\prec(a,e)$, $v'_\prec(a,e)$ | Entry point; receives identity wiring from previous period's continuation |
-| | | | | $g_{\prec\sim}$: $m = (1+r)a + ewN$ |
-| **Decision** | $\sim$ | $(m, e)$ | $v_\sim(m,e)$, $v'_\sim(m,e)$, control $c \in [0, m - \underline{a}]$ | $v_\sim(m,e) = \max_c \lbrace u(c) + \beta v_\succ(m - c, e) \rbrace$ |
-| | | | | $g_{\sim\succ}$: $a' = m - c$, $a' \geq \underline{a}$ |
-| **Continuation** | $\succ$ | $(a', e)$ | $v_\succ(a',e)$, $v'_\succ(a',e)$ | $v_\succ(a',e) = \sum_{e'} \Pi(e' \mid e) \, v_\prec^{+}(a', e')$ |
+**Table 1. Discounting Stage Perches**
 
-where $v_\prec^{+}$ denotes the **next-period** arrival value.
+| Perch | Indicator | State | Value functions | Explanation |
+|-------|-----------|-------|-----------------|-------------|
+| Arrival | $\prec$ | $\bullet$ | $v_\prec = v_\sim$ | no shocks |
+| Decision | $\sim$ | $\bullet$ | $v_\sim = \beta v_\succ$ | apply $\beta$ |
+| Continuation | $\succ$ | $\bullet$ | $v_\succ$ | value at exit |
+
+Here $\bullet$ is a generic passthrough state whose type ($\psi$-type or $m$-type) is inherited from the predecessor stage's continuation state. The discounting stage applies the discount factor $\beta$ to the continuation value. Since the ARSS model has no permanent income growth ($\Gamma = 1$), the discount factor is simply $\beta$.
+
+### 3.2 The Shocks-only Stage
+
+**Table 2. Shocks-only Stage Perches**
+
+| Perch | Indicator | State | Value functions | Explanation |
+|-------|-----------|-------|-----------------|-------------|
+| Arrival | $\prec$ | $a$ | $v_\prec(a) = \sum_{e'} \Pi(e' \mid e) \, v_\succ(a, e')$ | pre-shock value; expectation over $e'$ |
+| Decision | $\sim$ | $a$ | (none) | no choice |
+| Continuation | $\succ$ | $\check{m}$ | $v_\succ$ | post-shock value |
+
+The arrival value function takes the expectation over the Markov productivity shock: $v_\prec(a) = \sum_{e'} \Pi(e' \mid e) \, v_\succ((1 + r^p) a + e' \frac{W}{P} N, \, e')$. Once the shock $e$ is realized, the continuation state $\check{m} = (1 + r^p) a + e \frac{W}{P} N$ is fully determined (deterministic). The notation $\check{m}$ indicates that this is an $m$-type variable (market resources after shocks are realized).
+
+This shocks-only stage is a specialization of the `portable` stage in SolvingMicroDSOPs with no portfolio optimization. The correspondence is:
+- The return factor $(1 + r^p)$ plays the role of $R$ (with $\Gamma = 1$ and no risky-share choice).
+- The labor income $e \frac{W}{P} N$ plays the role of the transitory shock, where the randomness comes from the Markov state $e$.
+- The equilibrium objects $r^p$, $W$, $P$, $N$ are taken as given by the household — only $e$ is stochastic from the household's perspective.
+
+### 3.3 The Shock-free Consumption Stage (cons-noshocks)
+
+With shocks handled in the preceding stage, the consumption stage has arrival state $m$ and no shocks between arrival and decision, so $v_\prec = v_\sim$.
+
+**Table 3. Cons-noshocks Stage Perches**
+
+| Perch | Indicator | State | Value functions | Explanation |
+|-------|-----------|-------|-----------------|-------------|
+| Arrival | $\prec$ | $m$ | $v_\prec = v_\sim$ | no shocks; identity |
+| Decision | $\sim$ | $m$ | $v_\sim(m) = \max_c u(c) - v(N) + v_\succ(m - c)$ | choose consumption |
+| Continuation | $\succ$ | $\psi$ | $v_\succ$ | value at exit |
+
+The household chooses $c$ to maximize $u(c) - v(N) + v_\succ(\psi)$ where $\psi = m - c$. Since $v(N)$ does not depend on $c$ (hours are set by the union), the first-order condition is $u'(c) = v'_\succ(\psi)$, i.e. $c^{-\sigma} = v'_\succ(m - c)$. This is the standard EGM-compatible form:
+
+- InvEuler: $c_\succ(\psi) = (v'_\succ(\psi))^{-1/\sigma}$
+- Endogenous grid: $m = \psi + c_\succ(\psi)$
+- Envelope: $v'_\sim(m) = u'(c) = c^{-\sigma}$
+
+The borrowing constraint $\psi \geq \underline{a}$ binds when $m$ is low. At the constraint, $c = m - \underline{a}$.
+
+### 3.4 The Three-stage Period
+
+The period is defined by the stage list [shocks-only, $\mathcal{C}(\check{m} \leftrightarrow m)$, cons-noshocks, disc]:
+
+| Element | Transition | Action |
+|---------|------------|--------|
+| shocks-only | $a \rightarrow \check{m}$ | productivity shock $e$ realizes (no choice) |
+| $\mathcal{C}(\check{m} \leftrightarrow m)$ | $\check{m} \rightarrow m$ | rename |
+| cons-noshocks | $m \rightarrow \psi$ | choose $c$ |
+| disc | | apply $\beta$ |
+
+The full pipeline within a period:
+
+$$
+a \xrightarrow{\text{shocks-only}} \check{m} \xrightarrow{\text{cons-noshocks}} \psi \xrightarrow{\text{disc}} \text{exit}
+$$
+
+### 3.5 Connectors
+
+**Within-period connectors** are specified above: $\mathcal{C}(\check{m} \leftrightarrow m)$ renames the post-shock resources to the consumption stage's arrival state.
+
+**Between-period connector:** The period ends after the disc stage with exit state $\psi$. The next period's shocks-only stage arrives with state $a$. The between-period connector is $\mathcal{C}(\psi \leftrightarrow a)$, which is the identity $a_{t+1} = \psi_t$.
 
 ### Key Structural Notes
 
-1. **Shock timing.** The exogenous state $e$ follows a Markov process. The expectation over $e'|e$ sits in the dcsn-to-arvl mover $\mathbb{I}$ (pre-decision shock pattern). At the decision perch, $e$ is known and the agent conditions on it.
+1. **Shock timing.** The productivity shock $e$ is realized at the arrival perch of the shocks-only stage — not between periods, and not at a separate decision point. Once $e$ is known, market resources $m$ are determined, and the consumption stage proceeds without further uncertainty.
 
-2. **EGM compatibility.** Because preferences are CRRA and the budget constraint $a' = m - c$ is additively separable, the Endogenous Grid Method applies:
-   - InvEuler: $c_{[\succ]} = (\beta \, v'_{\succ}(a', e))^{-1/\sigma}$
-   - Reverse transition: $m_{[\succ]} = a' + c_{[\succ]}$
-   - Envelope: $v'_{\sim}(m,e) = u'(c) = c^{-\sigma}$
+2. **Why this ordering (shocksonly-consnoshocks).** In this ordering, the cons-noshocks stage receives a continuation value $v_\succ(\psi)$ that already has shocks integrated out by the preceding shocks-only stage. The first-order condition $u'(c) = v'_\succ(\psi)$ can be inverted directly via EGM without any inner expectation loop. In the reverse ordering, the consumption FOC would involve a continuation value with unresolved shocks, requiring numerical root-finding inside an expectation integral.
 
-3. **Borrowing constraint.** The constraint $a' \geq \underline{a}$ binds when $m$ is low. At the constraint, $c = m - \underline{a}$ and the marginal value $v'_{\sim}(m,e) = (m - \underline{a})^{-\sigma}$ exceeds the unconstrained envelope, producing the kink that EGM must handle.
+3. **EGM compatibility.** Because preferences are CRRA and the budget constraint $\psi = m - c$ is additively separable, the Endogenous Grid Method applies directly in the cons-noshocks stage.
 
-4. **Identity wiring.** The consumption stage produces continuation variable $a'$ and the next stage expects an arrival variable also called $a$. The two periods snap together: $(a', e)_\succ \mapsto (a, e)_\prec^{+}$.
+4. **Identity wiring.** The disc stage produces exit state $\psi$, and the next period's shocks-only stage expects arrival state $a$. These snap together via the identity $a_{t+1} = \psi_t$.
 
 ### Parameters
 
@@ -106,8 +149,8 @@ where $v_\prec^{+}$ denotes the **next-period** arrival value.
 | $\alpha$ | Import share (home bias $= 1 - \alpha$) |
 | $\varphi$ | Inverse Frisch elasticity of labor supply |
 | $\psi$ | Labor disutility weight |
-| $r$ | Real interest rate (taken as given by household) |
-| $w$ | Real wage (taken as given by household) |
+| $r^p$ | Real portfolio return (taken as given by household) |
+| $W/P$ | Real wage (taken as given by household) |
 | $N$ | Hours worked (union-set, exogenous to household) |
 | $\underline{a}$ | Borrowing limit |
 | $\rho_e$ | Persistence of log productivity AR(1) |
