@@ -39,7 +39,7 @@ This split is mechanical given relative prices, so the household effectively cho
 
 ### Idiosyncratic productivity shock $e$
 
-Each household is subject to an idiosyncratic shock to its productivity $e$. This risk cannot be insured. The Bellman equation conditions on the current realization $e$ and takes expectations over $e'$. The paper does not specify the exact stochastic process, but standard HANK models typically assume a stationary process for $e$ that can be discretized into a finite-state Markov chain with transition probabilities $\Pi(e' \mid e)$.
+Each household is subject to an idiosyncratic shock to its productivity $e$. This risk cannot be insured. The Bellman equation conditions on the current realization $e$ and takes expectations over $e'$. We assume a stationary process for $e$ that can be discretized into a finite-state Markov chain with transition probabilities $\Pi(e' \mid e)$.
 
 ## Stage Decomposition: ARSS Consumption-Savings
 
@@ -77,14 +77,14 @@ Here $\bullet$ is a generic passthrough state whose type ($\psi$-type or $m$-typ
 
 | Perch | Indicator | State | Value functions | Explanation |
 |-------|-----------|-------|-----------------|-------------|
-| Arrival | $\prec$ | $a$ | $v_{\prec} = \mathbb{E}_{\prec}[v_{\succ}]$ | pre-shock value |
+| Arrival | $\prec$ | $a$ | See formula below | pre-shock value |
 | Decision(s) | $\sim$ | $a$ | (none) | no choice |
 | Continuation | $\succ$ | $\check{m}$ | $v_{\succ}$ | post-shock value |
 
 The arrival value function takes the expectation over the productivity shocks:
 
 $$
-v_{\prec}(a) = \mathbb{E}_{\prec}\left[v_{\succ}\left((1 + r^p) a + e' \frac{W}{P} N \right)\right] = \sum_{e'} \Pi(e' \mid e) \; v_{\succ}\left((1 + r^p) a + e' \frac{W}{P} N \right)
+v_{\prec}(a) = \mathbb{E}_{\prec}\left[v_{\succ}\left((1 + r^p) a + e' \frac{W}{P} N \right)\right] = \sum_{e'} \Pi(e' \mid e) \cdot v_{\succ}\left((1 + r^p) a + e' \frac{W}{P} N \right)
 $$
 
 Once the shock $e$ is realized, the continuation state $\check{m} = (1 + r^p) a + e \frac{W}{P} N$ is fully determined (non-stochastic). The notation $\check{m}$ indicates that this is an $m$-type variable (market resources after shocks are realized).
