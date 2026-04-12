@@ -37,13 +37,9 @@ $$
 
 This split is mechanical given relative prices, so the household effectively chooses **total real consumption** $c_t$ and **savings** $a'$. Hours $N_t$ are set by the union and are not chosen by the household.
 
-### Markov process for $e$
+### Idiosyncratic productivity shock $e$
 
-$$
-\log e' = \rho_e \log e + \varepsilon, \quad \varepsilon \sim \mathcal{N}(0, \sigma_\varepsilon^2)
-$$
-
-Discretized into a finite-state Markov chain with transition matrix $\Pi(e'|e)$ via Rouwenhorst.
+Each household is subject to an idiosyncratic shock to its productivity $e$. This risk cannot be insured. The Bellman equation conditions on the current realization $e$ and takes expectations over $e'$. The paper does not specify the exact stochastic process, but standard HANK models typically assume a stationary process for $e$ that can be discretized into a finite-state Markov chain with transition probabilities $\Pi(e' \mid e)$.
 
 ## Stage Decomposition: ARSS Consumption-Savings
 
@@ -69,9 +65,9 @@ Both $\psi$ and $a$ are $\psi$-type variables, representing investable assets be
 
 | Perch | Indicator | State | Value functions | Explanation |
 |-------|-----------|-------|-----------------|-------------|
-| Arrival | $\prec$ | $\bullet$ | $v_\prec = v_\sim$ | no shocks |
-| Decision(s) | $\sim$ | $\bullet$ | $v_\sim = \beta v_\succ$ | apply $\beta$ |
-| Continuation | $\succ$ | $\bullet$ | $v_\succ$ | value at exit |
+| Arrival | $\prec$ | $\bullet$ | $v_{\prec} = v_{\sim}$ | no shocks |
+| Decision(s) | $\sim$ | $\bullet$ | $v_{\sim} = \beta v_{\succ}$ | apply $\beta$ |
+| Continuation | $\succ$ | $\bullet$ | $v_{\succ}$ | value at exit |
 
 Here $\bullet$ is a generic passthrough state whose type ($\psi$-type or $m$-type) is inherited from the predecessor stage's continuation state. The discounting stage applies the discount factor $\beta$ to the continuation value. Since the ARSS model has no permanent income growth ($\Gamma = 1$), the discount factor is simply $\beta$.
 
@@ -81,14 +77,14 @@ Here $\bullet$ is a generic passthrough state whose type ($\psi$-type or $m$-typ
 
 | Perch | Indicator | State | Value functions | Explanation |
 |-------|-----------|-------|-----------------|-------------|
-| Arrival | $\prec$ | $a$ | $v_\prec = \mathbb{E}_\prec[v_\succ]$ | pre-shock value |
+| Arrival | $\prec$ | $a$ | $v_{\prec} = \mathbb{E}_{\prec}[v_{\succ}]$ | pre-shock value |
 | Decision(s) | $\sim$ | $a$ | (none) | no choice |
-| Continuation | $\succ$ | $\check{m}$ | $v_\succ$ | post-shock value |
+| Continuation | $\succ$ | $\check{m}$ | $v_{\succ}$ | post-shock value |
 
-The arrival value function takes the expectation over the productivity shocks: $v_\prec(a) = \mathbb{E}_\prec[v_\succ((1 + r^p) a + e' \frac{W}{P} N, \, e')]$. Expanding: 
+The arrival value function takes the expectation over the productivity shocks:
 
 $$
-v_\prec(a) = \sum_{e'} \Pi(e' \mid e) \, v_\succ\left((1 + r^p) a + e' \frac{W}{P} N, \, e'\right)
+v_{\prec}(a) = \mathbb{E}_{\prec}\left[v_{\succ}\left((1 + r^p) a + e' \frac{W}{P} N \right)\right] = \sum_{e'} \Pi(e' \mid e) \; v_{\succ}\left((1 + r^p) a + e' \frac{W}{P} N \right)
 $$
 
 Once the shock $e$ is realized, the continuation state $\check{m} = (1 + r^p) a + e \frac{W}{P} N$ is fully determined (non-stochastic). The notation $\check{m}$ indicates that this is an $m$-type variable (market resources after shocks are realized).
@@ -106,15 +102,21 @@ With shocks handled in the preceding stage, the consumption stage has arrival st
 
 | Perch | Indicator | State | Value functions | Explanation |
 |-------|-----------|-------|-----------------|-------------|
-| Arrival | $\prec$ | $m$ | $v_\prec = v_\sim$ | no shocks; identity |
-| Decision(s) | $\sim$ | $m$ | $v_\sim(m) = \max_c u(c) - v(N) + v_\succ(m - c)$ | choose consumption |
-| Continuation | $\succ$ | $\psi$ | $v_\succ$ | value at exit |
+| Arrival | $\prec$ | $m$ | $v_{\prec} = v_{\sim}$ | no shocks; identity |
+| Decision(s) | $\sim$ | $m$ | $v_{\sim}(m) = \max_c u(c) - v(N) + v_{\succ}(m - c)$ | choose consumption |
+| Continuation | $\succ$ | $\psi$ | $v_{\succ}$ | value at exit |
 
-The household chooses $c$ to maximize $u(c) - v(N) + v_\succ(\psi)$ where $\psi = m - c$. Since $v(N)$ does not depend on $c$ (hours are set by the union), the first-order condition is $u'(c) = v'_\succ(\psi)$, i.e. $c^{-\sigma} = v'_\succ(m - c)$. This is the standard EGM-compatible form:
+The household chooses $c$ to maximize $u(c) - v(N) + v_{\succ}(\psi)$ where $\psi = m - c$. Since $v(N)$ does not depend on $c$ (hours are set by the union), the first-order condition is:
 
-- InvEuler: $c_\succ(\psi) = (v'_\succ(\psi))^{-1/\sigma}$
-- Endogenous grid: $m = \psi + c_\succ(\psi)$
-- Envelope: $v'_\sim(m) = u'(c) = c^{-\sigma}$
+$$
+u'(c) = v'_{\succ}(\psi), \quad \text{i.e.} \quad c^{-\sigma} = v'_{\succ}(m - c)
+$$
+
+This is the standard EGM-compatible form:
+
+- InvEuler: $c_{\succ}(\psi) = (v'_{\succ}(\psi))^{-1/\sigma}$
+- Endogenous grid: $m = \psi + c_{\succ}(\psi)$
+- Envelope: $v'_{\sim}(m) = u'(c) = c^{-\sigma}$
 
 The borrowing constraint $\psi \geq \underline{a}$ binds when $m$ is low. At the constraint, $c = m - \underline{a}$.
 
@@ -135,9 +137,9 @@ The within-period connectors are specified above. For the between-period connect
 
 The pipeline is:
 
-$$
-a \xrightarrow{\text{shocks-only}} \check{m} \xrightarrow{\text{cons-noshocks}} \psi \xrightarrow{\text{disc}} \text{exit}
-$$
+```
+a  ──[shocks-only]──>  m̌  ──[cons-noshocks]──>  ψ  ──[disc]──>  exit
+```
 
 ### Key Structural Notes
 
@@ -163,5 +165,3 @@ $$
 | $W/P$ | Real wage (taken as given by household) |
 | $N$ | Hours worked (union-set, exogenous to household) |
 | $\underline{a}$ | Borrowing limit |
-| $\rho_e$ | Persistence of log productivity AR(1) |
-| $\sigma_\varepsilon$ | Std dev of productivity innovation |
