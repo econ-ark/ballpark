@@ -64,7 +64,7 @@ $$
 | Operator | Direction | Role |
 |----------|-----------|------|
 | $\mathbb{B}$: cntn to dcsn | backward | Optimise: $v(m, e) = \max_c \{ u(c) + \beta \, v_{\succ}(m - c, e) \}$ |
-| $\mathbb{I}$: dcsn to arvl | backward | Integrate: $v_{\prec}(a, e) = \mathbb{E}_{e' | e} [ v((1+r)a + e'wN, e') ]$ |
+| $\mathbb{I}$: dcsn to arvl | backward | Integrate: $v_{\prec}(a, e) = \mathbb{E}_{e' \mid e} [ v((1+r)a + e'wN, e') ]$ |
 
 ### Perch Table
 
@@ -74,7 +74,7 @@ $$
 | | | | | $g_{\prec\circ}$: $m = (1+r)a + ewN$ |
 | **Decision** | $\circ$ | $(m, e)$ | $v(m,e)$, $v'(m,e)$, control $c \in [0, m - \underline{a}]$ | $v(m,e) = \max_c \{ u(c) + \beta \, v_{\succ}(m - c, e) \}$ |
 | | | | | $g_{\circ\succ}$: $a' = m - c$, $a' \geq \underline{a}$ |
-| **Continuation** | $\succ$ | $(a', e)$ | $v_{\succ}(a',e)$, $v'_{\succ}(a',e)$ | $v_{\succ}(a',e) = \mathbb{E}_{e' | e} [ v_{\prec}^{+}(a', e') ]$ |
+| **Continuation** | $\succ$ | $(a', e)$ | $v_{\succ}(a',e)$, $v'_{\succ}(a',e)$ | $v_{\succ}(a',e) = \mathbb{E}_{e' \mid e} [ v_{\prec}^{+}(a', e') ]$ |
 
 where $v_{\prec}^{+}$ denotes the **next-period** arrival value.
 
