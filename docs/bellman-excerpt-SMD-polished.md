@@ -77,7 +77,7 @@ Here $\bullet$ is a generic passthrough state whose type ($\psi$-type or $m$-typ
 
 | Perch | Indicator | State | Value functions | Explanation |
 |-------|-----------|-------|-----------------|-------------|
-| Arrival | $\prec$ | $a$ | $v_{\prec} = \mathbb{E}_{\prec}\lbrack v_{\succ} \rbrack$ | pre-shock value |
+| Arrival | $\prec$ | $a$ | $$v_{\prec} = \mathbb{E}_{\prec}[v_{\succ}]$$ | pre-shock value |
 | Decision(s) | $\sim$ | $a$ | (none) | no choice |
 | Continuation | $\succ$ | $\check{m}$ | $v_{\succ}$ | post-shock value |
 
