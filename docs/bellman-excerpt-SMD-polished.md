@@ -47,7 +47,7 @@ Discretized into a finite-state Markov chain with transition matrix $\Pi(e'|e)$ 
 
 ## Stage Decomposition: ARSS Consumption-Savings
 
-The household problem has one choice variable ($c$) together with a non-trivial shock structure (Markov productivity $e$). Following the SolvingMicroDSOPs modular architecture (Sections 4 and 9.2), we decompose a single period into **three stages**: a discounting stage, a shocks-only stage, and a shock-free consumption stage. Each stage has three perches: **arrival** ($\prec$), **decision** ($\sim$), and **continuation** ($\succ$).
+The household problem has one choice variable ($c$) together with a non-trivial shock structure (Markov productivity $e$). Following the SolvingMicroDSOPs modular architecture, we decompose a single period into **three stages**: a discounting stage, a shocks-only stage, and a shock-free consumption stage. Each stage has three perches: **arrival** ($\prec$), **decision(s)** ($\sim$), and **continuation** ($\succ$).
 
 Let $m$ denote real market resources (cash-on-hand):
 
@@ -55,7 +55,13 @@ $$
 m = (1 + r^p) a + e \frac{W}{P} N
 $$
 
-and let $\psi = m - c$ denote assets after the consumption decision (end-of-period savings, before discounting).
+Define $\psi_t = m_t - c_t$ as assets after the consumption decision (end-of-period savings, before discounting). Next period's asset holdings are therefore:
+
+$$
+a_{t+1} = \psi_t
+$$
+
+Both $\psi$ and $a$ are $\psi$-type variables, representing investable assets before returns are realized. In contrast, $m$ is an $m$-type variable, representing spendable resources after returns.
 
 ### 3.1 The Discounting Stage (disc)
 
@@ -64,7 +70,7 @@ and let $\psi = m - c$ denote assets after the consumption decision (end-of-peri
 | Perch | Indicator | State | Value functions | Explanation |
 |-------|-----------|-------|-----------------|-------------|
 | Arrival | $\prec$ | $\bullet$ | $v_\prec = v_\sim$ | no shocks |
-| Decision | $\sim$ | $\bullet$ | $v_\sim = \beta v_\succ$ | apply $\beta$ |
+| Decision(s) | $\sim$ | $\bullet$ | $v_\sim = \beta v_\succ$ | apply $\beta$ |
 | Continuation | $\succ$ | $\bullet$ | $v_\succ$ | value at exit |
 
 Here $\bullet$ is a generic passthrough state whose type ($\psi$-type or $m$-type) is inherited from the predecessor stage's continuation state. The discounting stage applies the discount factor $\beta$ to the continuation value. Since the ARSS model has no permanent income growth ($\Gamma = 1$), the discount factor is simply $\beta$.
@@ -75,11 +81,17 @@ Here $\bullet$ is a generic passthrough state whose type ($\psi$-type or $m$-typ
 
 | Perch | Indicator | State | Value functions | Explanation |
 |-------|-----------|-------|-----------------|-------------|
-| Arrival | $\prec$ | $a$ | $v_\prec(a) = \sum_{e'} \Pi(e' \mid e) \, v_\succ(a, e')$ | pre-shock value; expectation over $e'$ |
-| Decision | $\sim$ | $a$ | (none) | no choice |
+| Arrival | $\prec$ | $a$ | $v_\prec = \mathbb{E}_\prec[v_\succ]$ | pre-shock value |
+| Decision(s) | $\sim$ | $a$ | (none) | no choice |
 | Continuation | $\succ$ | $\check{m}$ | $v_\succ$ | post-shock value |
 
-The arrival value function takes the expectation over the Markov productivity shock: $v_\prec(a) = \sum_{e'} \Pi(e' \mid e) \, v_\succ((1 + r^p) a + e' \frac{W}{P} N, \, e')$. Once the shock $e$ is realized, the continuation state $\check{m} = (1 + r^p) a + e \frac{W}{P} N$ is fully determined (deterministic). The notation $\check{m}$ indicates that this is an $m$-type variable (market resources after shocks are realized).
+The arrival value function takes the expectation over the productivity shocks: $v_\prec(a) = \mathbb{E}_\prec[v_\succ((1 + r^p) a + e' \frac{W}{P} N, \, e')]$. Expanding: 
+
+$$
+v_\prec(a) = \sum_{e'} \Pi(e' \mid e) \, v_\succ\left((1 + r^p) a + e' \frac{W}{P} N, \, e'\right)
+$$
+
+Once the shock $e$ is realized, the continuation state $\check{m} = (1 + r^p) a + e \frac{W}{P} N$ is fully determined (non-stochastic). The notation $\check{m}$ indicates that this is an $m$-type variable (market resources after shocks are realized).
 
 This shocks-only stage is a specialization of the `portable` stage in SolvingMicroDSOPs with no portfolio optimization. The correspondence is:
 - The return factor $(1 + r^p)$ plays the role of $R$ (with $\Gamma = 1$ and no risky-share choice).
@@ -95,7 +107,7 @@ With shocks handled in the preceding stage, the consumption stage has arrival st
 | Perch | Indicator | State | Value functions | Explanation |
 |-------|-----------|-------|-----------------|-------------|
 | Arrival | $\prec$ | $m$ | $v_\prec = v_\sim$ | no shocks; identity |
-| Decision | $\sim$ | $m$ | $v_\sim(m) = \max_c u(c) - v(N) + v_\succ(m - c)$ | choose consumption |
+| Decision(s) | $\sim$ | $m$ | $v_\sim(m) = \max_c u(c) - v(N) + v_\succ(m - c)$ | choose consumption |
 | Continuation | $\succ$ | $\psi$ | $v_\succ$ | value at exit |
 
 The household chooses $c$ to maximize $u(c) - v(N) + v_\succ(\psi)$ where $\psi = m - c$. Since $v(N)$ does not depend on $c$ (hours are set by the union), the first-order condition is $u'(c) = v'_\succ(\psi)$, i.e. $c^{-\sigma} = v'_\succ(m - c)$. This is the standard EGM-compatible form:
@@ -108,26 +120,24 @@ The borrowing constraint $\psi \geq \underline{a}$ binds when $m$ is low. At the
 
 ### 3.4 The Three-stage Period
 
-The period is defined by the stage list [shocks-only, $\mathcal{C}(\check{m} \leftrightarrow m)$, cons-noshocks, disc]:
+The shocksonly–consnoshocks period is defined by the stage list [shocks-only, $\mathcal{C}(\check{m} \leftrightarrow m)$, cons-noshocks, disc]:
 
 | Element | Transition | Action |
 |---------|------------|--------|
-| shocks-only | $a \rightarrow \check{m}$ | productivity shock $e$ realizes (no choice) |
+| shocks-only | $a \rightarrow \check{m}$ | shocks realize (no choice) |
 | $\mathcal{C}(\check{m} \leftrightarrow m)$ | $\check{m} \rightarrow m$ | rename |
 | cons-noshocks | $m \rightarrow \psi$ | choose $c$ |
 | disc | | apply $\beta$ |
 
-The full pipeline within a period:
+### 3.5 Connectors for Period
+
+The within-period connectors are specified above. For the between-period connector, the period ends after the disc stage (a passthrough), so the exit state is $\psi$. The shocks-only stage of the next period arrives with state $a$. Therefore, the between-period connector is $\mathcal{C}(\psi \leftrightarrow a)$, which is the identity $a_{t+1} = \psi_t$.
+
+The pipeline is:
 
 $$
 a \xrightarrow{\text{shocks-only}} \check{m} \xrightarrow{\text{cons-noshocks}} \psi \xrightarrow{\text{disc}} \text{exit}
 $$
-
-### 3.5 Connectors
-
-**Within-period connectors** are specified above: $\mathcal{C}(\check{m} \leftrightarrow m)$ renames the post-shock resources to the consumption stage's arrival state.
-
-**Between-period connector:** The period ends after the disc stage with exit state $\psi$. The next period's shocks-only stage arrives with state $a$. The between-period connector is $\mathcal{C}(\psi \leftrightarrow a)$, which is the identity $a_{t+1} = \psi_t$.
 
 ### Key Structural Notes
 
