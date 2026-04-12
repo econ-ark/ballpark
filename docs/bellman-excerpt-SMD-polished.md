@@ -79,7 +79,7 @@ Here $\bullet$ is a generic passthrough state whose type ($\psi$-type or $m$-typ
 <tr><th>Perch</th><th>Indicator</th><th>State</th><th>Value functions</th><th>Explanation</th></tr>
 <tr><td>Arrival</td><td>≺</td><td><i>a</i></td><td>v<sub>≺</sub> = 𝔼<sub>≺</sub>[v<sub>≻</sub>]</td><td>pre-shock value</td></tr>
 <tr><td>Decision(s)</td><td>∼</td><td><i>a</i></td><td>(none)</td><td>no choice</td></tr>
-<tr><td>Continuation</td><td>≻</td><td>m̌</td><td>v<sub>≻</sub></td><td>post-shock value</td></tr>
+<tr><td>Continuation</td><td>≻</td><td><img src="https://latex.codecogs.com/svg.image?\check{m}" /></td><td>v<sub>≻</sub></td><td>post-shock value</td></tr>
 </table>
 
 The arrival value function takes the expectation over the productivity shocks:
