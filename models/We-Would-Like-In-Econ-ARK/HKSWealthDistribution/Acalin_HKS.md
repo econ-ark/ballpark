@@ -1,0 +1,156 @@
+---
+jupytext:
+  text_representation:
+    extension: .md
+    format_name: myst
+    format_version: 0.13
+    jupytext_version: 1.19.1
+kernelspec:
+  display_name: Python 3 (ipykernel)
+  language: python
+  name: python3
+---
+
+# Hubmer, Krusell, and Smith (2018)
+
++++
+
+# "[A Comprehensive Quantitative Theory of the U.S. Wealth Distribution](https://economics.yale.edu/sites/default/files/files/pub/grad/working-papers/hubmerkrusellsmith_wealth2018.pdf)"
+
+- Notebook created by Julien Acalin and Ruby Zheng
+
++++
+
+### Summary
+
+This paper employs a benchmark heterogeneous-agent macroeconomic model to examine a number
+of plausible drivers of the rise in wealth inequality in the U.S. over the last forty years. 
+
+The main findings are as follows:
+* The significant drop in tax progressivity starting in the late 1970s is the most important driver of the increase in wealth inequality since then 
+* The sharp observed increases in earnings inequality and the falling labor share over the recent decades fall far short of accounting for the data 
+* Returns on assets matter to account for the dynamics of wealth inequality over the period as portfolios of households differ systematically both across and within wealth groups
+
++++
+
+### Overview 
+
+### Prior literature
+
+The paper builds on three strands of work: 
+* (i) Bewley–Aiyagari models (Aiyagari 1994, Huggett 1993, Krusell & Smith 1998) show how uninsurable risk and borrowing constraints generate precautionary saving and inequality, but they cannot explain why wealth is much more concentrated than income. 
+* (ii) Introduce wealth-dependent returns: Benhabib, Bisin & Zhu (2015) show that capital income risk generates a Pareto tail; Cagetti & De Nardi (2006) model entrepreneurship and top wealth; Stachurski & Toda (2018) prove that in the standard setup (risk-free saving, constant discount factors) the wealth distribution cannot have a heavier tail than income, so such extensions are necessary. 
+* (iii) Empirical work documents long-run U.S. inequality (Piketty & Saez 2003, Saez & Zucman 2016) and motivates a comprehensive model that combines these ingredients to match the full distribution.
+
+#### A Bewley-Huggett-Aiyagari model
+
+This paper uses a macroeconomic general-equilibrium model with heterogeneous agents—the Bewley-Huggett-Aiyagari setting—to examine more closely a set of candidate explanations for the increase in U.S. wealth inequality over the last forty or so years. The method the authors follow is thus to: 
+* (i) independently measure changes in the environment, such as in the tax code, the earnings processes facing individuals, and their portfolio returns; 
+* (ii) feed these into the model assuming that the economy is in a steady state in 1967; 
+* (iii) examine the resulting wealth distribution path; and 
+* (iv) conduct counterfactuals.
+
+
+#### Portfolio heterogeneity
+
+In this paper, the authors depart from the benchmark model by introducing portfolio heterogeneity across and within wealth groups. This is motivated by the fact that register data in Norway and Sweden (see Fagereng et al. (2015) and Bach et al. (2015)) have revealed, first, an average return that is increasing in the household’s overall level of wealth; and, second, an idiosyncratic return component (because different households hold different types of assets) whose variance is also increasing in wealth.
+
+One major finding is that, once portfolio heterogeneity, calibrated to the findings in Bach et al. (2015), is incorporated into the model, the authors replicate wealth inequality of the magnitude we see in the data. Given the role of portfolio heterogeneity and of asset-price movements, it is important to think more about the origins of these observations. This paper is an important step forward in noting just how important portfolios and asset prices are for inequality.
+
++++
+
+### The model
+
+
+#### Households
+
+Utility is given by:
+$u(c)=\frac{c^{1-\gamma}}{1-\gamma}$
+
+The objective function is:
+$\max _{\left(c_{t}\right)_{t=0}^{\infty}}\left\{u\left(c_{0}\right)+\mathbb{E}_{0}\left[\sum_{t=1}^{\infty} \prod_{s=0}^{t-1} \beta_{s} u\left(c_{t}\right)\right]\right\}$
+
+Labor supply is exogenous.
+
+Asset markets are incomplete, consumers cannot fully insure against idiosyncratic shocks. In the
+model, the only endogenous choice is the overall level of savings $a_t$. The gross return on it is:
+$1+\underline{r}_{t}+r_{t}^{X}\left(a_{t}\right)+\sigma^{X}\left(a_{t}\right) \eta_{t}$
+
+where $\underline{r}_{t}$ is an aggregate return component, $r_{t}^{X}$ and $\sigma^{X}$ are functions that control mean and standard deviation of excess returns, and $η_t$ is an i.i.d. standard normal idiosyncratic shock. The excess return schedule should be viewed as the reduced form of an implicit portfolio choice model, where the optimal choice is allowed to depend on the overall wealth level, albeit not on other persistent state variables.
+
+
+**The decision problem of the consumer can be stated in recursive form as follows:**
+
+$\begin{aligned} V_{t}\left(x_{t}, p_{t}, \beta_{t}\right) &=\max _{a_{t+1} \geq \underline{a}}\left\{u\left(x_{t}-a_{t+1}\right)+\beta_{t} \mathbb{E}\left[V_{t+1}\left(x_{t+1}, p_{t+1}, \beta_{t+1}\right) | p_{t}, \beta_{t}\right]\right\} \\ \text { subject to } \\ x_{t+1} &=a_{t+1}+y_{t+1}-\tau_{t+1}\left(y_{t+1}\right)+\left(1-\tilde{\tau}_{t+1}\right) \tilde{y}_{t+1}+T_{t+1} \\ y_{t+1} &=\left(r_{t+1}+r_{t+1}^{X}\left(a_{t+1}\right)\right) a_{t+1}+w_{t+1} l_{t+1}\left(p_{t+1}, \nu_{t+1}\right) \\ \tilde{y}_{t+1} &=\sigma^{X}\left(a_{t+1}\right) \eta_{t+1} a_{t+1} \end{aligned}$
+
+
+Given cash-on-hand $x_t$ (all resources available in period $t$), the optimal savings decision and the resulting value function depend solely on the persistent component of the earnings process $p_t$ and the current discount factor $β_t$. Conditional on $(p_t, β_t)$, the expectation is taken over $(p_{t+1}, β_{t+1})$ as well as the transitory shocks to earnings $ν_{t+1}$ and the return on capital $η_{t+1}$. Ordinary gross income $y_t$ is subject
+to a non-linear income tax $τ_t(·)$, while there is a flat (capital gains) tax $\tilde{τ}_t$ on the mean-zero idiosyncratic return component. Each consumer receives a uniform lump-sum transfer $T_t$.
+
+
+
+#### Firms
+
+Firms are perfectly competitive and can be described by an aggregate constant returns to scale production
+function.
+
+
+#### Government
+
+The government redistributes aggregate income by means of a uniform lump-sum payment, which
+amounts to a constant fraction $λ ∈ [0, 1]$ of aggregate tax revenues. The remainder is spent in a way such
+that marginal utilities of agents are not affected.
+
+
+
++++
+
+### Results
+
+
+#### Wealth inequality
+
+How much does each of the various sources of heterogeneity contribute to wealth inequality in the benchmark economy? To answer this question, the authors start from the benchmark model, shut down one channel at a time, and report on the general equilibrium differences in Table 2.
+
+
++++
+
+<center><img src="Table2.png" style="height:250px"></center>
+
++++
+
+Overall, discount factor heterogeneity does contribute positively to wealth inequality, but it is not the
+most important factor. Instead, differences in returns are crucial. Line 7 shuts down return differences across wealth levels, line 8 return risk, while 6 combines the two modifications. Overall, differences in mean returns across wealth levels are far more important, though at the very top idiosyncratic return risk matters equally.
+
+A striking feature of Table 2 is the fundamental importance of tax progressivity in keeping wealth inequality in check. Line 5 refers to a counterfactual that replaces the progressive income tax with a flat tax, such that aggregate tax revenues relative to output are unchanged. Wealth inequality is exploding. For example, the top 1% share increases from 27.4% to 89.2%.
+
+
++++
+
+
+#### Dynamics
+
+Figure 9 displays the evolution of top wealth shares in the model (solid blue line) compared to the data as measured by Saez & Zucman (2016) using the capitalization method (SZ). In addition, whenever possible the graphs are augmented by survey estimates from the SCF (dashed yellow lines).
+
+
++++
+
+<center><img src="Figure9.png" style="height:450px"></center>
+
++++
+
+### Conclusion
+
+Declining tax progressivity, together with increasing earnings risk and higher earnings inequality amongst top earnings, can account for the rise in the capital-to-net-output ratio and at least some of the decline in the (gross) labor share when the elasticity of substitution between capital and labor is larger than one as in Karabarbounis & Neiman (2014b). This model thus provides an alternative to the central mechanism—declining growth rates—to which Piketty (2014) draws attention in attempting to connect these macroeconomic trends to rising inequality.
+
+Moreover, the key mechanism accounting for dynamics lies in heterogeneous portfolios across and within wealth groups, along with systematic return movements in the data.
+
++++
+
+### Subsequent literature
+
+Work citing HKS (2018) has moved in three directions:
+
+* (i) Policy analysis: The same type of wealth heterogeneity is used to study how monetary policy and tax reform affect inequality—e.g. Lenza & Slačálek (2020, 2024) on monetary policy and inequality in the euro area, and Guner et al. (2021) on income tax reform in Spain. 
+* (ii) Empirical discipline: Micro evidence on saving and returns by wealth (e.g. Fagereng, Holm, Moll & Natvik 2019 on capital gains across the wealth distribution) is used to validate and refine the mechanisms that generate the right tail. 
+* (iii) New channels and theory: Markups and market power (Boar & Midrigan 2019), culture and portfolios (Fleck & Monninger 2020), and deeper theory for income-fluctuation problems and state-dependent discounting (Ma, Stachurski & Toda 2019; Stachurski & Zhang 2019) extend the framework. Together, this suggests the field is heading toward policy-relevant, empirically disciplined models that integrate multiple mechanisms.
