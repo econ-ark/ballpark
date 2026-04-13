@@ -1,0 +1,10 @@
+Matsya session name for this repo:
+emma-ballpark-topics2026
+
+Standing instruction:
+Whenever you run `matsya` for this ballpark repo, append:
+--session emma-ballpark-topics2026
+
+Examples:
+matsya "What is Dolo Plus?" --session emma-ballpark-topics2026
+matsya "Translate this Bellman problem into dolo-plus YAML." --session emma-ballpark-topics2026
