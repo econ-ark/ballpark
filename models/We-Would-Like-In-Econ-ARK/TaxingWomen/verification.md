@@ -1,9 +1,9 @@
 # Verification (short)
 
-**Accepted:** Perch structure, EGM recipe, envelope condition, Markov forward mover, prices-as-parameters treatment — all match the paper.
+**Accepted:** Two-stage branching decomposition (labor-branch → cons-savings), DAG wiring with separate work/home continuation legs, EGM-amenable structure exploiting additive separability — all faithful to GKV's discrete-continuous setup.
 
-**Edited:** Added explicit (1+g) growth factor note in the transition and the β̃ < 1 restriction, both absent from the original notebook summary.
+**Edited:** Corrected preferences from Cobb-Douglas to additively separable log-linear (the paper's actual functional form); enriched the Bellman markdown with the log-linear tax function (Table 2 coefficients), calibrated parameters (Table 3), binary human capital law of motion χ(l) = 1{l > 0}, and children time/goods cost schedules — all absent from the initial excerpt and needed by Matsya to produce a correct YAML.
 
-**Rejected:** Nothing outright. Model B as "same stage, expanded controls" is faithful to the paper.
+**Rejected:** Matsya's initial ShockRealization stage — GKV types (z, q) are permanent, not period-by-period Markov draws, so a within-period shock stage is fictitious.
 
 **Matsya session:** `topics2026-TaxingWomen`
