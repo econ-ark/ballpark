@@ -64,6 +64,87 @@ If the formalization layer has stabilized and you have working code, add a `repl
 
 ---
 
+## Machine-readable metadata (for AI indexing)
+
+Ballpark entries are designed to be discovered and cited by both humans and AI agents. The `index.md` frontmatter and an optional `AGENTS.md` provide the structured signals that make this work.
+
+### Required frontmatter fields on `index.md`
+
+```yaml
+---
+title: "<Paper title> — Ballpark Entry"
+schema_type: ScholarlyArticle              # schema.org type; Dataset also acceptable
+about:
+  doi: 10.XXXX/YYYY                        # paper DOI
+  authors: [LastName, LastName, LastName]
+  year: 2019
+  journal: American Economic Review
+keywords: [kebab-case, tags]               # free-form topical tags
+econ_ark_topic:                            # controlled vocabulary — pick from:
+  - HA-macro                               #   HA-macro, lifecycle, wealth-distribution,
+  - wealth-distribution                    #   monetary, fiscal-policy, optimal-taxation,
+  - lifecycle                              #   housing, labor, business-cycles,
+                                           #   computational-methods, open-economy,
+                                           #   liquidity-trap, demographics,
+                                           #   financial-crisis, inequality
+jel: [D31, E21, J62]                       # JEL codes (array)
+difficulty: stretch                        # good-first-ballpark | stretch | research-grade
+status: formalized                         # slideware | formalized | remark-ready | promoted
+has_formalization_layer: true              # true iff the formalization-layer files exist
+ballpark_contributor:
+  name: "<name>"
+  orcid: "0000-0000-0000-0000"             # optional but strongly encouraged
+updated_by:                                # one entry per material revision; most recent last
+  - name: "<name>"
+    orcid: "..."
+    date: 2026-01-27
+---
+```
+
+MyST renders this frontmatter as JSON-LD on the published page, which Google Scholar, LLM training pipelines, and retrieval agents recognize. The same frontmatter powers the browsable catalog's filter UI (one source of truth).
+
+### Optional frontmatter extensions (recommended)
+
+```yaml
+doi: 10.5281/zenodo.XXXXXXX                # Zenodo DOI for this ballpark entry itself
+superseded_by: https://github.com/econ-ark/REMARK/...   # once promoted
+requires: [CRRA, EGM, bequest-utility]     # model features — free-form tags
+```
+
+### `AGENTS.md` (optional, recommended for items with a formalization layer)
+
+A short structured brief aimed at coding agents (Claude Code, Cursor, etc.) that a user's local session will read when the directory is opened. Distinct from the human-readable `index.md`. See the [Benhabib_et_al_2019 worked example](models/We-Would-Like-In-Econ-ARK/Benhabib_et_al_2019/AGENTS.md).
+
+Purpose:
+
+- Point agents at the **right file to read first** (the SMD-polished excerpt, not the paper PDF).
+- Surface the **Matsya session name** so new calls continue the existing thread.
+- List **known workarounds** / unresolved features so agents don't re-discover them.
+- Suggest **common next tasks** so agents proposing work have a grounded starting point.
+
+### Repo-level artifacts (maintained centrally, not per item)
+
+- [`llms.txt`](llms.txt) at the repo root — a plain-text sitemap for LLMs following the [llmstxt.org](https://llmstxt.org) convention. Update this file when you add or rename an item.
+- `items.json` (auto-generated from frontmatter during the MyST build) — machine-readable catalog; one object per item with the full frontmatter flattened.
+- `sitemap.xml` and `atom.xml` — emitted by the MyST build.
+
+### Content-form conventions for LLM legibility
+
+- **Every committed `.ipynb` is also exported to `.md`** at build time. Reviewers and LLMs read the `.md`; the `.ipynb` remains authoritative.
+- **Paper ships as `.mmd` alongside `.pdf`** where license permits (Pandoc-converted markdown — much easier for Cursor / Claude / Matsya to ingest than PDF).
+- **Every equation carries an `:alt:` attribute** describing it in prose, for models that can't render LaTeX but can read HTML.
+- **Every figure has alt-text** (WCAG and LLM indexability are the same action).
+
+### Model structure as first-class data (stretch)
+
+For items with a committed `dolo-plus-draft.yaml`, a generated `model.json` extracts the stage(s) into a programmatic form. This lets retrieval agents answer structural queries like *"find all ballpark items with an EGM-compatible interior stage"* or *"which items have Markov-chain employment states."* The extractor is maintained centrally; contributors do not hand-write `model.json`.
+
+### AI provenance (optional)
+
+If AI tools materially shaped the formalization layer, add `ai-provenance.md` documenting which tools played which role and linking the session artifacts. This gives both credit and traceability.
+
+---
+
 ## What does **not** belong in a ballpark item
 
 - `_build/` — gitignored.

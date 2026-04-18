@@ -1,0 +1,53 @@
+# Econ-ARK Ballpark
+
+> A curated catalog of economics papers we would welcome into the Econ-ARK
+> ecosystem as replications ([REMARK](https://github.com/econ-ark/REMARK))
+> or demonstrations ([DemARK](https://github.com/econ-ark/DemARK)). Each
+> entry provides a paper's recursive-problem formulation in explicit form,
+> and where available a modular dynamic-programming (dolo-plus) draft
+> suitable for AI-assisted formalization.
+
+Target audience: graduate students, course instructors, structural-macro
+researchers, and agent systems doing scholarly retrieval. Ballpark entries
+are designed to be the natural starting point for turning a published paper
+into a reproducible, citable Econ-ARK contribution.
+
+## Workflow documents
+
+- [CONTRIBUTING.md](CONTRIBUTING.md): Canonical structure for a ballpark entry — exposition, formalization, and asset layers, plus machine-readable metadata.
+- [README.md](README.md): Project framing and the promotion path from ballpark → REMARK / DemARK → HARK tool.
+- [models.md](models.md): Pointer into the catalog.
+
+## Items
+
+Each item lives at `models/We-Would-Like-In-Econ-ARK/<citekey>/index.md`. Status values: `slideware` (paper summary only), `formalized` (explicit recursive model + optional dolo-plus draft), `remark-ready`, `promoted`.
+
+- [Benhabib_et_al_2019](models/We-Would-Like-In-Econ-ARK/Benhabib_et_al_2019/): Lifecycle wealth distribution with heterogeneous returns and warm-glow bequests. Topic: wealth-distribution, lifecycle. Status: formalized.
+- [AHLifeCycleExpenditure](models/We-Would-Like-In-Econ-ARK/AHLifeCycleExpenditure/): Lifecycle expenditure profiles. Topic: lifecycle. Status: slideware.
+- [ARMonetaryPolicyHABC](models/We-Would-Like-In-Econ-ARK/ARMonetaryPolicyHABC/): Algan–Ragot heterogeneous-agent monetary policy with money in utility. Topic: HA-macro, monetary. Status: slideware.
+- [clMonetary](models/We-Would-Like-In-Econ-ARK/clMonetary/): Monetary-policy model. Topic: monetary. Status: slideware.
+- [Fujiwara_Teranishi](models/We-Would-Like-In-Econ-ARK/Fujiwara_Teranishi/): Monetary policy with heterogeneous agents. Topic: HA-macro, monetary. Status: slideware.
+- [GKKOCWealthTax](models/We-Would-Like-In-Econ-ARK/GKKOCWealthTax/): Optimal wealth taxation with heterogeneous agents. Topic: optimal-taxation, wealth-distribution. Status: slideware.
+- [GKNMonetaryPolicyHA](models/We-Would-Like-In-Econ-ARK/GKNMonetaryPolicyHA/): Gornemann–Kuester–Nakajima monetary policy with heterogeneous agents. Topic: HA-macro, monetary. Status: slideware.
+- [Guerrieri_Lorenzoni2017](models/We-Would-Like-In-Econ-ARK/Guerrieri_Lorenzoni2017/): Credit crises, precautionary savings, and the liquidity trap. Topic: HA-macro, liquidity-trap. Status: slideware.
+- [HKMOHousingChannelMP](models/We-Would-Like-In-Econ-ARK/HKMOHousingChannelMP/): Housing channel of monetary policy with heterogeneous agents. Topic: HA-macro, housing, monetary. Status: slideware.
+- [HKSWealthDistribution](models/We-Would-Like-In-Econ-ARK/HKSWealthDistribution/): Hubmer–Krusell–Smith quantitative theory of the U.S. wealth distribution. Topic: wealth-distribution, HA-macro. Status: slideware.
+- [KMVBoomBust](models/We-Would-Like-In-Econ-ARK/KMVBoomBust/): Boom-bust dynamics. Topic: HA-macro, business-cycles. Status: slideware.
+- [Kumhof_et_al_2015](models/We-Would-Like-In-Econ-ARK/Kumhof_et_al_2015/): Inequality, leverage, and crises. Topic: inequality, financial-crisis. Status: slideware.
+- [MK3TagTax](models/We-Would-Like-In-Econ-ARK/MK3TagTax/): Optimal tagged taxation. Topic: optimal-taxation. Status: slideware.
+- [OpenHA](models/We-Would-Like-In-Econ-ARK/OpenHA/): Open-economy heterogeneous-agent model. Topic: HA-macro, open-economy. Status: slideware.
+- [OptimalTaxHeight](models/We-Would-Like-In-Econ-ARK/OptimalTaxHeight/): Optimal taxation with height as a tag. Topic: optimal-taxation. Status: slideware.
+- [OptimumDebt](models/We-Would-Like-In-Econ-ARK/OptimumDebt/): Aiyagari–McGrattan optimum quantity of public debt. Topic: HA-macro, fiscal-policy. Status: slideware.
+- [PopAgingMPtransmission](models/We-Would-Like-In-Econ-ARK/PopAgingMPtransmission/): Population aging and monetary-policy transmission. Topic: demographics, monetary. Status: slideware.
+- [Ravn_Sterk_2021](models/We-Would-Like-In-Econ-ARK/Ravn_Sterk_2021/): Macroeconomic fluctuations with heterogeneous agents. Topic: HA-macro. Status: slideware.
+- [Reiter_2009](models/We-Would-Like-In-Econ-ARK/Reiter_2009/): Solving heterogeneous-agent models by projection and perturbation. Topic: computational-methods. Status: slideware.
+- [SSJ_2021](models/We-Would-Like-In-Econ-ARK/SSJ_2021/): Sequence-space Jacobian methods for heterogeneous-agent models. Topic: HA-macro, computational-methods. Status: slideware.
+- [TaxingWomen](models/We-Would-Like-In-Econ-ARK/TaxingWomen/): Guner–Kaygusuz–Ventura taxation and female labor supply. Topic: lifecycle, optimal-taxation, labor. Status: slideware.
+
+## Already in Econ-ARK
+
+- [tools/Already-Partway-In-Econ-ARK](tools/Already-Partway-In-Econ-ARK/): Papers whose methods are partly implemented in HARK.
+
+## Optional
+
+- [models/We-Would-Like-In-Econ-ARK.ipynb](models/We-Would-Like-In-Econ-ARK.ipynb): Legacy notebook surveying housing-and-heterogeneity papers.
