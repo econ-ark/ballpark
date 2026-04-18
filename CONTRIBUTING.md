@@ -9,9 +9,10 @@ This file specifies what a ballpark item should contain and how to submit one. F
 ## Before you start
 
 1. **Is the paper in scope?** Ballpark items are papers that are either (a) serious structural models producing interesting quantitative results, or (b) strong empirical evidence that begs for a model. See [README.md](README.md) for the two tracks (`models/` vs `empirical/`).
-2. **Is it already here?** Check `models/We-Would-Like-In-Econ-ARK/` for an existing subdirectory under the paper's citekey. If one exists, open a PR improving it rather than creating a parallel entry.
-3. **Is it listed but not yet claimed?** If there is a subdirectory but it is thin (legacy "slideware" — one notebook of markdown + figures), your contribution can be to refactor it to the canonical structure below.
-4. **None of the above?** Open an issue naming the paper, the DOI, and the track (`models` / `empirical`), and we will confirm before you invest effort.
+2. **Has the paper been cited enough to matter?** The paper must have **at least 3 citations in Google Scholar** to be eligible as a ballpark candidate. This is a hard gate: it filters for papers whose ideas have begun to circulate in the literature, without excluding recent papers that have not yet accumulated many citations. Paste the Google Scholar citation count (as of submission date) into the submission PR description.
+3. **Is it already here?** Check `models/We-Would-Like-In-Econ-ARK/` for an existing subdirectory under the paper's citekey. If one exists, open a PR improving it rather than creating a parallel entry.
+4. **Is it listed but not yet claimed?** If there is a subdirectory but it is thin (legacy "slideware" — one notebook of markdown + figures), your contribution can be to refactor it to the canonical structure below.
+5. **None of the above?** Open an issue naming the paper, the DOI, and the track (`models` / `empirical`), and we will confirm before you invest effort.
 
 ---
 
@@ -273,7 +274,7 @@ Qualifying checklist — everything in Draft, plus:
 
 - [ ] `<citekey>_prior-literature.ipynb` situating the paper in its foundational literature, with `{cite:t}` citations resolving from `references.bib`. **Cite at least 3 and no more than 6 prior papers** — enough to establish context, few enough that the notebook stays focused.
 - [ ] `<citekey>_summary.ipynb` with (a) a non-technical motivation + findings overview, and (b) a **"The Model"** section stating the recursive formulation **explicitly**: no `u(c)` placeholders, explicit CRRA or EZ kernel, explicit bequest function (if any), explicit transitions, explicit shock distributions, explicit constraint set.
-- [ ] `<citekey>_subsequent-literature.ipynb` (may note "no subsequent literature found" when applicable) + `subsequent-literature.bib`.
+- [ ] `<citekey>_subsequent-literature.ipynb` + `subsequent-literature.bib`. **No hard citation count is required**, since recent papers may have few subsequent citations; the notebook should cite whatever subsequent work exists (typically 0–6 papers) and note explicitly if the paper is too recent to have accumulated much. (Paper eligibility itself is gated by the Google-Scholar-≥3 rule in "Before you start.")
 - [ ] `self.bib` with the paper's own bib entry.
 - [ ] `<citekey>.mmd` (Pandoc-converted markdown of the paper) unless license forbids — this is what Cursor / Claude / Matsya read most effectively.
 - [ ] `myst.yml` configured; `myst build` completes cleanly.
