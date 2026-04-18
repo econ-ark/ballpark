@@ -122,6 +122,71 @@ Purpose:
 - List **known workarounds** / unresolved features so agents don't re-discover them.
 - Suggest **common next tasks** so agents proposing work have a grounded starting point.
 
+#### How to produce your `AGENTS.md`
+
+Copy the template below into `AGENTS.md` in your item directory and fill in the six sections. Every section has a grounded source in files you have already produced — you should not be inventing content.
+
+| Section | Where its content comes from |
+|---|---|
+| **Paper** | `<citekey>_intro.ipynb` — citation, DOI, one-sentence pitch of why the paper is in-ballpark. Copy verbatim; this is the one place duplication with `index.md` is intentional, because the agent may open `AGENTS.md` first. |
+| **If a user asks to work on this item** | `<citekey>_summary.ipynb` (section "The Model") is the authoritative recursive statement. `<citekey>.mmd` is the AI-friendly paper source. If your formalization layer is present, point at `bellman-excerpt-SMD-polished.md` as "read first" instead of the summary notebook. |
+| **Formalization status** | Tick which layer files you committed: `bellman-excerpt.md`, `bellman-excerpt-SMD-polished.md`, `dolo-plus-draft.yaml`, `verification.md`, `matsya-session.txt`. Be honest about what is not yet present. |
+| **Known model features requiring attention** | Pull from `verification.md` (the items you rejected or edited) and from the inline `# workaround:` / `# unresolved:` comments in `dolo-plus-draft.yaml`. This is the single most useful section for an agent — it is the list of things it should not re-discover. If the formalization layer is absent, list the model features you already know will be awkward (state-contingent shocks, mechanical deductions, non-standard normalizations, etc.). |
+| **Common next tasks** | List what you intentionally left undone. Examples from real items: *"add terminal-period stage to YAML"*, *"formalize the dynasty wrapper"*, *"add age-varying wage overrides"*. Cite the specific file or line a next-task should touch. Do **not** list tasks you would have liked to do but have no grounding for. |
+| **Workflow reminders** | Mostly boilerplate. Keep the Matsya session-naming convention (`topics2026-<slug>` for coursework), the paper-verification reminder, and the workaround-comment convention. Delete anything that does not apply to your item. |
+
+**Template** (copy and fill in):
+
+````markdown
+# Ballpark entry: <Authors> (<Year>)
+
+> Structured brief for coding agents (Claude Code, Cursor, etc.). Human-facing content lives in [`index.md`](index.md).
+
+## Paper
+
+- **Citation:** <Authors (Year), "Title," Journal vol(issue), pages>.
+- **DOI:** [<doi>](https://doi.org/<doi>)
+- **Core model:** <one-sentence description: lifecycle / HA / OLG / ..., key state and control, what's stochastic, what closes the problem>.
+- **Why in-ballpark:** <one sentence: what makes this paper interesting for Econ-ARK>.
+
+## If a user asks to work on this item
+
+1. **Read first:** <file> — <why this is authoritative>.
+2. **Paper source for AI ingestion:** `<citekey>.mmd` (Pandoc-converted). Prefer this over `<citekey>.pdf`.
+
+## Formalization status
+
+- Explicit recursive formulation: <present in `_summary.ipynb` | not yet stated>.
+- `bellman-excerpt.md`: <committed | not committed>.
+- `dolo-plus-draft.yaml`: <committed | not committed>.
+- `verification.md`: <committed | not committed>.
+- `matsya-session.txt`: <committed | not committed>.
+
+## Known model features requiring attention in a formalization pass
+
+- <feature 1>: <what's awkward and why; how you worked around it or plan to>.
+- <feature 2>: ...
+- <feature 3>: ...
+
+## Common next tasks (grounded)
+
+1. <task 1, tied to a specific file or section>.
+2. <task 2>.
+3. <task 3>.
+
+## Workflow reminders
+
+- **Matsya session:** use `topics2026-<slug>` for new work on this item.
+- **Paper verification:** Matsya output must be checked against the paper PDF (or `.mmd`), not only against the ballpark `_summary.ipynb`.
+- **When flagging workarounds in YAML:** use inline `# workaround:` or `# unresolved:` comments rather than silently fudging non-canonical syntax.
+````
+
+**AI-assisted drafting (recommended).** Once your formalization layer is present, ask a coding agent (Claude Code, Cursor) to draft `AGENTS.md` from your item's files:
+
+> Read `index.md`, `<citekey>_intro.ipynb`, `<citekey>_summary.ipynb`, `bellman-excerpt-SMD-polished.md`, `dolo-plus-draft.yaml`, and `verification.md` in this directory. Draft an `AGENTS.md` following the template in the repo-root `CONTRIBUTING.md`. Do not invent content — if a section lacks a grounded source in these files, write **TBD** for that section and explain what you would need.
+
+**Then review carefully.** Agents occasionally invent plausible-sounding "next tasks" or "workarounds" that are not grounded in your verification notes. Rewrite anything you cannot trace to a specific file. The point of `AGENTS.md` is that a later agent can trust it; that trust is wasted if you pass through hallucinations.
+
 ### Repo-level artifacts (maintained centrally, not per item)
 
 - [`llms.txt`](llms.txt) at the repo root — a plain-text sitemap for LLMs following the [llmstxt.org](https://llmstxt.org) convention. Update this file when you add or rename an item.
