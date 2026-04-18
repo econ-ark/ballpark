@@ -89,7 +89,7 @@ econ_ark_topic:                            # controlled vocabulary — pick from
                                            #   financial-crisis, inequality
 jel: [D31, E21, J62]                       # JEL codes (array)
 difficulty: stretch                        # good-first-ballpark | stretch | research-grade
-tier: T3                                   # T1 (Entry) | T2 (Primer) | T3 (Formalized) | T4 (Candidate) — see "Ballpark tiers" below
+tier: formalized                           # draft | primer | formalized — see "Ballpark tiers" below
 has_formalization_layer: true              # true iff the formalization-layer files exist
 ballpark_contributor:
   name: "<name>"
@@ -237,36 +237,39 @@ When you revise an existing item, add (do not overwrite) an **Updated by** line.
 
 ## Ballpark tiers
 
-Ballpark items progress through four tiers of increasing completeness — analogous to REMARK's standard / published distinction, but with more granularity because the ballpark catalog is a *farm system* rather than a terminal repository. Each tier is a **plateau**: contributors can stop at any tier indefinitely, and each tier has concrete, reviewable qualifying criteria.
+Ballpark items progress through three tiers of increasing formalization completeness — analogous in spirit to REMARK's standard/published distinction but scoped entirely to *pre-implementation* work. The ballpark's job is to land a well-specified model ready for a coder; the implementation step (working `reproduce.sh`, `CITATION.cff`, `binder/environment.yml`) happens in [REMARK](https://github.com/econ-ark/REMARK) / [DemARK](https://github.com/econ-ark/DemARK), not here.
 
-| Tier | Name | One-line characterization |
-|------|------|----------------------------|
-| **T1** | **Entry** | Paper identified, claimed, and cataloged. |
-| **T2** | **Primer** | A reader can understand the paper and its context without reading the paper. |
-| **T3** | **Formalized** | The model is stated in modular-DDSL form, with a dolo-plus YAML draft. |
-| **T4** | **Candidate** | Working replication code; eligible for promotion to REMARK / DemARK. |
+Each tier is a **plateau** with a concrete, reviewable qualifying checklist. Contributors can stop at any tier indefinitely.
 
-(A pre-tier-1 state, **T0 — Wanted**, is an open issue labeled `wanted-ballpark` with bibliographic info. It does not have a directory.)
+| Tier | One-line characterization | Typical effort from the previous tier (AI-assisted, PhD-course-assignment units) |
+|------|---------------------------|----------------------------------------------------------------------------------|
+| **Draft** | Paper identified, claimed, and minimally cataloged. | **≈ 1 weekly assignment** (from zero / from a `wanted-ballpark` issue). |
+| **Primer** | A reader can understand the paper and its context without reading the paper. | **≤ 2 weekly assignments** (from Draft). |
+| **Formalized** | The model is stated in modular-DDSL form, with a dolo-plus YAML draft. | **≤ 2 weekly assignments** (from Primer). |
 
-### T1 — Entry
+Each name presupposes the tier below it: a *primer* is a completed introductory treatment of what a *draft* only sketches; a *formalized* specification is the rigorous re-expression of what the *primer* states informally. Rank order is unambiguous from the names alone.
+
+(A pre-tier state, **Wanted**, is an open issue labeled `wanted-ballpark` with bibliographic info. It has no directory.)
+
+### Draft
 
 *"I am claiming this paper and committing to minimal cataloging."*
 
 Qualifying checklist:
 
 - [ ] Item directory exists under `models/We-Would-Like-In-Econ-ARK/<citekey>/` (or `empirical/<citekey>/`).
-- [ ] `index.md` with required frontmatter (including `tier: T1`).
+- [ ] `index.md` with required frontmatter (including `tier: draft`).
 - [ ] `<citekey>_intro.ipynb` with citation, DOI link, **Original ballpark author + date**, and a 3-sentence pitch of why the paper is in-ballpark for Econ-ARK.
-- [ ] `references.bib` (may be empty at T1).
+- [ ] `references.bib` (may be empty at Draft).
 - [ ] Paper committed as `<citekey>.pdf` OR replaced by a DOI pointer with a license note in `_intro.ipynb`.
 
-T1 is the minimum mergeable contribution. It converts a `wanted-ballpark` issue into a claimed directory.
+Draft is the minimum mergeable contribution. It converts a `wanted-ballpark` issue into a claimed directory.
 
-### T2 — Primer
+### Primer
 
 *"A graduate student can orient themselves around this paper without reading it."*
 
-Qualifying checklist — everything in T1, plus:
+Qualifying checklist — everything in Draft, plus:
 
 - [ ] `<citekey>_prior-literature.ipynb` situating the paper in its foundational literature, with `{cite:t}` citations resolving from `references.bib`.
 - [ ] `<citekey>_summary.ipynb` with (a) a non-technical motivation + findings overview, and (b) a **"The Model"** section stating the recursive formulation **explicitly**: no `u(c)` placeholders, explicit CRRA or EZ kernel, explicit bequest function (if any), explicit transitions, explicit shock distributions, explicit constraint set.
@@ -276,59 +279,55 @@ Qualifying checklist — everything in T1, plus:
 - [ ] `myst.yml` configured; `myst build` completes cleanly.
 - [ ] `index.md` `{include}`s all four exposition notebooks in order.
 
-T2 is the current aspirational target for the typical legacy-slideware refactor. [`Benhabib_et_al_2019`](models/We-Would-Like-In-Econ-ARK/Benhabib_et_al_2019/) is the reference instance of T2.
+Primer is the current aspirational target for the typical legacy-slideware refactor. [`Benhabib_et_al_2019`](models/We-Would-Like-In-Econ-ARK/Benhabib_et_al_2019/) is the reference instance of this tier.
 
-### T3 — Formalized
+### Formalized
 
-*"The model has been translated into a modular-DP specification suitable for coding-agent implementation."*
+*"The model has been translated into a modular-DP specification ready for a coder."*
 
-Qualifying checklist — everything in T2, plus:
+Qualifying checklist — everything in Primer, plus:
 
 - [ ] `bellman-excerpt.md` — standalone modular-DDSL Bellman statement (symbol table, timing, perch decomposition, stage operator).
 - [ ] `bellman-excerpt-SMD-polished.md` — post-Matsya SMD-aligned revision with perch table and EGM channel discussion.
 - [ ] `dolo-plus-draft.yaml` — one-stage YAML (interior period sufficient); all unresolved features flagged with inline `# workaround:` or `# unresolved:` comments.
 - [ ] `verification.md` — one paragraph stating what was accepted / edited / rejected from Matsya's output, compared against the published paper (not only the `_summary.ipynb`).
-- [ ] `matsya-session.txt` — the `--session` string used, if AI-assisted; or `matsya-session.txt` containing `N/A — hand-written` otherwise.
-- [ ] **`AGENTS.md` — required at T3.** See the section above for how to produce it.
+- [ ] `matsya-session.txt` — the `--session` string used, if AI-assisted; or a file containing `N/A — hand-written` otherwise.
+- [ ] **`AGENTS.md` — required at Formalized.** See the section above for how to produce it.
 
-T3 is the course-project tier: achievable in one semester by a student who has completed the [course workflow](https://github.com/llorracc/workspace-course-topics/blob/main/assignments/matsya-ballpark-dolo-plus-draft.md).
+Formalized is the ballpark's top tier. A *Formalized* item is ready to be picked up by a coder (human or agent) and promoted to REMARK or DemARK — the implementation work happens there, not here.
 
-### T4 — Candidate
+### Beyond Formalized: promotion out of the ballpark
 
-*"Working code; ready to be promoted to REMARK."*
+Once a Formalized item has working code reproducing paper results, it is eligible for promotion to [REMARK](https://github.com/econ-ark/REMARK) (for substantial replications) or [DemARK](https://github.com/econ-ark/DemARK) (for demonstrations). REMARK itself has a tiering (*standard* vs. *published*-with-DOI); those criteria are documented at the REMARK repo and are not this repository's concern.
 
-Qualifying checklist — everything in T3, plus:
+When an item is promoted, add a **Superseded by** pointer in `_intro.ipynb` rather than deleting the ballpark entry — the entry retains historical and pedagogical interest.
 
-- [ ] `replication/` subdirectory with:
-  - [ ] `reproduce.sh` that reproduces at least one paper result end-to-end from a clean clone.
-  - [ ] `CITATION.cff` following the [Citation File Format](https://citation-file-format.github.io/).
-  - [ ] `binder/environment.yml` pinning dependencies.
-- [ ] `dolo-plus-draft.yaml` promoted to a validated dolo-plus stage — **no `# unresolved:` comments remain**; `# workaround:` comments may persist but should be documented in `verification.md`.
-- [ ] `ai-provenance.md` (recommended) documenting which AI tools were used in code generation.
-
-T4 items are eligible for **promotion** to [REMARK](https://github.com/econ-ark/REMARK) or [DemARK](https://github.com/econ-ark/DemARK) per the criteria in those repos. When promoted, add a **Superseded by** pointer to `_intro.ipynb` rather than deleting the ballpark entry.
-
-### Promotion mechanics
+### Promotion mechanics within the ballpark
 
 - Each tier is a plateau; indefinite residence is fine.
 - A **promotion PR** adds the next tier's files and updates `tier:` in the frontmatter.
-- PR title pattern: `Promote <citekey> to T2 (Primer)` / `Promote <citekey> to T3 (Formalized)` / `Promote <citekey> to T4 (Candidate)`.
+- PR title pattern: `Promote <citekey> to Primer` / `Promote <citekey> to Formalized`.
 - The PR body quotes the qualifying checklist for the target tier and ticks each box with a file-line citation.
-- **Tier regression** (e.g. T3 → T2) is allowed when an item's formalization is found to be incorrect and is being withdrawn for revision; it should be rare and the PR must explain the defect.
+- **Tier regression** (e.g. Formalized → Primer) is allowed when an item's formalization is found to be incorrect and is being withdrawn for revision; it should be rare and the PR must explain the defect.
 
 ### Badges
 
-Each item's rendered page carries a tier badge (`T1 Entry` / `T2 Primer` / `T3 Formalized` / `T4 Candidate`) at the top. Catalog cards show the badge so visitors can filter by tier (e.g. *"show me all T2 items that need promotion to T3"* — a natural call-to-contribute).
+Each item's rendered page carries a tier badge (`Draft` / `Primer` / `Formalized`) at the top. Catalog cards show the badge so visitors can filter by tier (e.g. *"show me all Primer items that need promotion to Formalized"* — a natural call-to-contribute).
 
 The badge derives from the `tier:` frontmatter field; the MyST build pipeline renders it automatically. Contributors do not hand-insert badge markdown.
 
-### Tier-indexed difficulty estimates (rules of thumb)
+### Effort calibration (for contributors and instructors)
 
-- T1 → T2: **a weekend** for a student familiar with MyST + Pandoc.
-- T2 → T3: **4–8 weeks** of part-time work in the course-project workflow.
-- T3 → T4: **a semester or more**, depending on the paper's computational depth.
+Effort is expressed in PhD-course-assignment units assuming AI-assisted workflow (Cursor + Claude + Matsya). These estimates are generous upper bounds:
 
-These are not hard constraints, but they help contributors and instructors scope what fits into a given commitment window.
+| Step | Upper bound |
+|------|-------------|
+| → Draft | 1 weekly assignment |
+| Draft → Primer | ≤ 2 weekly assignments |
+| Primer → Formalized | ≤ 2 weekly assignments |
+| Total from zero to Formalized | ≤ 5 weekly assignments |
+
+These estimates guide course-project scoping: a full semester leaves ample room for a student to take a paper all the way to Formalized and start on the replication step (which then belongs in REMARK, not here).
 
 ---
 
