@@ -288,7 +288,7 @@ Primer is the current aspirational target for the typical legacy-slideware refac
 
 Qualifying checklist — everything in Primer, plus:
 
-- [ ] `bellman-excerpt.md` — standalone modular-DDSL Bellman statement (symbol table, timing, perch decomposition, stage operator).
+- [ ] `bellman-excerpt.md` — standalone modular-DDSL Bellman statement: **comprehensive symbol table** (see below), timing convention, perch decomposition, stage operator. The symbol table must list **every object that appears — or might appear — in the formalized statement of the model**: states, controls, shocks, parameters, value functions, marginal-value functions, constraints, income maps, deterministic deductions, normalization factors, timing indices, type / family indices, and any other quantity referenced anywhere in the Bellman equation, transitions, or mover blocks. Each row gives the symbol, its role (state / control / shock / parameter / derived / …), its space or domain, and a one-line description. The intent is that a reader (human or agent) can read the symbol table alone and know what every subsequent symbol in the document means without hunting through prose.
 - [ ] `bellman-excerpt-SMD-polished.md` — post-Matsya SMD-aligned revision with perch table and EGM channel discussion.
 - [ ] `dolo-plus-draft.yaml` — one-stage YAML (interior period sufficient); all unresolved features flagged with inline `# workaround:` or `# unresolved:` comments.
 - [ ] `verification.md` — one paragraph stating what was accepted / edited / rejected from Matsya's output, compared against the published paper (not only the `_summary.ipynb`).
