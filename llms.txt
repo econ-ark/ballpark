@@ -20,29 +20,35 @@ into a reproducible, citable Econ-ARK contribution.
 
 ## Items
 
-Each item lives at `models/We-Would-Like-In-Econ-ARK/<citekey>/index.md`. Status values: `slideware` (paper summary only), `formalized` (explicit recursive model + optional dolo-plus draft), `remark-ready`, `promoted`.
+Each item lives at `models/We-Would-Like-In-Econ-ARK/<citekey>/index.md`. Tiers (see [CONTRIBUTING.md](CONTRIBUTING.md#ballpark-tiers)):
+- **T1 Entry** — paper claimed, minimal cataloging.
+- **T2 Primer** — four-notebook exposition layer + explicit recursive model statement.
+- **T3 Formalized** — bellman excerpt, dolo-plus YAML draft, verification, `AGENTS.md`.
+- **T4 Candidate** — working replication code; REMARK-eligible.
 
-- [Benhabib_et_al_2019](models/We-Would-Like-In-Econ-ARK/Benhabib_et_al_2019/): Lifecycle wealth distribution with heterogeneous returns and warm-glow bequests. Topic: wealth-distribution, lifecycle. Status: formalized.
-- [AHLifeCycleExpenditure](models/We-Would-Like-In-Econ-ARK/AHLifeCycleExpenditure/): Lifecycle expenditure profiles. Topic: lifecycle. Status: slideware.
-- [ARMonetaryPolicyHABC](models/We-Would-Like-In-Econ-ARK/ARMonetaryPolicyHABC/): Algan–Ragot heterogeneous-agent monetary policy with money in utility. Topic: HA-macro, monetary. Status: slideware.
-- [clMonetary](models/We-Would-Like-In-Econ-ARK/clMonetary/): Monetary-policy model. Topic: monetary. Status: slideware.
-- [Fujiwara_Teranishi](models/We-Would-Like-In-Econ-ARK/Fujiwara_Teranishi/): Monetary policy with heterogeneous agents. Topic: HA-macro, monetary. Status: slideware.
-- [GKKOCWealthTax](models/We-Would-Like-In-Econ-ARK/GKKOCWealthTax/): Optimal wealth taxation with heterogeneous agents. Topic: optimal-taxation, wealth-distribution. Status: slideware.
-- [GKNMonetaryPolicyHA](models/We-Would-Like-In-Econ-ARK/GKNMonetaryPolicyHA/): Gornemann–Kuester–Nakajima monetary policy with heterogeneous agents. Topic: HA-macro, monetary. Status: slideware.
-- [Guerrieri_Lorenzoni2017](models/We-Would-Like-In-Econ-ARK/Guerrieri_Lorenzoni2017/): Credit crises, precautionary savings, and the liquidity trap. Topic: HA-macro, liquidity-trap. Status: slideware.
-- [HKMOHousingChannelMP](models/We-Would-Like-In-Econ-ARK/HKMOHousingChannelMP/): Housing channel of monetary policy with heterogeneous agents. Topic: HA-macro, housing, monetary. Status: slideware.
-- [HKSWealthDistribution](models/We-Would-Like-In-Econ-ARK/HKSWealthDistribution/): Hubmer–Krusell–Smith quantitative theory of the U.S. wealth distribution. Topic: wealth-distribution, HA-macro. Status: slideware.
-- [KMVBoomBust](models/We-Would-Like-In-Econ-ARK/KMVBoomBust/): Boom-bust dynamics. Topic: HA-macro, business-cycles. Status: slideware.
-- [Kumhof_et_al_2015](models/We-Would-Like-In-Econ-ARK/Kumhof_et_al_2015/): Inequality, leverage, and crises. Topic: inequality, financial-crisis. Status: slideware.
-- [MK3TagTax](models/We-Would-Like-In-Econ-ARK/MK3TagTax/): Optimal tagged taxation. Topic: optimal-taxation. Status: slideware.
-- [OpenHA](models/We-Would-Like-In-Econ-ARK/OpenHA/): Open-economy heterogeneous-agent model. Topic: HA-macro, open-economy. Status: slideware.
-- [OptimalTaxHeight](models/We-Would-Like-In-Econ-ARK/OptimalTaxHeight/): Optimal taxation with height as a tag. Topic: optimal-taxation. Status: slideware.
-- [OptimumDebt](models/We-Would-Like-In-Econ-ARK/OptimumDebt/): Aiyagari–McGrattan optimum quantity of public debt. Topic: HA-macro, fiscal-policy. Status: slideware.
-- [PopAgingMPtransmission](models/We-Would-Like-In-Econ-ARK/PopAgingMPtransmission/): Population aging and monetary-policy transmission. Topic: demographics, monetary. Status: slideware.
-- [Ravn_Sterk_2021](models/We-Would-Like-In-Econ-ARK/Ravn_Sterk_2021/): Macroeconomic fluctuations with heterogeneous agents. Topic: HA-macro. Status: slideware.
-- [Reiter_2009](models/We-Would-Like-In-Econ-ARK/Reiter_2009/): Solving heterogeneous-agent models by projection and perturbation. Topic: computational-methods. Status: slideware.
-- [SSJ_2021](models/We-Would-Like-In-Econ-ARK/SSJ_2021/): Sequence-space Jacobian methods for heterogeneous-agent models. Topic: HA-macro, computational-methods. Status: slideware.
-- [TaxingWomen](models/We-Would-Like-In-Econ-ARK/TaxingWomen/): Guner–Kaygusuz–Ventura taxation and female labor supply. Topic: lifecycle, optimal-taxation, labor. Status: slideware.
+Most items are currently T1 (legacy slideware format pre-dates the tier system). Refactoring a T1 item to T2 is an explicitly welcome PR and is scoped for a weekend of work.
+
+- [Benhabib_et_al_2019](models/We-Would-Like-In-Econ-ARK/Benhabib_et_al_2019/): Lifecycle wealth distribution with heterogeneous returns and warm-glow bequests. Topic: wealth-distribution, lifecycle. Tier: T2.
+- [AHLifeCycleExpenditure](models/We-Would-Like-In-Econ-ARK/AHLifeCycleExpenditure/): Lifecycle expenditure profiles. Topic: lifecycle. Tier: T1.
+- [ARMonetaryPolicyHABC](models/We-Would-Like-In-Econ-ARK/ARMonetaryPolicyHABC/): Algan–Ragot heterogeneous-agent monetary policy with money in utility. Topic: HA-macro, monetary. Tier: T1.
+- [clMonetary](models/We-Would-Like-In-Econ-ARK/clMonetary/): Monetary-policy model. Topic: monetary. Tier: T1.
+- [Fujiwara_Teranishi](models/We-Would-Like-In-Econ-ARK/Fujiwara_Teranishi/): Monetary policy with heterogeneous agents. Topic: HA-macro, monetary. Tier: T1.
+- [GKKOCWealthTax](models/We-Would-Like-In-Econ-ARK/GKKOCWealthTax/): Optimal wealth taxation with heterogeneous agents. Topic: optimal-taxation, wealth-distribution. Tier: T1.
+- [GKNMonetaryPolicyHA](models/We-Would-Like-In-Econ-ARK/GKNMonetaryPolicyHA/): Gornemann–Kuester–Nakajima monetary policy with heterogeneous agents. Topic: HA-macro, monetary. Tier: T1.
+- [Guerrieri_Lorenzoni2017](models/We-Would-Like-In-Econ-ARK/Guerrieri_Lorenzoni2017/): Credit crises, precautionary savings, and the liquidity trap. Topic: HA-macro, liquidity-trap. Tier: T1.
+- [HKMOHousingChannelMP](models/We-Would-Like-In-Econ-ARK/HKMOHousingChannelMP/): Housing channel of monetary policy with heterogeneous agents. Topic: HA-macro, housing, monetary. Tier: T1.
+- [HKSWealthDistribution](models/We-Would-Like-In-Econ-ARK/HKSWealthDistribution/): Hubmer–Krusell–Smith quantitative theory of the U.S. wealth distribution. Topic: wealth-distribution, HA-macro. Tier: T1.
+- [KMVBoomBust](models/We-Would-Like-In-Econ-ARK/KMVBoomBust/): Boom-bust dynamics. Topic: HA-macro, business-cycles. Tier: T1.
+- [Kumhof_et_al_2015](models/We-Would-Like-In-Econ-ARK/Kumhof_et_al_2015/): Inequality, leverage, and crises. Topic: inequality, financial-crisis. Tier: T1.
+- [MK3TagTax](models/We-Would-Like-In-Econ-ARK/MK3TagTax/): Optimal tagged taxation. Topic: optimal-taxation. Tier: T1.
+- [OpenHA](models/We-Would-Like-In-Econ-ARK/OpenHA/): Open-economy heterogeneous-agent model. Topic: HA-macro, open-economy. Tier: T1.
+- [OptimalTaxHeight](models/We-Would-Like-In-Econ-ARK/OptimalTaxHeight/): Optimal taxation with height as a tag. Topic: optimal-taxation. Tier: T1.
+- [OptimumDebt](models/We-Would-Like-In-Econ-ARK/OptimumDebt/): Aiyagari–McGrattan optimum quantity of public debt. Topic: HA-macro, fiscal-policy. Tier: T1.
+- [PopAgingMPtransmission](models/We-Would-Like-In-Econ-ARK/PopAgingMPtransmission/): Population aging and monetary-policy transmission. Topic: demographics, monetary. Tier: T1.
+- [Ravn_Sterk_2021](models/We-Would-Like-In-Econ-ARK/Ravn_Sterk_2021/): Macroeconomic fluctuations with heterogeneous agents. Topic: HA-macro. Tier: T1.
+- [Reiter_2009](models/We-Would-Like-In-Econ-ARK/Reiter_2009/): Solving heterogeneous-agent models by projection and perturbation. Topic: computational-methods. Tier: T1.
+- [SSJ_2021](models/We-Would-Like-In-Econ-ARK/SSJ_2021/): Sequence-space Jacobian methods for heterogeneous-agent models. Topic: HA-macro, computational-methods. Tier: T1.
+- [TaxingWomen](models/We-Would-Like-In-Econ-ARK/TaxingWomen/): Guner–Kaygusuz–Ventura taxation and female labor supply. Topic: lifecycle, optimal-taxation, labor. Tier: T1.
 
 ## Already in Econ-ARK
 

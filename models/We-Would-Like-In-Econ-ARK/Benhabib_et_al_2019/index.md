@@ -15,7 +15,7 @@ econ_ark_topic:
   - wealth-distribution
 jel: [D31, E21, J62]
 difficulty: stretch
-status: formalized
+tier: T2                                    # Primer — exposition layer complete; formalization layer pending
 has_formalization_layer: false
 requires: [CRRA, EGM, bequest-utility]
 ballpark_contributor:

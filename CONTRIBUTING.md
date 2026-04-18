@@ -89,7 +89,7 @@ econ_ark_topic:                            # controlled vocabulary — pick from
                                            #   financial-crisis, inequality
 jel: [D31, E21, J62]                       # JEL codes (array)
 difficulty: stretch                        # good-first-ballpark | stretch | research-grade
-status: formalized                         # slideware | formalized | remark-ready | promoted
+tier: T3                                   # T1 (Entry) | T2 (Primer) | T3 (Formalized) | T4 (Candidate) — see "Ballpark tiers" below
 has_formalization_layer: true              # true iff the formalization-layer files exist
 ballpark_contributor:
   name: "<name>"
@@ -235,27 +235,112 @@ When you revise an existing item, add (do not overwrite) an **Updated by** line.
 
 ---
 
-## Minimum viable contribution
+## Ballpark tiers
 
-Not every contributor will produce every layer. For a PR to be mergeable:
+Ballpark items progress through four tiers of increasing completeness — analogous to REMARK's standard / published distinction, but with more granularity because the ballpark catalog is a *farm system* rather than a terminal repository. Each tier is a **plateau**: contributors can stop at any tier indefinitely, and each tier has concrete, reviewable qualifying criteria.
 
-- **Minimum:** `index.md` + `<citekey>_intro.ipynb` (with explicit provenance) + `<citekey>_summary.ipynb` with an explicit "The Model" section + `references.bib` + paper PDF or DOI pointer.
-- **Stretch (coursework-grade):** above + the full formalization layer + `AGENTS.md`.
-- **REMARK-ready:** above + a working `replication/` subdir.
+| Tier | Name | One-line characterization |
+|------|------|----------------------------|
+| **T1** | **Entry** | Paper identified, claimed, and cataloged. |
+| **T2** | **Primer** | A reader can understand the paper and its context without reading the paper. |
+| **T3** | **Formalized** | The model is stated in modular-DDSL form, with a dolo-plus YAML draft. |
+| **T4** | **Candidate** | Working replication code; eligible for promotion to REMARK / DemARK. |
+
+(A pre-tier-1 state, **T0 — Wanted**, is an open issue labeled `wanted-ballpark` with bibliographic info. It does not have a directory.)
+
+### T1 — Entry
+
+*"I am claiming this paper and committing to minimal cataloging."*
+
+Qualifying checklist:
+
+- [ ] Item directory exists under `models/We-Would-Like-In-Econ-ARK/<citekey>/` (or `empirical/<citekey>/`).
+- [ ] `index.md` with required frontmatter (including `tier: T1`).
+- [ ] `<citekey>_intro.ipynb` with citation, DOI link, **Original ballpark author + date**, and a 3-sentence pitch of why the paper is in-ballpark for Econ-ARK.
+- [ ] `references.bib` (may be empty at T1).
+- [ ] Paper committed as `<citekey>.pdf` OR replaced by a DOI pointer with a license note in `_intro.ipynb`.
+
+T1 is the minimum mergeable contribution. It converts a `wanted-ballpark` issue into a claimed directory.
+
+### T2 — Primer
+
+*"A graduate student can orient themselves around this paper without reading it."*
+
+Qualifying checklist — everything in T1, plus:
+
+- [ ] `<citekey>_prior-literature.ipynb` situating the paper in its foundational literature, with `{cite:t}` citations resolving from `references.bib`.
+- [ ] `<citekey>_summary.ipynb` with (a) a non-technical motivation + findings overview, and (b) a **"The Model"** section stating the recursive formulation **explicitly**: no `u(c)` placeholders, explicit CRRA or EZ kernel, explicit bequest function (if any), explicit transitions, explicit shock distributions, explicit constraint set.
+- [ ] `<citekey>_subsequent-literature.ipynb` (may note "no subsequent literature found" when applicable) + `subsequent-literature.bib`.
+- [ ] `self.bib` with the paper's own bib entry.
+- [ ] `<citekey>.mmd` (Pandoc-converted markdown of the paper) unless license forbids — this is what Cursor / Claude / Matsya read most effectively.
+- [ ] `myst.yml` configured; `myst build` completes cleanly.
+- [ ] `index.md` `{include}`s all four exposition notebooks in order.
+
+T2 is the current aspirational target for the typical legacy-slideware refactor. [`Benhabib_et_al_2019`](models/We-Would-Like-In-Econ-ARK/Benhabib_et_al_2019/) is the reference instance of T2.
+
+### T3 — Formalized
+
+*"The model has been translated into a modular-DP specification suitable for coding-agent implementation."*
+
+Qualifying checklist — everything in T2, plus:
+
+- [ ] `bellman-excerpt.md` — standalone modular-DDSL Bellman statement (symbol table, timing, perch decomposition, stage operator).
+- [ ] `bellman-excerpt-SMD-polished.md` — post-Matsya SMD-aligned revision with perch table and EGM channel discussion.
+- [ ] `dolo-plus-draft.yaml` — one-stage YAML (interior period sufficient); all unresolved features flagged with inline `# workaround:` or `# unresolved:` comments.
+- [ ] `verification.md` — one paragraph stating what was accepted / edited / rejected from Matsya's output, compared against the published paper (not only the `_summary.ipynb`).
+- [ ] `matsya-session.txt` — the `--session` string used, if AI-assisted; or `matsya-session.txt` containing `N/A — hand-written` otherwise.
+- [ ] **`AGENTS.md` — required at T3.** See the section above for how to produce it.
+
+T3 is the course-project tier: achievable in one semester by a student who has completed the [course workflow](https://github.com/llorracc/workspace-course-topics/blob/main/assignments/matsya-ballpark-dolo-plus-draft.md).
+
+### T4 — Candidate
+
+*"Working code; ready to be promoted to REMARK."*
+
+Qualifying checklist — everything in T3, plus:
+
+- [ ] `replication/` subdirectory with:
+  - [ ] `reproduce.sh` that reproduces at least one paper result end-to-end from a clean clone.
+  - [ ] `CITATION.cff` following the [Citation File Format](https://citation-file-format.github.io/).
+  - [ ] `binder/environment.yml` pinning dependencies.
+- [ ] `dolo-plus-draft.yaml` promoted to a validated dolo-plus stage — **no `# unresolved:` comments remain**; `# workaround:` comments may persist but should be documented in `verification.md`.
+- [ ] `ai-provenance.md` (recommended) documenting which AI tools were used in code generation.
+
+T4 items are eligible for **promotion** to [REMARK](https://github.com/econ-ark/REMARK) or [DemARK](https://github.com/econ-ark/DemARK) per the criteria in those repos. When promoted, add a **Superseded by** pointer to `_intro.ipynb` rather than deleting the ballpark entry.
+
+### Promotion mechanics
+
+- Each tier is a plateau; indefinite residence is fine.
+- A **promotion PR** adds the next tier's files and updates `tier:` in the frontmatter.
+- PR title pattern: `Promote <citekey> to T2 (Primer)` / `Promote <citekey> to T3 (Formalized)` / `Promote <citekey> to T4 (Candidate)`.
+- The PR body quotes the qualifying checklist for the target tier and ticks each box with a file-line citation.
+- **Tier regression** (e.g. T3 → T2) is allowed when an item's formalization is found to be incorrect and is being withdrawn for revision; it should be rare and the PR must explain the defect.
+
+### Badges
+
+Each item's rendered page carries a tier badge (`T1 Entry` / `T2 Primer` / `T3 Formalized` / `T4 Candidate`) at the top. Catalog cards show the badge so visitors can filter by tier (e.g. *"show me all T2 items that need promotion to T3"* — a natural call-to-contribute).
+
+The badge derives from the `tier:` frontmatter field; the MyST build pipeline renders it automatically. Contributors do not hand-insert badge markdown.
+
+### Tier-indexed difficulty estimates (rules of thumb)
+
+- T1 → T2: **a weekend** for a student familiar with MyST + Pandoc.
+- T2 → T3: **4–8 weeks** of part-time work in the course-project workflow.
+- T3 → T4: **a semester or more**, depending on the paper's computational depth.
+
+These are not hard constraints, but they help contributors and instructors scope what fits into a given commitment window.
 
 ---
 
 ## Pre-merge checklist
 
-Before opening a PR, confirm:
+The target tier determines the checklist. Copy the target tier's qualifying checklist from the section above into your PR body and tick each box with a file-line citation. **In addition**, every PR (regardless of tier) must confirm:
 
-- [ ] `index.md` `{include}`s exactly the four exposition notebooks, in order.
+- [ ] `index.md` `{include}`s exactly the four exposition notebooks, in order (T2 and above).
 - [ ] `myst.yml` builds the item without errors (`myst build` in the item directory).
 - [ ] Every `{cite:t}` reference resolves against the bib files.
 - [ ] Every figure the notebooks reference exists and renders.
-- [ ] Paper PDF is either committed or replaced by a DOI pointer with a license note.
 - [ ] `_intro.ipynb` carries visible **Original ballpark author** and (if applicable) **Updated by** lines.
-- [ ] If the formalization layer is included: `AGENTS.md` is present; `dolo-plus-draft.yaml` flags all unresolved features with inline `# workaround:` / `# unresolved:` comments; and `verification.md` compares Matsya output to the published paper (not only the ballpark summary).
 - [ ] No `_build/`, UUID build directories, or `.slides.html` files are committed.
 
 ---
