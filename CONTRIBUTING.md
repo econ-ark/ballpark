@@ -271,7 +271,7 @@ Draft is the minimum mergeable contribution. It converts a `wanted-ballpark` iss
 
 Qualifying checklist — everything in Draft, plus:
 
-- [ ] `<citekey>_prior-literature.ipynb` situating the paper in its foundational literature, with `{cite:t}` citations resolving from `references.bib`.
+- [ ] `<citekey>_prior-literature.ipynb` situating the paper in its foundational literature, with `{cite:t}` citations resolving from `references.bib`. **Cite at least 3 and no more than 6 prior papers** — enough to establish context, few enough that the notebook stays focused.
 - [ ] `<citekey>_summary.ipynb` with (a) a non-technical motivation + findings overview, and (b) a **"The Model"** section stating the recursive formulation **explicitly**: no `u(c)` placeholders, explicit CRRA or EZ kernel, explicit bequest function (if any), explicit transitions, explicit shock distributions, explicit constraint set.
 - [ ] `<citekey>_subsequent-literature.ipynb` (may note "no subsequent literature found" when applicable) + `subsequent-literature.bib`.
 - [ ] `self.bib` with the paper's own bib entry.
