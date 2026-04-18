@@ -111,7 +111,7 @@ superseded_by: https://github.com/econ-ark/REMARK/...   # once promoted
 requires: [CRRA, EGM, bequest-utility]     # model features — free-form tags
 ```
 
-### `AGENTS.md` (optional, recommended for items with a formalization layer)
+### `AGENTS.md` (required for items with a formalization layer; recommended otherwise)
 
 A short structured brief aimed at coding agents (Claude Code, Cursor, etc.) that a user's local session will read when the directory is opened. Distinct from the human-readable `index.md`. See the [Benhabib_et_al_2019 worked example](models/We-Would-Like-In-Econ-ARK/Benhabib_et_al_2019/AGENTS.md).
 
@@ -175,7 +175,7 @@ When you revise an existing item, add (do not overwrite) an **Updated by** line.
 Not every contributor will produce every layer. For a PR to be mergeable:
 
 - **Minimum:** `index.md` + `<citekey>_intro.ipynb` (with explicit provenance) + `<citekey>_summary.ipynb` with an explicit "The Model" section + `references.bib` + paper PDF or DOI pointer.
-- **Stretch (coursework-grade):** above + the full formalization layer.
+- **Stretch (coursework-grade):** above + the full formalization layer + `AGENTS.md`.
 - **REMARK-ready:** above + a working `replication/` subdir.
 
 ---
@@ -190,7 +190,7 @@ Before opening a PR, confirm:
 - [ ] Every figure the notebooks reference exists and renders.
 - [ ] Paper PDF is either committed or replaced by a DOI pointer with a license note.
 - [ ] `_intro.ipynb` carries visible **Original ballpark author** and (if applicable) **Updated by** lines.
-- [ ] If the formalization layer is included: `dolo-plus-draft.yaml` flags all unresolved features with inline `# workaround:` / `# unresolved:` comments, and `verification.md` compares Matsya output to the published paper (not only the ballpark summary).
+- [ ] If the formalization layer is included: `AGENTS.md` is present; `dolo-plus-draft.yaml` flags all unresolved features with inline `# workaround:` / `# unresolved:` comments; and `verification.md` compares Matsya output to the published paper (not only the ballpark summary).
 - [ ] No `_build/`, UUID build directories, or `.slides.html` files are committed.
 
 ---
