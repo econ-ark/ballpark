@@ -317,6 +317,31 @@ When an item is promoted, add a **Superseded by** pointer in `_intro.ipynb` rath
 - The PR body quotes the qualifying checklist for the target tier and ticks each box with a file-line citation.
 - **Tier regression** (e.g. Formalized → Primer) is allowed when an item's formalization is found to be incorrect and is being withdrawn for revision; it should be rare and the PR must explain the defect.
 
+### Review policy
+
+Review requirements depend on the target tier.
+
+- **Draft and Primer: self-serve.** The contributor opens the PR, ticks the target tier's qualifying checklist in the PR body with file-line citations, and merges once the **automated checks** (see below) pass. No designated reviewer is required at these tiers because the qualifying criteria are mechanically checkable.
+
+- **Formalized: automated gate, then designated human reviewer.** The contributor opens the PR the same way, but:
+
+  1. **Automated rigorous check runs first.** CI runs the full Formalized checklist as executable checks (file-existence, YAML validity, MyST build, bib resolution, `AGENTS.md` section structure, symbol-table presence, perch-decomposition keyword presence, etc. — see "Automated checks" below). The PR **cannot be assigned to a human reviewer until CI passes**.
+  2. **Human reviewer from `REVIEWERS.md`** (to be added; starts with the maintainer list) then approves before merge. The reviewer's job is specifically the things CI *cannot* check: economic correctness of the Bellman equation, correctness of the perch decomposition, defensibility of the YAML workarounds, whether `verification.md` actually compares to the published paper (versus merely claiming to), and quality of the model exposition.
+
+  Rationale: Formalized is the tier where content can be plausible-looking-but-wrong, and catching that needs a reviewer with DP background. Gating the human review behind CI ensures reviewer time is spent on judgment, not on finding missing files.
+
+### Automated checks (CI)
+
+A `.github/workflows/ballpark-check.yml` action (forthcoming in a follow-up PR) will run per-tier checks and post a status on the PR. **A contributor's checklist tick is not sufficient** at any tier — CI must also pass.
+
+Per-tier mechanical gates the CI will enforce:
+
+- **Draft:** directory path correct; `index.md` frontmatter present with required fields and `tier:` value in controlled set; `<citekey>_intro.ipynb` exists and contains citation / DOI / author; `references.bib` exists; paper `.pdf` committed or DOI pointer present.
+- **Primer** (additive): all four exposition notebooks exist; `_summary.ipynb` contains a **"The Model"** heading; `_prior-literature.ipynb` resolves **3–6** unique `{cite:t}` references against bib files; `self.bib` and `subsequent-literature.bib` exist; `<citekey>.mmd` exists or license-note present; `myst.yml` present and `myst build` succeeds; `index.md` `{include}`s all four notebooks; every `{cite:t}` resolves; every referenced figure exists.
+- **Formalized** (additive): `bellman-excerpt.md`, `bellman-excerpt-SMD-polished.md`, `dolo-plus-draft.yaml`, `verification.md`, `matsya-session.txt`, `AGENTS.md` all exist; `dolo-plus-draft.yaml` parses as YAML; `bellman-excerpt.md` contains a markdown table (heuristic: at least one pipe-delimited row with a Symbol column) and references all three perch names (`arrival`, `decision`, `continuation`); `AGENTS.md` contains the six required top-level sections (heading-based check).
+
+What CI does **not** check at Formalized (and therefore what the human reviewer is responsible for): the Bellman equation being correct, the perch decomposition being correct, the YAML workarounds being defensible, and `verification.md` genuinely comparing against the published paper.
+
 ### Badges
 
 Each item's rendered page carries a tier badge (`Draft` / `Primer` / `Formalized`) at the top. Catalog cards show the badge so visitors can filter by tier (e.g. *"show me all Primer items that need promotion to Formalized"* — a natural call-to-contribute).
