@@ -24,7 +24,7 @@
 
 ## Known model features requiring attention in a formalization pass
 
-- **Notebook uses `a` ambiguously** (raw assets vs. cash-on-hand). Any YAML must distinguish the prestate from the poststate role (e.g. `a_prev` / `a`). The cleanest resolution is to introduce $m \coloneqq (1+r) a_{\prec} + w_t$ as the decision-perch state.
+- **Perch-ready notation convention.** The recursive problem in `_summary.ipynb` → "The Model" → "Recursive Formulation" uses an explicit, perch-ready convention: $a_t$ = beginning-of-period wealth; $m_t \coloneqq (1+r)a_t + w_t$ = cash-on-hand at the decision perch; $a_{t+1} = m_t - c_t$ = savings identity. The paper's own compact statement ($a' = (1+r)a - c + w$ with $0 \le c \le a$) carried an `a`-double-role ambiguity; the notebook's current rewrite resolves it. **A formalizer should build on the notebook's convention, not re-derive from the paper.**
 - **Terminal period under-specified.** Warm-glow $e(a_T) = A a_T^{1-\mu} / (1-\mu)$ is stated, but the budget at $T$ is left implicit (is there a $w_T$? does $e$ apply to savings or to post-return assets?). A complete formalization must resolve this explicitly.
 - **Dynasty-level heterogeneity** is the paper's distinguishing feature: $(r, w)$ fixed within a life, stochastic across generations. A single-agent lifecycle YAML is not sufficient to reproduce the paper's tail-thickness result — you need a dynasty-level wrapper or a parameterized family indexed by $(r, w)$ draws.
 - **Age profile $w_t$** should not flatten to a scalar `w` in the YAML. The period template needs age-varying wage overrides.
