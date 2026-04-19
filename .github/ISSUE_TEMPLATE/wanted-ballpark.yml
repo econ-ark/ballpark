@@ -1,0 +1,116 @@
+name: Wanted Ballpark Paper
+description: Propose a paper for inclusion in the ballpark catalog.
+title: "[Wanted] <citekey>: <short paper title>"
+labels: ["wanted-ballpark"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for proposing a paper for the ballpark! This issue creates the **Wanted** state — the pre-tier catalog entry that precedes a directory. Once a contributor claims the paper and opens a PR, it enters the **Draft** tier.
+
+        Please review [CONTRIBUTING.md → Before you start](../../blob/master/CONTRIBUTING.md#before-you-start) and make sure the paper meets the eligibility rules (in particular, **≥ 3 Google Scholar citations**).
+
+  - type: input
+    id: citation
+    attributes:
+      label: Full citation
+      description: Include authors, year, title, journal, volume(issue), pages.
+      placeholder: "Benhabib, J., Bisin, A., & Luo, M. (2019). Wealth distribution and social mobility in the US: A quantitative approach. American Economic Review, 109(5), 1623–1647."
+    validations:
+      required: true
+
+  - type: input
+    id: doi
+    attributes:
+      label: DOI or permanent URL
+      placeholder: "10.1257/aer.20151684"
+    validations:
+      required: true
+
+  - type: input
+    id: citekey
+    attributes:
+      label: Proposed citekey
+      description: Used as the directory name under `models/We-Would-Like-In-Econ-ARK/` or `empirical/`. Match the key in your reference manager (e.g. Zotero) if you have one.
+      placeholder: "Benhabib_et_al_2019"
+    validations:
+      required: true
+
+  - type: input
+    id: citations
+    attributes:
+      label: Google Scholar citation count (today)
+      description: Must be ≥ 3 per the eligibility rule. Paste the current number from the paper's Google Scholar page.
+      placeholder: "127"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: track
+    attributes:
+      label: Track
+      description: Structural models go under `models/`; strong empirical evidence that begs for a model goes under `empirical/`.
+      options:
+        - models
+        - empirical
+    validations:
+      required: true
+
+  - type: dropdown
+    id: topic
+    attributes:
+      label: Primary Econ-ARK topic
+      description: Pick the best single match. Additional topics can be listed in the item's frontmatter later.
+      options:
+        - HA-macro
+        - lifecycle
+        - wealth-distribution
+        - monetary
+        - fiscal-policy
+        - optimal-taxation
+        - housing
+        - labor
+        - business-cycles
+        - computational-methods
+        - open-economy
+        - liquidity-trap
+        - demographics
+        - financial-crisis
+        - inequality
+    validations:
+      required: true
+
+  - type: textarea
+    id: pitch
+    attributes:
+      label: Why in-ballpark (≈ 3 sentences)
+      description: Why should Econ-ARK care about this paper? What does it uniquely contribute to the ecosystem's agenda? Keep it short.
+      placeholder: "Canonical example of heterogeneous-returns driving the wealth tail — a headline result in modern HA macro..."
+    validations:
+      required: true
+
+  - type: input
+    id: difficulty
+    attributes:
+      label: Difficulty estimate (optional)
+      description: "One of: good-first-ballpark, stretch, research-grade. Used for course-project scoping."
+      placeholder: "stretch"
+
+  - type: input
+    id: claim
+    attributes:
+      label: Claim (optional)
+      description: If you intend to draft this ballpark entry yourself, mention your name/GitHub handle here. Otherwise leave blank — the issue is a standing invitation.
+      placeholder: "@<your-github-handle>"
+
+  - type: checkboxes
+    id: eligibility
+    attributes:
+      label: Eligibility confirmation
+      options:
+        - label: "Paper has ≥ 3 Google Scholar citations."
+          required: true
+        - label: "Paper is not already in `models/We-Would-Like-In-Econ-ARK/` or `empirical/`."
+          required: true
+        - label: "I have read [CONTRIBUTING.md → Before you start](../../blob/master/CONTRIBUTING.md#before-you-start)."
+          required: true

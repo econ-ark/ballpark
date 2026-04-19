@@ -12,7 +12,7 @@ This file specifies what a ballpark item should contain and how to submit one. F
 2. **Has the paper been cited enough to matter?** The paper must have **at least 3 citations in Google Scholar** to be eligible as a ballpark candidate. This is a hard gate: it filters for papers whose ideas have begun to circulate in the literature, without excluding recent papers that have not yet accumulated many citations. Paste the Google Scholar citation count (as of submission date) into the submission PR description.
 3. **Is it already here?** Check `models/We-Would-Like-In-Econ-ARK/` for an existing subdirectory under the paper's citekey. If one exists, open a PR improving it rather than creating a parallel entry.
 4. **Is it listed but not yet claimed?** If there is a subdirectory but it is thin (legacy "slideware" — one notebook of markdown + figures), your contribution can be to refactor it to the canonical structure below.
-5. **None of the above?** Open an issue naming the paper, the DOI, and the track (`models` / `empirical`), and we will confirm before you invest effort.
+5. **None of the above?** Open a [Wanted Ballpark Paper issue](../../issues/new?template=wanted-ballpark.yml) using the provided form (citation, DOI, Google Scholar citation count, track, topic, 3-sentence pitch). We will confirm before you invest effort.
 
 ---
 
