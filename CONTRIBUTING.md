@@ -54,7 +54,7 @@ The three workaround categories you are most likely to hit are **mechanical (non
 |------|-----------|---------|
 | `<citekey>.pdf` | required | The paper. If license forbids redistribution, replace with a DOI-only pointer in `_intro.ipynb`. |
 | `<citekey>.mmd` | recommended | Pandoc-converted markdown of the paper. Much easier for Cursor / Claude / Matsya to ingest than PDF. Produce via `pandoc <citekey>.pdf -o <citekey>.mmd` or equivalent. |
-| `references.bib` | required | Bib entries cited from `_prior-literature.ipynb` and `_summary.ipynb`. |
+| `references.bib` | required | Bib entries cited from `_prior-literature.ipynb` and `_summary.ipynb`. A superset is acceptable — uncited entries (e.g., a broader reading list the contributor maintains) do not need to be pruned. MyST renders only cited entries in the published bibliography. |
 | `self.bib` | recommended | The paper's own bib entry. Keeps the paper citation separable from its context. |
 | `subsequent-literature.bib` | required if the notebook is non-empty | Bib entries cited from `_subsequent-literature.ipynb`. |
 | Figures / tables (e.g. `fig1.png`, `Table2.png`) | as needed | Use paper's own labels where possible. |
