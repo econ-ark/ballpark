@@ -11,14 +11,15 @@
 
 ## If a user asks to work on this item
 
-1. **Read first:** `Benhabib_et_al_2019_summary.ipynb` → section "The Model" → Recursive Formulation. This is the authoritative recursive statement; do not re-derive from the PDF.
-2. **Paper source for AI ingestion:** `Benhabib_et_al_2019.mmd` (Pandoc-converted). Prefer this over `Benhabib_et_al_2019.pdf`.
+1. **Read first:** [`bellman-excerpt.md`](bellman-excerpt.md) — the modular-DDSL Bellman statement with comprehensive symbol table, perch decomposition, stage operators, and EGM channel. This is the authoritative formalization input; a YAML-drafting agent should read this before touching the notebooks.
+2. **For economic context beyond the formalization:** `Benhabib_et_al_2019_summary.ipynb` → "The Model".
+3. **Paper source for AI ingestion:** `Benhabib_et_al_2019.mmd` (Pandoc-converted). Prefer this over `Benhabib_et_al_2019.pdf`.
 
 ## Formalization status
 
 - Explicit recursive formulation: **present** in `_summary.ipynb`.
-- `bellman-excerpt.md`: **not committed**.
-- `dolo-plus-draft.yaml`: **not committed**.
+- `bellman-excerpt.md`: **committed (first-pass draft, pre-Matsya iteration)**. Contains comprehensive symbol table, timing convention, interior + terminal stage decompositions with perches / transitions / movers / stage operator, EGM channel for both stages, $(\tau, r)$ parameterized-family discussion, and enumerated open issues for the Matsya iteration.
+- `dolo-plus-draft.yaml`: **not committed**. Next step: feed `bellman-excerpt.md` to Matsya and iterate.
 - `verification.md`: **not committed**.
 - `matsya-session.txt`: **not committed**.
 
