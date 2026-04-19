@@ -18,10 +18,10 @@
 ## Formalization status
 
 - Explicit recursive formulation: **present** in `_summary.ipynb`.
-- `bellman-excerpt.md`: **committed (first-pass draft, pre-Matsya iteration)**. Contains comprehensive symbol table, timing convention, interior + terminal stage decompositions with perches / transitions / movers / stage operator, EGM channel for both stages, $(\tau, r)$ parameterized-family discussion, and enumerated open issues for the Matsya iteration.
-- `dolo-plus-draft.yaml`: **not committed**. Next step: feed `bellman-excerpt.md` to Matsya and iterate.
-- `verification.md`: **not committed**.
-- `matsya-session.txt`: **not committed**.
+- `bellman-excerpt.md`: **committed and iterated with Matsya**. After the Improve step, reflects matsya's recommended patterns (identity forward mover idiom; terminal boundary wiring; calibration-override family; corrected terminal-FOC discussion).
+- `dolo-plus-draft.yaml`: **committed (first Matsya draft)**. Canonical stage structure; two speculative blocks (`terminal:`, `calibration_family:`) preserved with `# SPECULATIVE` flags intact per matsya's advisory.
+- `verification.md`: **committed**. Compares the YAML against the paper's §I; paper's description is sufficient; remaining gaps are dolo-plus spec gaps, not paper gaps.
+- `matsya-session.txt`: **committed** (`topics2026-benhabib-demo`).
 
 ## Known model features requiring attention in a formalization pass
 

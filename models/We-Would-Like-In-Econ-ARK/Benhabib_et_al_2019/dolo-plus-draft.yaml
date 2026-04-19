@@ -1,0 +1,159 @@
+name: bbl_consumption_savings
+
+# ─────────────────────────────────────────────────────────────────────
+# Benhabib-Bisin-Luo (2019) household consumption-savings stage.
+#
+# Types (tau, r) are drawn at birth and fixed within life.
+# They enter only through calibration overrides (beta, r, w, sigma).
+# No within-period shocks ⟹ identity forward mover.
+#
+# Terminal period: V[>] and dV[>] are replaced by warm-glow bequest
+# e(a) = A * a^(1-mu)/(1-mu) via boundary wiring (see terminal block).
+# ─────────────────────────────────────────────────────────────────────
+
+symbols:
+  spaces:
+    Xa: '@def R+'          # raw wealth / end-of-period wealth
+    Xm: '@def R+'          # cash-on-hand
+
+  prestate:
+    a: '@in Xa'            # arrival: raw wealth (before return + earnings)
+
+  states:
+    m: '@in Xm'            # decision: cash-on-hand
+
+  poststates:
+    a_next: '@in Xa'       # continuation: end-of-period wealth
+
+  controls:
+    c: '@in R+'            # consumption
+
+  # NOTE: No exogenous block. Types (tau, r) are fixed at birth and
+  # enter only via calibration parameters. No within-period shocks.
+
+  values:
+    V[<]: '@in R'          # arrival-perch value
+    V: '@in R'             # decision-perch value
+    V[>]: '@in R'          # continuation-perch value
+  values_marginal:
+    dV[<]: '@in R'         # arrival-perch marginal value
+    dV: '@in R'            # decision-perch marginal value
+    dV[>]: '@in R'         # continuation-perch marginal value
+
+  parameters:
+    beta: '@in (0,1)'      # discount factor (varies by type tau)
+    r: '@in R+'            # rate of return on wealth (fixed-at-birth type)
+    w: '@in R+'            # earnings (varies by age and by type tau)
+    sigma: '@in R+'        # CRRA coefficient
+
+equations:
+  # ── Arrival → Decision ──────────────────────────────────────────
+  # Cash-on-hand = gross return on wealth + earnings
+  arvl_to_dcsn_transition: |
+    m = (1 + r) * a + w
+
+  # ── Decision → Continuation ─────────────────────────────────────
+  # End-of-period wealth = cash-on-hand minus consumption
+  dcsn_to_cntn_transition: |
+    a_next = m - c
+
+  # ── Backward mover: continuation → decision ────────────────────
+  # Standard EGM block. At t = T, V[>] and dV[>] are supplied by
+  # the terminal boundary specification (see terminal block below).
+  cntn_to_dcsn_mover:
+    Bellman: |
+      V = max_{c}{c^(1-sigma)/(1-sigma) + beta * V[>]}
+    InvEuler: |
+      c[>] = (beta * dV[>])^(-1/sigma)
+    cntn_to_dcsn_transition: |
+      m[>] = a_next + c[>]
+    MarginalBellman: |
+      dV = c^(-sigma)
+
+  # ── Forward mover: decision → arrival ──────────────────────────
+  # Identity mover: no pre-decision shocks, no expectation operator.
+  # V[<] and dV[<] pass through from the decision perch.
+  dcsn_to_arvl_mover:
+    Bellman: |
+      V[<] = V
+    ShadowBellman: |
+      dV[<] = dV
+
+# ═══════════════════════════════════════════════════════════════════
+# TERMINAL BOUNDARY SPECIFICATION
+# ═══════════════════════════════════════════════════════════════════
+# At t = T, the continuation value V[>] is not supplied by a
+# successor stage but by the warm-glow bequest function:
+#
+#   e(a) = A * a^(1-mu) / (1-mu)
+#   e'(a) = A * a^(-mu)
+#
+# This feeds into the EGM backward mover at the terminal period:
+#   InvEuler: c[>] = (beta * A * a_next^(-mu))^(-1/sigma)
+#
+# When mu = sigma, this simplifies; when mu ≠ sigma, EGM still
+# works because InvEuler inverts u'(c) = c^(-sigma) regardless
+# of the curvature of e(a).
+# ═══════════════════════════════════════════════════════════════════
+
+terminal:                                          # SPECULATIVE: no canonical syntax verified
+  parameters:                                      # SPECULATIVE
+    A: '@in R+'                                    # SPECULATIVE — bequest weight
+    mu: '@in R+'                                   # SPECULATIVE — bequest curvature
+  V[>]: |                                          # SPECULATIVE
+    A * a_next^(1-mu) / (1-mu)                     # SPECULATIVE
+  dV[>]: |                                         # SPECULATIVE
+    A * a_next^(-mu)                               # SPECULATIVE
+
+# ═══════════════════════════════════════════════════════════════════
+# CALIBRATION-OVERRIDE PARAMETERIZED FAMILY
+# ═══════════════════════════════════════════════════════════════════
+# BBL (2019) has N_tau x N_r types drawn at birth from an
+# intergenerational Markov chain. Within a life, (tau, r) are fixed.
+#
+# Per Turn 2 analysis: the canonical approach is Option (A) —
+# one stage template (above), instantiated once per (tau, r) pair
+# with calibration overrides for (beta, r, sigma) and an
+# age-varying w schedule.
+#
+# The intergenerational Markov chain Pi_{tau,tau'} x Pi_{r,r'}
+# governing type transmission across generations is a population-
+# level object, not a stage-level object.
+#
+# workaround: The mechanism for declaring a calibration family in
+# dolo-plus is UNRESOLVED — no canonical syntax exists in the
+# retrieved sources. The block below is speculative.
+# ═══════════════════════════════════════════════════════════════════
+
+calibration_family:                                # SPECULATIVE: entire block
+  description: |                                   # SPECULATIVE
+    BBL type-indexed family. Each (tau, r) pair    # SPECULATIVE
+    produces one instance of the stage template    # SPECULATIVE
+    with overridden parameters.                    # SPECULATIVE
+  index: [tau, r_type]                             # SPECULATIVE
+  instances:                                       # SPECULATIVE
+    - tau: 1                                       # SPECULATIVE
+      r_type: 1                                    # SPECULATIVE
+      calibration:                                 # SPECULATIVE
+        beta: 0.96                                 # SPECULATIVE
+        r: 0.04                                    # SPECULATIVE
+        sigma: 1.5                                 # SPECULATIVE
+        w: 1.0                                     # SPECULATIVE — age-0 value; schedule TBD
+        A: 15.0                                    # SPECULATIVE
+        mu: 1.5                                    # SPECULATIVE
+    - tau: 2                                       # SPECULATIVE
+      r_type: 1                                    # SPECULATIVE
+      calibration:                                 # SPECULATIVE
+        beta: 0.99                                 # SPECULATIVE
+        r: 0.04                                    # SPECULATIVE
+        sigma: 2.0                                 # SPECULATIVE
+        w: 1.2                                     # SPECULATIVE
+        A: 15.0                                    # SPECULATIVE
+        mu: 2.0                                    # SPECULATIVE
+    # ... additional (tau, r_type) pairs           # SPECULATIVE
+  population:                                      # SPECULATIVE
+    description: |                                 # SPECULATIVE
+      Intergenerational Markov chain over types.   # SPECULATIVE
+      Not part of the individual Bellman problem.  # SPECULATIVE
+    Pi_tau: [[0.8, 0.2], [0.3, 0.7]]              # SPECULATIVE
+    Pi_r: [[0.9, 0.1], [0.1, 0.9]]                # SPECULATIVE
