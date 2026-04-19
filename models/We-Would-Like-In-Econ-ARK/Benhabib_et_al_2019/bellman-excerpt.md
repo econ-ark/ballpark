@@ -88,19 +88,17 @@ The paper's baseline calibration fixes $\sigma = 2$ and estimates $\mu$ and $A$ 
 For a **given type assignment $(\tau, r)$** (a point in $\{1,\ldots,10\} \times \{r_1,\ldots,r_5\}$):
 
 - The problem is a **finite-horizon, discrete-time** lifecycle problem over $t = 1, \ldots, T$ with $T = 36$ periods.
-- The problem admits **two stage templates**:
-  - **Interior stage** (used at $t = 1, \ldots, T-1$): Bellman optimization with continuation value $V^{\tau,r}_{t+1}$.
-  - **Terminal stage** (used at $t = T$): Bellman optimization with warm-glow closure $e(a_{T+1})$ replacing the continuation value.
-- Each stage has **three perches**: arrival $\prec$, decision $\circ$, continuation $\succ$.
+- Per matsya evaluation (`topics2026-benhabib-demo` Turn 3), the problem uses **one stage template** applied at every age, with a **terminal boundary wiring** at $t = T$ supplying $V_{[\succ]} = e(a_{[\succ]})$ and $dV_{[\succ]} = e'(a_{[\succ]})$ in place of the iterated downstream value. A separate `terminal_stage` block is **not** used.
+- The stage has **three perches**: arrival $\prec$, decision $\circ$, continuation $\succ$.
 - Because there are no within-life shocks, the **forward mover** $\mathbb{I}_t$ (decision → arrival of $t+1$) is an **identity**; this is an explicitly degenerate but legitimate mover in the modular-DDSL formalism.
 
 The full within-lifetime problem is therefore the sequential composition
 
 $$
-V^{\tau,r}_1 \;=\; (\mathbb{T}_1 \circ \mathbb{T}_2 \circ \cdots \circ \mathbb{T}_{T-1} \circ \mathbb{T}^{\mathrm{term}}_T)[\,e(\cdot)\,]
+V^{\tau,r}_1 \;=\; (\mathbb{T}_1 \circ \mathbb{T}_2 \circ \cdots \circ \mathbb{T}_{T-1} \circ \mathbb{T}_T)[\,e(\cdot)\,]
 $$
 
-where each interior $\mathbb{T}_t$ uses the interior stage template with $w_t(\tau)$ as an age-varying parameter, and $\mathbb{T}^{\mathrm{term}}_T$ uses the terminal stage template.
+where each $\mathbb{T}_t$ uses the same stage template with $w_t(\tau)$ as an age-varying parameter. At the terminal age $t = T$, the boundary wiring replaces the iterated continuation input.
 
 ---
 
@@ -136,6 +134,18 @@ $$
 
 Equivalently, in compact form, the inter-period connector $\mathbb{I}_t$ is the identity on the poststate–prestate wiring $a_{\succ, t} \mapsto a_{\prec, t+1}$.
 
+**Canonical dolo-plus idiom** (per matsya evaluation, `topics2026-benhabib-demo` Turn 1; status **PROVISIONAL** — structurally valid per the "identity twister" dev-spec, no canonical example explicitly labeled identity-mover found in the corpus):
+
+```yaml
+dcsn_to_arvl_mover:
+  Bellman: |
+    V[<] = V
+  ShadowBellman: |
+    dV[<] = dV
+```
+
+(i.e., pure value pass-through, no expectation operator.) The `exogenous` block is correspondingly omitted, not declared-but-empty.
+
 ### Stage operator
 
 $$
@@ -167,44 +177,41 @@ The standard EGM iteration is: choose a grid over $a_{t+1}$, apply inverse Euler
 
 ## Terminal stage (used at $t = T$)
 
-### Perch decomposition
+Per matsya evaluation (`topics2026-benhabib-demo` Turn 3; status **PROVISIONAL** — recommended pattern has no canonical example in the retrieved corpus): the terminal stage is **the same stage template as the interior stage, with a terminal boundary wiring** that supplies $V_{[\succ]}$ and $dV_{[\succ]}$ as closed-form functions of the poststate rather than as outputs of a downstream Bellman solve. A separate `terminal_stage` block is **not recommended** — it violates compositionality.
 
-| Perch | Objects | Key transition or Bellman step |
-|:---|:---|:---|
-| **Arrival** ($\prec$) | state $a_T \in \mathbb{R}_{\ge 0}$; value $V^{\tau,r}_T(a_T)$ | $\mathrm{g}_{\prec\circ}$: $m_T = (1+r)\,a_T + w_T(\tau)$ |
-| **Decision** ($\circ$) | state $m_T$; control $c_T \in [0, m_T]$; terminal value | $\mathbb{B}_T^{\mathrm{term}}$: $V^{\tau,r}_T(m_T) = \max_{c_T \in [0, m_T]}\bigl\{u(c_T) + e(a_{T+1})\bigr\}$ |
-| **Continuation** ($\succ$) | state $a_{T+1} \in \mathbb{R}_{\ge 0}$ (the bequest); warm-glow payoff $e(a_{T+1})$ applied | $\mathrm{g}_{\circ\succ}$: $a_{T+1} = m_T - c_T$ — savings identity; no inter-period connector (life ends) |
+### Boundary wiring at $t = T$
 
-### Movers
-
-- **Backward mover $\mathbb{B}_T^{\mathrm{term}}$** (continuation → decision at $T$; the terminal optimization):
+At the continuation perch of period $T$ (the poststate $a_{T+1}$ carries the bequest), the value and marginal-value inputs to the backward mover are closed-form:
 
 $$
-V^{\tau,r}_T(m_T) \;=\; \max_{c_T \in [0, m_T]} \Bigl\{\; u(c_T) \;+\; e(a_{T+1}) \;\Bigr\},
-\qquad a_{T+1} = m_T - c_T.
+V_{[\succ]}(a_{T+1}) \;=\; e(a_{T+1}) \;=\; A\,\frac{a_{T+1}^{1-\mu}}{1-\mu},
 $$
 
-- **Forward mover $\mathbb{I}_T$:** **not applicable** — the agent does not survive to a period $T+1$, so there is no arrival of $t+1$ to integrate into. The terminal stage's continuation perch directly produces the bequest $a_{T+1}$ as the terminal-payoff input.
-
-### EGM channel (terminal period)
-
-The first-order condition at $t = T$ equates the marginal utility of consumption to the marginal warm-glow utility of bequeathing:
-
 $$
-u'(c_T) \;=\; \frac{\partial e(a_{T+1})}{\partial a_{T+1}} \quad\Longleftrightarrow\quad c_T^{-\sigma} \;=\; A\, a_{T+1}^{-\mu}.
+dV_{[\succ]}(a_{T+1}) \;=\; e'(a_{T+1}) \;=\; A\, a_{T+1}^{-\mu}.
 $$
 
-Combined with the budget identity $a_{T+1} = m_T - c_T$, this gives a one-dimensional root-find in $c_T$ (or, equivalently, a one-dimensional EGM inversion with the terminal FOC replacing the continuation-value envelope).
+These replace the iterated $V^{\tau,r}_{T+1}$ and $dV^{\tau,r}_{T+1}$ that would be produced by a downstream stage in the interior case.
 
-### Differential-savings result
+### EGM channel at the terminal boundary
 
-The relationship $c_T^{-\sigma} = A\, a_{T+1}^{-\mu}$ implies
+Applying the same Inverse Euler as the interior stage, with the boundary $dV_{[\succ]}$:
 
 $$
-a_{T+1} \;=\; A^{1/\mu}\, c_T^{\sigma/\mu}.
+c_{T,[\succ]} \;=\; \Bigl(\beta\, dV_{[\succ]}(a_{T+1})\Bigr)^{-1/\sigma} \;=\; \bigl(\beta\, A\, a_{T+1}^{-\mu}\bigr)^{-1/\sigma} \;=\; (\beta A)^{-1/\sigma}\, a_{T+1}^{\mu/\sigma}.
 $$
 
-When $\mu < \sigma$ (the paper's estimated regime), $\sigma/\mu > 1$, so the bequest-to-consumption ratio is **increasing** in $c_T$, which itself grows with $m_T$ — hence the paper's **differential savings rate (rich save proportionally more)** emerges from the curvature mismatch at the terminal stage and propagates backward through the recursion.
+Reverse transition: $m_{T,[\succ]} = a_{T+1} + c_{T,[\succ]}$. This produces the endogenous $m_T$ grid at period $T$ directly — no numerical root-find is required despite $\mu \ne \sigma$, because the Inverse Euler step inverts $u'(c) = c^{-\sigma}$ (always closed-form for CRRA) regardless of the functional form of $dV_{[\succ]}$. The $\mu \ne \sigma$ case is orthogonal to EGM's applicability.
+
+### Differential-savings result (analytical)
+
+Combining the Inverse-Euler solution $c_T = (\beta A)^{-1/\sigma} a_{T+1}^{\mu/\sigma}$ with the budget identity $a_{T+1} = m_T - c_T$:
+
+$$
+m_T \;=\; c_T + a_{T+1} \;=\; (\beta A)^{-1/\sigma}\, a_{T+1}^{\mu/\sigma} + a_{T+1}.
+$$
+
+As $m_T \to \infty$, $a_{T+1} \to \infty$, and since $\mu/\sigma < 1$ (in the paper's estimated $\mu < \sigma$ regime) the $a_{T+1}$ term dominates, so $a_{T+1}/m_T \to 1$: the **savings rate tends to 1** at the top. This is the analytical root of the paper's **differential savings** result (rich save proportionally more); the effect propagates backward through the recursion to earlier ages.
 
 ---
 
@@ -230,10 +237,12 @@ The **full household problem** is a **parameterized family of Bellman problems**
 
 A dolo-plus YAML must handle this parameterization. Two encoding options:
 
-- **(A) Calibration-override family (the HAFiscal pattern):** encode a single interior-stage template and a single terminal-stage template, and instantiate 50 copies at different calibrations (one per $(\tau, r)$ pair). This is the clean choice when $\tau$ and $r$ are genuinely constant-within-life, as they are here.
-- **(B) Discrete-state-resolved-at-birth:** encode $(\tau, r)$ as discrete state variables resolved only at the initial period $t = 1$ (effectively, a MC transition with mass 1 on the identity self-loop thereafter). Less clean but semantically equivalent.
+- **(A) Calibration-override family (the HAFiscal pattern):** encode a single interior-stage template, and instantiate 50 copies at different calibrations (one per $(\tau, r)$ pair). This is the clean choice when $\tau$ and $r$ are genuinely constant-within-life, as they are here.
+- **(B) Discrete-state-resolved-at-birth:** encode $(\tau, r)$ as discrete state variables resolved only at the initial period $t = 1$ (effectively, a MC transition with mass 1 on the identity self-loop thereafter).
 
-**Recommended:** option (A). Option (B) would misleadingly suggest within-life uncertainty in $(\tau, r)$, which there is none of.
+**Recommended: option (A)** — per matsya evaluation (`topics2026-benhabib-demo` Turn 2; status **UNRESOLVED**): "structurally sound" given the spec's separation of calibration from stage structure, but *"the mechanism for instantiating a family (calibration overrides, model-level type indexing) is not documented"* in matsya's retrieved corpus. Option (B) is explicitly rejected — matsya's verdict: *"Not recommended — violates measurability spirit"* (types would masquerade as dynamic states).
+
+The YAML should follow pattern (A) and include a `# workaround: family-instantiation mechanism is UNRESOLVED — canonical dolo-plus spec on calibration-override families not located as of topics2026-benhabib-demo session` comment pending location of a HAFiscal or type-heterogeneity canonical example.
 
 ---
 
@@ -241,30 +250,35 @@ A dolo-plus YAML must handle this parameterization. Two encoding options:
 
 The minimum adequate `dolo-plus-draft.yaml` formalization consists of:
 
-1. One `stage` declaration for the **interior period template**, with perches, transitions, movers (including an explicit identity forward mover), the EGM mover block, and a symbols-conventions block matching the Symbol table above.
-2. One `stage` declaration for the **terminal period**, with the warm-glow closure and the terminal FOC.
-3. A `calibration` block that parameterizes the **family** — ten values for $w_t(\tau)$ at each age, five values for $r$, and the preference parameters $(\sigma, \mu, A, \beta)$.
-4. An outer composition specifying **lifecycle nest** (repeat interior for $t = 1, \ldots, T-1$; terminal at $T$).
+1. One `stage` declaration for the **single stage template** (matsya recommendation; not two separate interior/terminal blocks). Contains perches, within-stage transitions, the backward mover $\mathbb{B}$ (Bellman), an explicitly-identity forward mover $\mathbb{I}$ (`V[<] = V; dV[<] = dV`), the EGM mover block, and a symbols-conventions block matching the Symbol table above.
+2. **Terminal boundary wiring** for $t = T$: supplies $V_{[\succ]}(a_{[\succ]}) = A\,a_{[\succ]}^{1-\mu}/(1-\mu)$ and $dV_{[\succ]}(a_{[\succ]}) = A\,a_{[\succ]}^{-\mu}$ in place of the iterated $V^{\tau,r}_{T+1}, dV^{\tau,r}_{T+1}$ that would otherwise flow from the next age.
+3. A `calibration` block that parameterizes the **family** — ten age-profiles $w_t(\tau)$ for $\tau \in \{1, \ldots, 10\}$ (paper Table 1), five values for $r$, and the preference parameters $(\sigma, \mu, A, \beta)$.
+4. An outer composition specifying the **lifecycle nest** (apply the stage template at $t = 1, \ldots, T$ with age-varying $w_t(\tau)$; at $t = T$ use the terminal boundary wiring).
+5. An **instantiation mechanism** for the $(\tau, r)$ family, following option (A) calibration-override — pending resolution of the UNRESOLVED canonical-idiom gap, with an inline `# workaround:` comment.
 
 ---
 
-## Open issues / flagged gaps for the Matsya iteration
+## Open issues / flagged gaps — status after matsya evaluation (session `topics2026-benhabib-demo`)
 
-Items the Matsya iteration should explicitly validate or flag as workarounds:
+The items below were drafted as open questions for the first matsya round; their post-evaluation status is recorded here.
 
-1. **Degenerate forward mover $\mathbb{I}_t = \mathrm{id}$.** There are no within-life shocks. Matsya should confirm the dolo-plus `exogenous` block can be omitted (not just empty-but-declared) and that a pure-identity $\mathbb{I}_t$ is canonical. The `cons_stage_no_shocks` or `deterministic_lifecycle` template, if it exists, is the appropriate reference.
+### Resolved / addressed
 
-2. **Parameterized-family dimension $(\tau, r)$.** Matsya should confirm whether dolo-plus's calibration-override family (option A above) is the canonical encoding for parameters that are drawn at birth but fixed within a life. The HAFiscal formalization uses this pattern for $(\beta_i, e)$; the mechanism should transfer.
+1. **Degenerate forward mover $\mathbb{I}_t = \mathrm{id}$.** *Resolved* by matsya (Turn 1). Canonical YAML idiom is the value pass-through pattern `V[<] = V; dV[<] = dV`, with the `exogenous` block omitted (not declared-but-empty). Status **PROVISIONAL** — no canonical example explicitly labeled "identity mover" found, but the pattern is structurally valid per the "identity twister" dev-spec. The YAML should include an inline comment citing the PROVISIONAL status.
 
-3. **Warm-glow terminal closure.** Matsya should confirm the canonical idiom for a terminal period whose continuation is a closed-form function $e(a_{T+1})$ rather than a continuation value. Candidates: (i) treating $e$ as the "next period's arrival value" and running the interior template with a degenerate terminal wiring; (ii) a dedicated `terminal_stage` block. The worked example `cons_stage` patterns may favor one.
+2. **Parameterized-family dimension $(\tau, r)$.** *Addressed* by matsya (Turn 2). Option (A) calibration-override family is recommended over option (B) discrete-state-at-birth. Status **UNRESOLVED** — mechanism for instantiation not found in matsya's retrieved corpus. The YAML should include a `# workaround:` comment flagging the gap.
 
-4. **Lifecycle nest with age-varying $w_t(\tau)$.** Matsya should confirm the canonical syntax for overriding a single parameter ($w_t$) at each repetition of the interior template across $t$. The paper provides $w_t(\tau)$ as a $10 \times 6$ age-bracket matrix (Table 1), interpolated linearly within bracket; the YAML should reference this table rather than hard-code 36 values.
+3. **Warm-glow terminal closure.** *Resolved* by matsya (Turn 3). Recommended: the interior template with terminal boundary wiring $V_{[\succ]} = e(a_{[\succ]})$, $dV_{[\succ]} = A\,a_{[\succ]}^{-\mu}$. A separate `terminal_stage` block is explicitly **not** recommended (violates compositionality). Status **PROVISIONAL**.
 
-5. **Section IIID wealth-dependent $r$ extension — out of scope.** The baseline formalization treats $r$ as fixed-within-life. The Section IIID extension allows $r = r_0 + b \cdot p(a)$ where $p(a)$ is a wealth-percentile index and $b$ is estimated. This is a **substantive change to the exogenous block** (state-contingent $r$ rather than fixed-at-birth $r$) and belongs in a **second, separate YAML** for the extension — not the baseline.
+4. **Terminal FOC invertibility (previously flagged as a concern).** *Corrected* by matsya (Turn 3). The $\mu \ne \sigma$ case does **not** require a numerical root-find: the Inverse Euler step inverts $u'(c) = c^{-\sigma}$ regardless of the functional form of $dV_{[\succ]}$. The terminal boundary's $dV_{[\succ]} = A\,a_{[\succ]}^{-\mu}$ plugs into the same Inverse Euler the interior stage uses. This previously-flagged concern was based on thinking about fixed-grid root-finding; under EGM it is not an issue.
 
-6. **Terminal FOC invertibility.** The terminal FOC $c_T^{-\sigma} = A\, a_{T+1}^{-\mu}$ with budget $a_{T+1} = m_T - c_T$ has a unique solution in $c_T$ for all $m_T > 0$, but no closed form (because $\sigma \ne \mu$ in the paper's estimated regime). Matsya should confirm whether dolo-plus's EGM block supports the terminal FOC pattern $u'(c_T) = e'(a_{T+1})$ directly, or whether a numerical one-dimensional root-find must be coded inline.
+### Still open
 
-7. **Non-negativity of $a_{t+1}$ from the no-borrowing constraint.** The constraint $0 \le c_t \le m_t$ implies $a_{t+1} = m_t - c_t \ge 0$ automatically. The YAML should not declare a redundant poststate constraint; the control-bound constraint is sufficient.
+5. **Lifecycle nest with age-varying $w_t(\tau)$.** The paper provides $w_t(\tau)$ as a $10 \times 6$ age-bracket matrix (paper Table 1), interpolated linearly within bracket; the YAML should reference this table. Canonical dolo-plus syntax for per-age parameter overrides on a repeated stage was not asked of matsya in this round; a follow-up query may be needed.
+
+6. **Section IIID wealth-dependent $r$ extension — out of scope for baseline YAML.** The baseline formalization treats $r$ as fixed-within-life. The extension $r = r_0 + b \cdot p(a)$ (where $p(a)$ is a wealth-percentile index) is a **substantive change to the `exogenous` block** (state-contingent $r$ rather than fixed-at-birth $r$) and belongs in a **second, separate YAML** for the extension — not the baseline.
+
+7. **Non-negativity of $a_{t+1}$ from the no-borrowing constraint.** The constraint $0 \le c_t \le m_t$ implies $a_{t+1} = m_t - c_t \ge 0$ automatically. The YAML should not declare a redundant poststate constraint; the control-bound constraint is sufficient. No matsya input needed for this.
 
 ---
 
