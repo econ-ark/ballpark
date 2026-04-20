@@ -28,6 +28,8 @@ As an example of the kinds of things we are looking for, see the [paper](https:/
 
 The papers listed herein are a small subset of the ones that we would welcome into the Econ-ARK. If you want to work on a paper that is not listed here, post an "issue" on the repo asking (and providing a link and bibliographical reference for the paper in question). If it is likely to prove interesting to our audience, we are very likely to encourage you to replicate it.
 
+For what a ballpark item should contain and how to submit one, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## Environment Setup
 
 This repo uses [uv](https://docs.astral.sh/uv/) for dependency management and keeps per-platform environments in directories named `.venv-<os>-<arch>` (matching the pattern used in `HAFiscal-Latest`). Install uv first (`brew install uv` or `curl -LsSf https://astral.sh/uv/install.sh | sh`).
