@@ -61,7 +61,12 @@ equations:
     m_tilde = (1 + r) * a_tilde + w_tilde * e - tau
 
   dcsn_to_cntn_transition: |
-    a_prime = m_tilde - c_tilde
+    # Paper's budget has (1+g)*a_prime on the LHS; restoring the factor
+    # to keep the YAML 1-to-1 with equation (1) in Aiyagari & McGrattan
+    # (1998), Sec. II. If future code prefers to absorb (1+g) into a
+    # rescaled poststate, flag it as `# workaround:` rather than drop
+    # the factor silently.
+    a_prime = (m_tilde - c_tilde) / (1 + g)
 
   cntn_to_dcsn_mover:
 
@@ -69,13 +74,19 @@ equations:
       V = max_{c_tilde}{c_tilde^(1 - nu) / (1 - nu) + beta_tilde * V[>]}
 
     InvEuler: |
-      c_tilde[>] = (beta_tilde * dV[>])^(-1/nu)
+      # With budget c + (1+g)*a_prime = m, the FOC picks up a 1/(1+g)
+      # factor from d(a_prime)/d(c) = -1/(1+g). The standard Euler
+      # c = (beta_tilde * dV[>])^(-1/nu) would be correct only if the
+      # (1+g) factor were absorbed into an effective discount factor.
+      c_tilde[>] = (beta_tilde * dV[>] / (1 + g))^(-1/nu)
 
     MarginalBellman: |
       dV = c_tilde^(-nu)
 
     cntn_to_dcsn_transition: |
-      m_tilde[>] = a_prime + c_tilde[>]
+      # EGM reverse transition: recover the endogenous m-grid point
+      # consistent with the paper's budget c + (1+g)*a_prime = m.
+      m_tilde[>] = (1 + g) * a_prime + c_tilde[>]
 
   dcsn_to_arvl_mover:
 

@@ -80,13 +80,13 @@ This is a deterministic, non-invertible map: many $(\tilde{a}, e)$ pairs can pro
 
 ### Decision → Continuation ($\mathrm{g}_{\circ\succ}$)
 
-The budget constraint determines end-of-period assets:
+The budget constraint determines end-of-period assets. The paper's equation (1) (Sec. II) has $(1+g)$ on the left-hand side:
 
 $$
-\tilde{a}' = \tilde{m} - \tilde{c}
+\tilde{c} + (1+g)\,\tilde{a}' = \tilde{m} \quad\Longleftrightarrow\quad \tilde{a}' = \frac{\tilde{m} - \tilde{c}}{1+g}
 $$
 
-with $\tilde{c} \in [0, \tilde{m}]$ (nonnegativity of both consumption and assets).
+with $\tilde{c} \in [0, \tilde{m}]$ (nonnegativity of both consumption and assets). Keeping the factor explicit rather than absorbing it into an effective discount factor matches the paper 1-to-1 and avoids a silent rescaling of the poststate.
 
 Productivity passes through: $e$ at continuation equals $e$ at decision.
 
@@ -99,7 +99,13 @@ Productivity passes through: $e$ at continuation equals $e$ at decision.
 The backward mover solves the consumption problem, taking the continuation value $\mathrm{v}_\succ(\tilde{a}', e)$ as given:
 
 $$
-\mathrm{v}(\tilde{m}, e) = \max_{\tilde{c} \in [0,\, \tilde{m}]} \left\{ \frac{\tilde{c}^{\,1-\nu}}{1-\nu} + \tilde{\beta}\;\mathrm{v}_\succ(\tilde{m} - \tilde{c},\; e) \right\}
+\mathrm{v}(\tilde{m}, e) = \max_{\tilde{c} \in [0,\, \tilde{m}]} \left\{ \frac{\tilde{c}^{\,1-\nu}}{1-\nu} + \tilde{\beta}\;\mathrm{v}_\succ\!\left(\frac{\tilde{m} - \tilde{c}}{1+g},\; e\right) \right\}
+$$
+
+The first-order condition picks up a $(1+g)^{-1}$ factor from $\partial \tilde{a}'/\partial \tilde{c} = -1/(1+g)$:
+
+$$
+\tilde{c}^{\,-\nu} = \frac{\tilde{\beta}}{1+g}\,\mathrm{v}'_\succ(\tilde{a}',\, e).
 $$
 
 **Envelope condition (marginal value at decision perch):**
@@ -132,16 +138,16 @@ For each productivity state $e_i$ and each point $\tilde{a}'_j$ on the exogenous
 
 **Step 1 — Marginal continuation value.** Compute $\mathrm{v}'_\succ(\tilde{a}'_j, e_i)$ from the forward mover (ShadowBellman evaluated on the poststate grid).
 
-**Step 2 — Inverse Euler (InvEuler).** Invert the FOC:
+**Step 2 — Inverse Euler (InvEuler).** Invert the FOC (which carries a $(1+g)^{-1}$ factor from the explicit growth-scaling of the poststate):
 
 $$
-\tilde{c}_{[\succ]}(\tilde{a}'_j, e_i) = \left(\tilde{\beta}\;\mathrm{v}'_\succ(\tilde{a}'_j, e_i)\right)^{-1/\nu}
+\tilde{c}_{[\succ]}(\tilde{a}'_j, e_i) = \left(\frac{\tilde{\beta}}{1+g}\;\mathrm{v}'_\succ(\tilde{a}'_j, e_i)\right)^{-1/\nu}
 $$
 
-**Step 3 — Reverse transition (endogenous grid point).** Recover cash-on-hand:
+**Step 3 — Reverse transition (endogenous grid point).** Recover cash-on-hand from the budget $\tilde{c} + (1+g)\,\tilde{a}' = \tilde{m}$:
 
 $$
-\tilde{m}_{[\succ]}(\tilde{a}'_j, e_i) = \tilde{a}'_j + \tilde{c}_{[\succ]}(\tilde{a}'_j, e_i)
+\tilde{m}_{[\succ]}(\tilde{a}'_j, e_i) = (1+g)\,\tilde{a}'_j + \tilde{c}_{[\succ]}(\tilde{a}'_j, e_i)
 $$
 
 **Step 4 — Envelope condition.** Marginal value at the endogenous decision-perch point:
