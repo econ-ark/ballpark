@@ -1,8 +1,8 @@
-# Aiyagari–McGrattan (1998) — Model A Household Stage
+# Aiyagari–McGrattan (1998) — Household Stage
 
 **Paper:** S. Rao Aiyagari and Ellen R. McGrattan, "The Optimum Quantity of Debt," *Journal of Monetary Economics* 42, 1998.
 
-**Scope:** Household dynamic program only (Model A: inelastic labor, lump-sum taxes). Prices $(r, \tilde{w})$ and fiscal policy $(\tau)$ are parameters pinned down outside this stage by general equilibrium.
+**Scope:** Household dynamic program only. Two variants are covered: **Model A** (inelastic labor, lump-sum taxes; §§1–9) and **Model B** (elastic labor, proportional taxes; §10 — the paper's benchmark). Prices $(r, \tilde{w})$ and fiscal policy $(\tau, \chi)$ are parameters pinned down outside this stage by general equilibrium.
 
 ---
 
@@ -199,11 +199,49 @@ where $H(\tilde{a}, e)$ is the steady-state joint distribution of assets and pro
 
 ---
 
-## 10. Note on Model B (Elastic Labor)
+## 10. Model B — Elastic Labor Supply, Proportional Taxes (Benchmark)
 
-Model B adds leisure $l \in [0,1]$ as a second control with composite utility $u(\tilde{c}, l) = (\tilde{c}^\eta l^{1-\eta})^{1-\mu}/(1-\mu)$. This does **not** change the perch structure — it remains a single stage with three perches. The structural differences are:
+Model B is the paper's benchmark specification. It keeps the same three-perch structure as Model A but adds leisure $l \in [0,1]$ as a second control and switches from lump-sum to proportional taxes (with a lump-sum transfer $\chi$).
 
-1. Two controls $(\tilde{c}, l)$ at the decision perch
-2. Budget constraint becomes $\tilde{a}' = \tilde{m} - \bar{w}\,e\,l - \tilde{c}$
-3. Intratemporal FOC pins down $\tilde{c}/l = \eta\,\bar{w}\,e/(1-\eta)$, reducing to one effective control
-4. EGM remains feasible via conditional inversion
+### 10.1 Objective (growth-normalized)
+
+$$
+\max_{\{\tilde{c}_t,\, l_t,\, \tilde{a}_{t+1}\}} \quad
+E\!\left[
+  \sum_{t=0}^{\infty} \tilde{\beta}^{\,t}
+  \frac{(\tilde{c}_t^{\,\eta}\, l_t^{\,1-\eta})^{1-\mu}}{1-\mu}
+  \;\Big|\; \tilde{a}_0, e_0
+\right]
+$$
+
+where $l_t \in [0,1]$ is leisure (so $1-l_t$ is labor supply), $\eta \in (0,1)$ is the consumption weight in the Cobb–Douglas composite, and $\mu > 0$ is the CRRA coefficient over the composite.
+
+### 10.2 Budget constraint
+
+$$
+\tilde{c}_t + (1+g)\,\tilde{a}_{t+1}
+  \le (1+\bar{r})\,\tilde{a}_t + \bar{w}\,e_t\,(1 - l_t) + \chi
+$$
+
+where $(\bar{r}, \bar{w})$ are steady-state after-tax prices (so the proportional tax wedges are absorbed into the prices faced by the household) and $\chi$ is a lump-sum transfer.
+
+### 10.3 Constraints
+
+$$
+\tilde{c}_t \ge 0, \qquad \tilde{a}_t \ge 0, \qquad 0 \le l_t \le 1
+$$
+
+### 10.4 Structural differences from Model A
+
+The perch structure is unchanged (three perches, same stage operator $\mathbb{T} = \mathbb{I} \circ \mathbb{B}$). What changes:
+
+1. **Two controls** $(\tilde{c}, l)$ at the decision perch rather than one.
+2. **Labor-income term** $\bar{w}\, e\, (1-l)$ in the budget replaces the exogenous $\tilde{w}\,e - \tau$ of Model A.
+3. **Intratemporal FOC** pins the leisure ratio: $\tilde{c}/l = \eta\,\bar{w}\,e/(1-\eta)$. This collapses the two-control problem to one effective control.
+4. **EGM remains feasible** via conditional inversion: solve the intratemporal FOC first (given $e$), then apply the same EGM recipe as in §5.
+
+*See §3 of `OptimumDebt_summary.ipynb` for the explicit Bellman statement of Model B; a full perch decomposition parallel to §§2–5 is a next-task item tracked in* `AGENTS.md`.
+
+### 10.5 Note on the paper's computational method (rejected from formal DP)
+
+The paper enforces the inequality constraints $\tilde{a} \ge 0$ and $l \in [0,1]$ numerically with cubic **penalty terms** of the form $\zeta \cdot \min(\tilde{a}, 0)^3$ and $\zeta \cdot \min(1-l, 0)^3$ appended to the objective. This is a **solver-level device** for the finite-element method the authors use; the formal DP uses the hard constraints above. See `verification.md` for the "rejected" status of the penalty formulation in the formalization.
