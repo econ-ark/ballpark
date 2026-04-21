@@ -237,16 +237,80 @@ $$
 \tilde{c}_t \ge 0, \qquad \tilde{a}_t \ge 0, \qquad 0 \le l_t \le 1
 $$
 
-### 10.4 Structural differences from Model A
+### 10.4 Added symbols (beyond Model A)
 
-The perch structure is unchanged (three perches, same stage operator $\mathbb{T} = \mathbb{I} \circ \mathbb{B}$). What changes:
+| Symbol | Role | Space / Domain | Description |
+|--------|------|----------------|-------------|
+| $l$ | control | $[0, 1]$ | Leisure (so $1-l$ is labor supply) |
+| $\eta$ | parameter | $(0, 1)$ | Consumption weight in the Cobb–Douglas composite |
+| $\mu$ | parameter | $\mathbb{R}_+$ | CRRA coefficient over the composite |
+| $\bar r$ | parameter (from GE) | $\mathbb{R}$ | After-tax net interest rate |
+| $\bar w$ | parameter (from GE) | $\mathbb{R}_+$ | After-tax wage (output-normalized) |
+| $\chi$ | parameter (from govt budget) | $\mathbb{R}$ | Lump-sum transfer |
 
-1. **Two controls** $(\tilde{c}, l)$ at the decision perch rather than one.
-2. **Labor-income term** $\bar{w}\, e\, (1-l)$ in the budget replaces the exogenous $\tilde{w}\,e - \tau$ of Model A.
-3. **Intratemporal FOC** pins the leisure ratio: $\tilde{c}/l = \eta\,\bar{w}\,e/(1-\eta)$. This collapses the two-control problem to one effective control.
-4. **EGM remains feasible** via conditional inversion: solve the intratemporal FOC first (given $e$), then apply the same EGM recipe as in §5.
+All symbols from Model A (§6) are carried over unchanged except that the household faces $(\bar r, \bar w)$ rather than $(r, \tilde w)$, and the tax instrument is $\chi$ rather than $\tau$.
 
-*See §3 of `OptimumDebt_summary.ipynb` for the explicit Bellman statement of Model B; a full perch decomposition parallel to §§2–5 is a next-task item tracked in* `AGENTS.md`.
+### 10.5 Perch structure for Model B
+
+The stage retains three perches; only the decision perch's control dimension and the transitions change.
+
+**Arrival perch ($\prec$):** same as Model A — $(\tilde{a}, e)$ with $\mathcal{F}_\prec = \sigma(\tilde{a}, e)$.
+
+**Decision perch ($\circ$):** state $(\tilde{m}, e)$; controls $(\tilde{c}, l)$.
+
+| Role | Variable | Space | Description |
+|------|----------|-------|-------------|
+| state | $\tilde{m}$ | $\mathbb{R}_+$ | Cash-on-hand *exclusive* of labor income (see transition below) |
+| state | $e$ | $\mathcal{E}$ | Productivity |
+| control | $\tilde{c}$ | $\mathbb{R}_+$ | Consumption |
+| control | $l$ | $[0, 1]$ | Leisure |
+
+**Continuation perch ($\succ$):** same as Model A — $(\tilde{a}', e)$.
+
+### 10.6 Transitions (Model B)
+
+**Arrival → Decision** ($\mathrm{g}_{\prec\circ}$): labor income depends on the choice $l$, so the natural decomposition absorbs the non-labor income into $\tilde{m}$ and lets labor income enter at the decision perch via the budget:
+
+$$
+\tilde{m} = (1 + \bar r)\,\tilde{a} + \chi.
+$$
+
+**Decision → Continuation** ($\mathrm{g}_{\circ\succ}$): the budget (with the $(1+g)$ factor restored from §3) then determines end-of-period assets as a function of both controls:
+
+$$
+(1+g)\,\tilde{a}' = \tilde{m} + \bar w\,e\,(1-l) - \tilde{c} \quad\Longleftrightarrow\quad \tilde{a}' = \frac{\tilde{m} + \bar w\,e\,(1-l) - \tilde{c}}{1+g}.
+$$
+
+### 10.7 Movers (Model B)
+
+**Backward mover $\mathbb{B}$:**
+
+$$
+\mathrm{v}(\tilde{m}, e) = \max_{\tilde{c}\in\mathbb{R}_+,\; l\in[0,1]}\left\{
+\frac{(\tilde{c}^{\,\eta}\, l^{\,1-\eta})^{1-\mu}}{1-\mu}
++ \tilde{\beta}\;\mathrm{v}_\succ\!\left(\frac{\tilde{m} + \bar w\,e\,(1-l) - \tilde{c}}{1+g},\; e\right)
+\right\}.
+$$
+
+At an interior optimum, the intratemporal FOC pins the consumption–leisure margin:
+
+$$
+\frac{\tilde{c}}{l} = \frac{\eta}{1-\eta}\,\bar w\,e.
+$$
+
+Substituting $l = \tilde{c}\,(1-\eta)/(\eta\,\bar w\, e)$ collapses the problem to a single effective control in $\tilde{c}$; the intertemporal (Inverse Euler) step then mirrors Model A's §5 with the composite marginal utility replacing $\tilde{c}^{-\nu}$.
+
+**Forward mover $\mathbb{I}$:** identical in form to Model A (§4) with $r \mapsto \bar r$, $\tilde w \mapsto \bar w$, and $\tau \mapsto -\chi$:
+
+$$
+\mathrm{v}_\prec(\tilde{a}',\, e) = \sum_{e'\in\mathcal{E}} \pi(e'\mid e)\; \mathrm{v}\!\left((1+\bar r)\,\tilde{a}' + \chi,\; e'\right).
+$$
+
+Note the *arrival-to-decision* transition above places only $(1+\bar r)\tilde{a}+\chi$ into $\tilde{m}$ so labor income appears where the leisure control is actually chosen; this is one of two equivalent conventions.
+
+### 10.8 EGM feasibility
+
+EGM (§5) remains applicable via **conditional inversion**: for fixed $e$, the intratemporal FOC reduces the choice to $\tilde{c}$ alone; the standard EGM inversion (with the $(1+g)$ factor of §5) then recovers the endogenous $\tilde{m}$-grid. The composite marginal utility $u_c(\tilde{c}, l) = \eta\,(\tilde{c}^{\,\eta}\, l^{\,1-\eta})^{1-\mu}/\tilde{c}$ is invertible in $\tilde{c}$ at each $e$, so InvEuler remains closed-form.
 
 ### 10.5 Note on the paper's computational method (rejected from formal DP)
 
