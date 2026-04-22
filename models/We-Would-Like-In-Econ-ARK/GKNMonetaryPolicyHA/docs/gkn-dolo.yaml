@@ -33,8 +33,19 @@ symbols:
 
 equations:
   arvl_to_dcsn_transition: |
-    e ~ P_e(e_old, X)
+    # workaround: P_e should be evaluated at X_tilde_prime (the pre-transition
+    # aggregate state of the next period), not X. The paper (Section 2.3, Figure 1)
+    # is explicit: f = f(X_tilde'). The YAML uses X_tilde_prime to reflect this,
+    # but dolo-plus has no canonical idiom for distinguishing pre- vs post-transition
+    # aggregate states. See verification.md for details.
+    X_tilde_prime = G_tilde(X)
+    e ~ P_e(e_old, X_tilde_prime)
     s ~ P_s(s_old)
+    # unresolved: H is a Krusell-Smith log-linear forecasting rule approximating the
+    # full law of motion for X. The paper does not give a closed-form H; details are
+    # in Appendix B. The infinite-dimensional distribution mu is summarized by a
+    # finite set of moments with log-linear forecasting rules estimated from
+    # simulated data.
     X_prime = H(X, Z_prime, D_prime)
     y = e * w(X_prime) * s * (1 - tau(X_prime)) + (1 - e) * b_unemp * s
     m = (p_a(X_prime) + d_a(X_prime)) * a + y
@@ -62,6 +73,8 @@ equations:
       dV[<] = E_{e, s, Z_prime, D_prime}{(p_a(X_prime) + d_a(X_prime)) * dV}
 
   # Employment transition probabilities (Section 2.3 of the paper)
+  # workaround: These are evaluated at X_tilde' (pre-transition state of next
+  # period), not at X' (post-transition). See arvl_to_dcsn_transition above.
   # Employed:   P(e'=1 | e=1) = 1 - lambda + lambda * f(X_tilde')
   #             P(e'=0 | e=1) = lambda * (1 - f(X_tilde'))
   # Unemployed: P(e'=1 | e=0) = f(X_tilde')
@@ -92,6 +105,8 @@ calibration:
       - [0.0183, 0.0183, 0.0183, 0.9450]
 
   settings:
+    # placeholder: grid settings are reasonable defaults, not from the paper
+    # (which does not report grid sizes in the main text).
     n_a: 200
     a_min: 0.0
     a_max: 500.0
