@@ -1,6 +1,9 @@
 version: 1
 project:
-  title: "A Comprehensive Quantitative Theory of the U.S. Wealth Distribution — Ballpark Entry"
+  title: "Sources of U.S. Wealth Inequality: Past, Present, and Future — Ballpark Entry"
+  authors:
+    - name: "Julien Acalin"
+    - name: "Ruby Zheng"
   bibliography:
     - self.bib
     - references.bib
@@ -10,5 +13,14 @@ project:
     - file: HKSWealthDistribution_prior-literature.ipynb
     - file: HKSWealthDistribution_summary.ipynb
     - file: HKSWealthDistribution_subsequent-literature.ipynb
+  exports:
+    - format: pdf
+      template: plain_latex_book
+      articles:
+        - HKSWealthDistribution_intro.ipynb
+        - HKSWealthDistribution_prior-literature.ipynb
+        - HKSWealthDistribution_summary.ipynb
+        - HKSWealthDistribution_subsequent-literature.ipynb
+      output: exports/HKSWealthDistribution.pdf
 site:
-  title: "A Comprehensive Quantitative Theory of the U.S. Wealth Distribution — Ballpark Entry"
+  title: "Sources of U.S. Wealth Inequality: Past, Present, and Future — Ballpark Entry"
