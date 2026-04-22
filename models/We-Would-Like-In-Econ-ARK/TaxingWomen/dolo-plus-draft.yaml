@@ -1,0 +1,318 @@
+# dolo-plus-draft.yaml — TaxingWomen (working draft)
+#
+# Source paper: Guner, Kaygusuz, Ventura (2012), "Taxing Women: A Macroeconomic
+# Analysis," Journal of Monetary Economics 59(1), 111-128.
+# DOI: 10.1016/j.jmoneco.2011.10.002
+#
+# Companion files:
+#   - bellman-excerpt.md                  (terse Bellman equations + symbol table)
+#   - bellman-excerpt-SMD-polished.md     (perch tables + stage composition)
+#   - TaxingWomen_Summary.ipynb §II.0     (primitives)
+#
+# Scope: the working-age MARRIED-HOUSEHOLD period (j < J_R). Singles and the
+# retired leg are noted at the end of the file but not fully expanded.
+#
+# Conventions:
+#   - arrival->decision mover is identity on every stage (no within-period
+#     shocks; T = I o B with degenerate I)
+#   - states listed before controls
+#   - unresolved syntax is flagged with `# unresolved:` inline
+#   - paper-verification-pending functional-form items are flagged with `# paper-verify:`
+
+name: TaxingWomen_GKV2012_married_workingage
+framework: dolo-plus
+schema: draft
+version: 0.1.0
+
+# -----------------------------------------------------------------------------
+# Symbols
+# -----------------------------------------------------------------------------
+
+symbols:
+
+  states:
+    - a         # assets
+    - h         # wife's human capital
+    - x         # wife's permanent productivity type (discrete, 4-point grid)
+    - z         # husband's permanent productivity type (discrete, 4-point grid)
+    - q         # wife's permanent utility cost of joint work (continuous, Gamma(.|z))
+    - b         # birth year of first child (discrete)
+    - j         # age
+
+  controls_female_labor:
+    - l_f       # wife's labor supply (continuous >= 0; l_f = 0 is the extensive-margin corner)
+
+  controls_male_labor:
+    - l_m       # husband's labor supply (continuous >= 0)
+
+  controls_consumption_savings:
+    - a_next    # next-period assets (continuous >= 0)
+
+  exogenous: []    # no within-period shocks; permanent types are drawn once at birth/marriage
+
+  parameters:
+    - beta              # time discount
+    - phi               # labor-disutility scale
+    - gamma             # 1/Frisch elasticity
+    - kappa             # wife's young-child time cost  # paper-verify: channel is (l_f + k_y*kappa)
+    - delta_h           # human-capital atrophy per non-participating period (0.02)
+    - w                 # equilibrium wage (solved in outer equilibrium loop)
+    - r                 # equilibrium interest rate (solved in outer equilibrium loop)
+    - tau_k             # capital-tax rate
+    - tau_p             # payroll-tax rate
+    - I_bar             # mean income (used to scale income inside log-tax)
+    - eps_I             # workaround: small positive lower bound on I for tau(ln I/I_bar)
+    - zeta1             # log-tax intercept  # see parameter_switching block below
+    - zeta2             # log-tax slope      # see parameter_switching block below
+
+  tables:
+    - varpi_m           # husband's age- and type-dependent productivity, indexed by (z, j)
+    - a_profile         # human-capital accumulation coefficient a_j^x, indexed by (x, j)
+    - d_child           # child-care goods cost d(s), indexed by s = j+1-b, with d(1)=0.064, d(2)=d(3)=0.049
+    - k_y_of_b_j        # indicator of young child, indicated by (b, j)
+    - p_M               # pension p^M(x, z) for retired married households
+    - zeta_table        # (zeta1, zeta2) indexed by (filing_status, young_children_indicator); GKV 2012 Table 2
+
+# -----------------------------------------------------------------------------
+# Derived functions
+# -----------------------------------------------------------------------------
+
+definitions:
+
+  # wife's human capital law of motion
+  chi: |
+    chi(l_f) = 1.0 if l_f > 0 else 0.0     # participation indicator
+  G_h_next: |
+    h_next = exp( log(h) + a_profile[x, j] * chi(l_f) - delta_h * (1 - chi(l_f)) )
+
+  # young-child indicator and child-care cost
+  k_y: |
+    k_y = k_y_of_b_j[b, j]                  # 1 when age-within-family s in {1,2,3}, else 0
+  d_s: |
+    s_child = j + 1 - b
+    d_s = d_child[s_child] if s_child in (1, 2, 3) else 0.0
+
+  # family labor income and total income (used by tax function)
+  earnings_h: |
+    earnings_h = w * varpi_m[z, j] * l_m    # husband's labor earnings
+  earnings_w: |
+    earnings_w = w * h * l_f                # wife's labor earnings
+  capital_income: |
+    capital_income = r * a                  # pre-tax capital income
+  I_total: |
+    I_total = earnings_h + earnings_w + capital_income
+
+  # log-progressive income tax; guarded to avoid singularity at I -> 0
+  # workaround: tau(I_bar) = zeta1 + zeta2 * log(I_guard/I_bar), with I_guard = max(I_total, eps_I)
+  tax_married: |
+    I_guard = max(I_total, eps_I)
+    y_tilde = I_guard / I_bar
+    tau_rate = zeta1 + zeta2 * log(y_tilde)
+    T_M = tau_rate * I_guard
+
+  # net resources available for c + a_next in the working-age married problem
+  net_resources: |
+    net_resources =
+      a * (1 + r * (1 - tau_k))
+      + (earnings_h + earnings_w) * (1 - tau_p)
+      - T_M
+      - w * d_s * chi(l_f) * k_y
+
+  # current-period consumption from the budget constraint
+  c_of_anext: |
+    c = net_resources - a_next             # requires c > 0 at any feasible grid cell
+
+# -----------------------------------------------------------------------------
+# Unitary married-household period utility  # paper-verify the additive q*chi(l_f) form
+# -----------------------------------------------------------------------------
+
+period_utility:
+  married: |
+    U_M = log(c)
+          - phi * l_m^(1 + 1/gamma) / (1 + 1/gamma)
+          - phi * (l_f + k_y * kappa)^(1 + 1/gamma) / (1 + 1/gamma)
+          - q * chi(l_f)
+    # note: SINGLE log(c), not u_f + u_m with log(c) appearing twice.
+
+# -----------------------------------------------------------------------------
+# Parameter switching (tax parameters)
+# -----------------------------------------------------------------------------
+# workaround: Dolo+ has no canonical syntax for parameter switching conditional on
+# a state-computed indicator. The consumption-savings stage is instantiated four
+# times with (zeta1, zeta2) fixed per cell; grid points are routed by the computed
+# (filing_status, k_y) pair. filing_status is fixed at 'married' within this YAML.
+
+parameter_switching:
+  keys: [filing_status, k_y]
+  cells:
+    - { filing_status: married, k_y: 0, zeta1: "zeta_table[married, 0, 0]", zeta2: "zeta_table[married, 0, 1]" }
+    - { filing_status: married, k_y: 1, zeta1: "zeta_table[married, 1, 0]", zeta2: "zeta_table[married, 1, 1]" }
+    - { filing_status: single,  k_y: 0, zeta1: "zeta_table[single,  0, 0]", zeta2: "zeta_table[single,  0, 1]" }
+    - { filing_status: single,  k_y: 1, zeta1: "zeta_table[single,  1, 0]", zeta2: "zeta_table[single,  1, 1]" }
+  # unresolved: the canonical way to wire this into a dolo-plus stage instance is
+  # to pass (zeta1, zeta2) as stage-level parameters rather than model-level
+  # parameters; this requires a stage-instantiation mechanism that Dolo+ does not
+  # yet expose uniformly.
+
+# -----------------------------------------------------------------------------
+# Stages (working-age married, j < J_R)
+# -----------------------------------------------------------------------------
+# Forward flow:  female_labor -> male_labor -> consumption_savings -> disc -> [connector]
+# Backward solve: connector <- disc <- consumption_savings <- male_labor <- female_labor
+
+stages:
+
+  # --------------------------------------------------------------------------
+  # Stage 1: female_labor
+  # --------------------------------------------------------------------------
+  - name: female_labor
+    perches:
+      arrival:
+        state: [a, h, x, z, q, b, j]
+        transition_to_decision: identity    # no within-period shocks
+      decision:
+        state: [a, h, x, z, q, b, j]
+        controls: [l_f]
+        bellman: |
+          W_f_tilde(a, h, x, z, q, b, j) =
+            max_{l_f >= 0}
+              { -phi * (l_f + k_y * kappa)^(1 + 1/gamma) / (1 + 1/gamma)
+                - q * chi(l_f)
+                + W_f_succ(a, h, x, z, q, b, j, l_f) }
+        egm_amenable: false
+        solver_hint: root_find_in_l_f
+      continuation:
+        state: [a, h, x, z, q, b, j, l_f]
+        transition_to_next_stage: identity  # W_f_succ = W_m_prec
+
+  # --------------------------------------------------------------------------
+  # Stage 2: male_labor
+  # --------------------------------------------------------------------------
+  - name: male_labor
+    perches:
+      arrival:
+        state: [a, h, x, z, q, b, j, l_f]
+        transition_to_decision: identity
+      decision:
+        state: [a, h, x, z, q, b, j, l_f]
+        controls: [l_m]
+        bellman: |
+          W_m_tilde(a, h, x, z, q, b, j, l_f) =
+            max_{l_m >= 0}
+              { -phi * l_m^(1 + 1/gamma) / (1 + 1/gamma)
+                + W_m_succ(a, h, x, z, q, b, j, l_f, l_m) }
+        egm_amenable: false
+        solver_hint: root_find_in_l_m
+      continuation:
+        state: [a, h, x, z, q, b, j, l_f, l_m]
+        transition_to_next_stage: identity  # W_m_succ = W_c_prec
+
+  # --------------------------------------------------------------------------
+  # Stage 3: consumption_savings
+  # --------------------------------------------------------------------------
+  - name: consumption_savings
+    perches:
+      arrival:
+        state: [a, h, x, z, q, b, j, l_f, l_m]
+        transition_to_decision: identity
+      decision:
+        state: [a, h, x, z, q, b, j, l_f, l_m]
+        controls: [a_next]
+        feasibility:
+          - "a_next >= 0"
+          - "c_of_anext > 0"
+        bellman: |
+          W_c_tilde(a, h, x, z, q, b, j, l_f, l_m) =
+            max_{a_next >= 0}
+              { log( c_of_anext )                        # single log(c), matches unitary U_M
+                + W_c_succ(a_next, h_next, x, z, q, b, j) }
+        egm_amenable: true
+        euler_inversion: |
+          # log utility closed form:
+          c_star(a_next, h_next, x, z, q, b, j) =
+            1.0 / ( beta * dW_c_succ_by_anext(a_next, h_next, x, z, q, b, j) )
+          # then a_star = net_resources^{-1}(c_star + a_next) on the endogenous grid
+      continuation:
+        state: [a_next, h_next, x, z, q, b, j]
+        transition_to_next_stage: identity  # W_c_succ = W_beta_prec
+
+  # --------------------------------------------------------------------------
+  # Stage 4: disc (discount-only stub stage)
+  # --------------------------------------------------------------------------
+  - name: disc
+    perches:
+      arrival:
+        state: [a_next, h_next, x, z, q, b, j]
+        transition_to_decision: identity
+      decision:
+        state: [a_next, h_next, x, z, q, b, j]
+        controls: []
+        bellman: |
+          W_beta_tilde(a_next, h_next, x, z, q, b, j) =
+            beta * W_beta_succ(a_next, h_next, x, z, q, b, j)
+        egm_amenable: n_a
+      continuation:
+        state: [a_next, h_next, x, z, q, b, j]
+        # connector C_j^M: (a_next, h_next, x, z, q, b) @ j  ->  (a, h, x, z, q, b) @ j+1
+        transition_to_next_period:
+          kind: pure_rename
+          mapping:
+            a: a_next
+            h: h_next
+            x: x
+            z: z
+            q: q
+            b: b
+            j: j + 1
+          terminal: |
+            # at j = J, the post-connector value is V_{J+1} = 0 (no bequest motive)
+            V_M_prec_at_J_plus_1 = 0
+
+# -----------------------------------------------------------------------------
+# Singles and retired (summary; full expansion to be added in a follow-up pass)
+# -----------------------------------------------------------------------------
+
+singles_and_retired:
+
+  single_male:
+    workingage_stages: [male_labor, consumption_savings, disc]
+    utility: "log(c) - phi * l^(1 + 1/gamma) / (1 + 1/gamma)"
+    notes:
+      - "drop human-capital state h and transition G (no endogenous HC for males)"
+      - "use tau from zeta_table[single, 0] at all ages; no young-child interaction"
+
+  single_female:
+    workingage_stages: [female_labor, consumption_savings, disc]
+    utility: "log(c) - phi * (l + k_y * kappa)^(1 + 1/gamma) / (1 + 1/gamma)"
+    notes:
+      - "keep human-capital state h and transition G with l in place of l_f"
+      - "route tax parameters by young-child indicator k_y via parameter_switching"
+
+  retired:
+    workingage_stages: [consumption_savings, disc]
+    notes:
+      - "labor stages drop; resource constraint uses pension p (p_m^S, p_f^S, or p^M) and T(ra, 0)"
+      - "consumption-savings EGM inversion unchanged"
+
+# -----------------------------------------------------------------------------
+# Known workarounds and unresolved items (indexed by the three companion files)
+# -----------------------------------------------------------------------------
+#
+# workaround:
+#   - tax(I -> 0) singular under log-progressive form; guarded by I_guard = max(I_total, eps_I).
+#   - (zeta1, zeta2) switching on (filing_status, k_y) via stage instantiation rather than
+#     conditional parameter assignment.
+#   - extensive margin at l_f = 0 handled as a corner of the continuous optimization, not as
+#     a separate branching stage, consistent with the non-branching decomposition in
+#     bellman-excerpt-SMD-polished.md.
+#
+# unresolved:
+#   - canonical dolo-plus mechanism for state-indexed parameter switching.
+#   - canonical dolo-plus root-find option per stage for implicit labor FOCs under log-progressive tax.
+#   - calibration parameters (phi, gamma, kappa, delta_h, grids for z, x, q, b; zeta_table,
+#     a_profile, d_child, varpi_m, p_M) currently live in free text; should be migrated to a
+#     calibration.yaml or a fully populated `parameters:` block anchored to GKV 2012 Table 3.
+#
+# paper-verify:
+#   - (l_f + k_y * kappa) channel for young-child time cost in the wife's disutility.
+#   - additive q * chi(l_f) form of the wife's participation cost in the unitary married objective.
