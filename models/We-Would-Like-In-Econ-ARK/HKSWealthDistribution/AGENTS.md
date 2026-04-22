@@ -18,7 +18,7 @@
 
 - Explicit recursive formulation: present in `HKSWealthDistribution_summary.ipynb` and `bellman-excerpt.md`.
 - `bellman-excerpt.md`: committed (root-level canonical version synthesized from `source/HKS_bellman_excerpt.md` + `source/HKS_bellman_stages.md`).
-- `dolo-plus-draft.yaml`: not yet committed at root. Two-stage drafts live in `source/hks_consumption.yaml` and `source/hks_shock_resolution.yaml`; consolidation into a single root `dolo-plus-draft.yaml` with canonical `# workaround:` / `# unresolved:` flags is the next task.
+- `dolo-plus-draft.yaml`: committed at root as a conservative composition manifest aligned with the dolo-plus spec `05-periods-models.md` (period-level keys `name`, `stages`, optional `connectors`; canonical `# workaround:` / `# unresolved:` flags). Two-stage drafts remain at `source/hks_consumption.yaml` and `source/hks_shock_resolution.yaml` as provenance.
 - `verification.md`: committed (root-level; expansion of `source/verification_paragraph.md`).
 - `matsya-session.txt`: committed.
 
@@ -34,7 +34,7 @@ Each is a **dolo-plus-spec representation gap**, not a paper gap — see `verifi
 
 ## Common next tasks (grounded)
 
-1. Consolidate `source/hks_consumption.yaml` + `source/hks_shock_resolution.yaml` into a single root `dolo-plus-draft.yaml`; retag every `# PLACEHOLDER` / `# TODO` with canonical `# workaround:` or `# unresolved:` flags keyed to `bellman-excerpt.md` §7.
+1. Period-level `wiring:` → `connectors:` alignment is **done** in `dolo-plus-draft.yaml` (per dolo-plus spec `05-periods-models.md`). Remaining follow-up tasks at the formalization layer: (i) resolve the rename convention between stage boundary variables — either rename the `hks_consumption` poststates to bare names `(a, p, b)` so the intra-period connector becomes identity and is omitted per spec, or keep the `_cntn` suffix and carry an explicit `rename:` map in the period file's `connectors:` block; (ii) if future work continues, write the nest-level twister file that wires `hks_shock_resolution.continuation` → next-period `hks_consumption.arrival`. Separately, retag any remaining `# PLACEHOLDER` / `# TODO` markers in the two `source/` stage files with canonical `# workaround:` / `# unresolved:` flags keyed to `bellman-excerpt.md` §7.
 2. Add the portfolio-heterogeneity + zero-earnings-state + stochastic-$\beta$ paragraph to `HKSWealthDistribution_summary.ipynb` → "The Model" (these are currently only in `bellman-excerpt.md`).
 3. Add Bach et al. (2015) as the empirical anchor in `HKSWealthDistribution_prior-literature.ipynb`; trim the prior-literature list to the 3–6 range.
 4. Add the 3-sentence in-ballpark pitch to `HKSWealthDistribution_intro.ipynb`; remove the self-addressed Note cell.

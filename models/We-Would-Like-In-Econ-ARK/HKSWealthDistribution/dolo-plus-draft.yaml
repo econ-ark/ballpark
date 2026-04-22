@@ -8,10 +8,15 @@
 #
 # This file does NOT execute. It declares:
 #   - the two stages that make up one period;
-#   - the inter-stage and inter-period value-function wiring;
+#   - the intra-period connector between the two stages;
 #   - the shared scalar calibration;
 #   - the open dolo-plus-spec representation issues, using the canonical
 #     `# workaround:` / `# unresolved:` flags.
+#
+# Inter-period wiring (shock-resolution.continuation -> next-period
+# consumption.arrival) is handled at the NEST level via a twister file,
+# not at the period level; that file is deliberately out of scope for
+# this PR. See open_issues item 5.
 #
 # Authoritative model reference (read first):     bellman-excerpt.md
 # Paper-faithful mathematical excerpt:            source/HKS_bellman_excerpt.md
@@ -38,12 +43,12 @@ name: hks_wealth_distribution_draft
 # T_t = B^cons o B^shock.
 # -----------------------------------------------------------------------------
 
-# unresolved: two-stage composition idiom.
-#   dolo-plus does not yet have a canonical top-level key for composing
-#   sub-stage YAMLs. The `stages:` / `wiring:` blocks below are structural
-#   placeholders chosen to be parseable-by-eye, not spec-conforming.
-#   A reviewer / formalizer should treat this block as an editorial index
-#   into the two stage files, not as a dolo-plus construct.
+# Period-level composition is canonical per the dolo-plus spec
+# (docs/dolo-plus-spec/syntax-semantic-rules/05-periods-models.md): a
+# period file has `name`, `stages`, and optional `connectors`, where
+# `connectors` are needed only when adjacent stage interface names do
+# not match. The per-stage fields below (`role`, `file`, `order`) are
+# editorial and are not part of the canonical stage syntax.
 stages:
 
   - name: hks_consumption
@@ -62,32 +67,29 @@ stages:
     # (y', ytilde') is computed; next-period cash-on-hand x' is formed.
 
 # -----------------------------------------------------------------------------
-# Inter-stage and inter-period value-function wiring
+# Intra-period connector (consumption -> shock-resolution)
 #
-# Both connectors are mechanically clear (see bellman-excerpt.md §4) but
-# neither has a canonical dolo-plus YAML form yet.
+# Per dolo-plus spec (05-periods-models.md), the period file declares
+# `connectors` only when adjacent stage interface names do not match;
+# otherwise the connector is the identity and MUST be omitted.
+#
+# In our current stage drafts the names do NOT match:
+#   hks_consumption  poststates:  a_cntn, p_cntn, b_cntn
+#   hks_shock_resolution prestates:  a,      p,      b
+# so an explicit `rename:` is needed, OR the stage-file poststates must
+# be renamed to bare names in a follow-up retag. See open_issues item 5.
 # -----------------------------------------------------------------------------
 
-wiring:
+connectors:
 
-  inter_stage_within_period:
-    # Consumption.continuation -> Shock-resolution.arrival
-    # On states, (a, p, b) pass through unchanged; on values:
-    #     v_cons_succ(a, p, b) = v_shock_prec(a, p, b)
-    from:   hks_consumption.continuation
-    to:     hks_shock_resolution.arrival
-    states: [a, p, b]
-    # unresolved: canonical dolo-plus declaration of cross-stage value
-    # identification. Written here as a mapping stub; not executable.
-
-  inter_period:
-    # Shock-resolution.continuation -> NEXT-PERIOD Consumption.arrival
-    # On states, (x', p', b') become (x, p, b) of the next period; on values:
-    #     v_shock_succ(x', p', b') = V_{t+1}(x', p', b')
-    from:   hks_shock_resolution.continuation
-    to:     hks_consumption.arrival    # next period
-    states: [x, p, b]
-    # unresolved: inter-period wiring idiom (same status as above).
+  - from: hks_consumption
+    to:   hks_shock_resolution
+    # unresolved: choose between
+    #   (a) adding a rename map here:   rename: {a_cntn: a, p_cntn: p, b_cntn: b}
+    #   (b) retagging source/hks_consumption.yaml poststates to (a, p, b), after
+    #       which this connector becomes identity and MUST be omitted per spec.
+    # Option (b) is the spec-preferred outcome; pending the stage-file retag
+    # listed in AGENTS.md -> "Common next tasks".
 
 # -----------------------------------------------------------------------------
 # Shared symbols (pulled up from the two stage files for a single clean view)
@@ -190,22 +192,43 @@ open_issues:
   #         tau(.), r_X(.), sigma_X(.), psi(.)
   #    The paper uses piecewise / tabulated schedules (11-bracket tax,
   #    13-bin portfolio schedule, Pareto-tail labour-efficiency map), not
-  #    parametric closed forms. Needs either a lookup-table idiom (not
-  #    currently in the dolo-plus spec) or an explicit parametric
-  #    approximation matched to the paper's tabulations.
+  #    parametric closed forms. The DDSL spec provides @mapsto ... @via
+  #    for closed-form functions and DELIBERATELY DEFERS tabulated /
+  #    piecewise / external-data objects to a later semantic layer
+  #    (dev-spec doloplus-foundations.md / spec_0.1a.1.md: "how these
+  #    objects are constructed/evaluated is method-dependent and will
+  #    be made explicit in DDSL-CORE / semantic directives"). Closing
+  #    this item requires either that spec layer or an explicit
+  #    parametric approximation matched to the paper's tabulations.
 
   # 3. workaround: partial-equilibrium aggregate-price treatment. Full
   #    equilibrium / transition experiments would time-index
   #    (w, r, T, tilde_tau) and (sigma^P_t, sigma^T_t, kappa_t, bar_r_ct)
   #    as `exogenous` paths.
 
-  # 4. unresolved: EGM feasibility under wealth-dependent returns.
-  #    Carroll-style EGM assumes the gross-return factor is independent of
-  #    a. Here r_X(a) and sigma_X(a) break that; the Euler inversion is
-  #    not obviously well-posed as written. First-pass YAML is likely to
-  #    omit InvEuler / MarginalBellman and rely on direct Bellman
-  #    iteration.
+  # 4. unresolved: EGM under wealth-dependent returns.
+  #    The Euler inversion itself is well-posed at a fixed a on the
+  #    exogenous continuation grid (the canonical Carroll two-step
+  #    c_hat = (v'_succ(a))^{-1/rho},  m_hat = a + c_hat
+  #    still executes). The open item is whether the endogenous grid
+  #    m_hat(a) remains monotone as r_X(a) increases in a; increasing
+  #    returns to wealth can cause grid crossings and break value-function
+  #    concavity. Non-monotone cases are addressed at the SOLVER level by
+  #    an upper-envelope correction (FUES / DC-EGM, Iskhakov et al. 2017),
+  #    not at the problem-description level. First-pass YAML may still
+  #    omit InvEuler / MarginalBellman in favour of direct Bellman
+  #    iteration, but that is an implementation choice, not a
+  #    well-posedness failure.
 
-  # 5. unresolved: inter-stage and inter-period value-function wiring
-  #    (the `wiring:` block above). Mechanically clear (bellman-excerpt.md
-  #    §4) but needs a canonical dolo-plus two-stage composition idiom.
+  # 5. unresolved (narrowed): period-level composition is canonical
+  #    (name + stages + optional connectors, per 05-periods-models.md);
+  #    `stages:` and `connectors:` above are on-spec. Two residual items
+  #    remain open:
+  #      (a) the intra-period rename between hks_consumption poststates
+  #          (a_cntn, p_cntn, b_cntn) and hks_shock_resolution prestates
+  #          (a, p, b) — pending the stage-file retag so the connector
+  #          can be omitted as identity per spec; see AGENTS.md ->
+  #          "Common next tasks";
+  #      (b) the inter-period twister that wires shock-resolution.
+  #          continuation -> next-period consumption.arrival at the
+  #          NEST level — deliberately out of scope for this PR.
