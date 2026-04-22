@@ -7,10 +7,7 @@ project:
     - references.bib
     - subsequent-literature.bib
   toc:
-    - file: TaxingWomen_Intro.ipynb
-    - file: TaxingWomen_prior-literature.ipynb
-    - file: TaxingWomen_Summary.ipynb
-    - file: TaxingWomen_subsequent-literature.ipynb
+    - file: index.md
 
 site:
   title: "Taxing Women: A Macroeconomic Analysis — Ballpark Entry"
