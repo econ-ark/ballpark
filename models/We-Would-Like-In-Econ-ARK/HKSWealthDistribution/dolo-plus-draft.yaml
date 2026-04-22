@@ -1,0 +1,211 @@
+# =============================================================================
+# HKS (2018) — Top-level dolo-plus draft  [DRAFT — NOT EXECUTABLE]
+#
+# Composition manifest for the two-stage household problem in
+# Hubmer, Krusell, and Smith (2018), "Sources of U.S. Wealth Inequality:
+# Past, Present, and Future" (DOI 10.1086/712332; working-paper title
+# "A Comprehensive Quantitative Theory of the U.S. Wealth Distribution").
+#
+# This file does NOT execute. It declares:
+#   - the two stages that make up one period;
+#   - the inter-stage and inter-period value-function wiring;
+#   - the shared scalar calibration;
+#   - the open dolo-plus-spec representation issues, using the canonical
+#     `# workaround:` / `# unresolved:` flags.
+#
+# Authoritative model reference (read first):     bellman-excerpt.md
+# Paper-faithful mathematical excerpt:            source/HKS_bellman_excerpt.md
+# Long-form stage narrative:                      source/HKS_bellman_stages.md
+# Stage-level YAML drafts:                        source/hks_consumption.yaml
+#                                                 source/hks_shock_resolution.yaml
+# Verification (faithful vs. unresolved):         verification.md
+# Matsya session:                                 matsya-session.txt
+#
+# STATUS: DRAFT. Every `# unresolved:` flag below is a dolo-plus
+# representation gap, not a paper-understanding gap. See verification.md,
+# section "Dolo-plus-spec gaps, not paper gaps".
+# =============================================================================
+
+name: hks_wealth_distribution_draft
+
+# -----------------------------------------------------------------------------
+# Period structure
+#
+# Period_t = Consumption stage  o  Shock-resolution stage
+#
+# Backward solution runs right-to-left; forward simulation left-to-right.
+# See bellman-excerpt.md §4.3 for the period operator
+# T_t = B^cons o B^shock.
+# -----------------------------------------------------------------------------
+
+# unresolved: two-stage composition idiom.
+#   dolo-plus does not yet have a canonical top-level key for composing
+#   sub-stage YAMLs. The `stages:` / `wiring:` blocks below are structural
+#   placeholders chosen to be parseable-by-eye, not spec-conforming.
+#   A reviewer / formalizer should treat this block as an editorial index
+#   into the two stage files, not as a dolo-plus construct.
+stages:
+
+  - name: hks_consumption
+    role: decision
+    file: source/hks_consumption.yaml
+    order: 1
+    # One decision: choose end-of-period assets a in [a_bar, x].
+    # Arrival mover is the identity (no within-stage shocks); this is
+    # explicitly labelled in bellman-excerpt.md §4.1, not elided.
+
+  - name: hks_shock_resolution
+    role: twister
+    file: source/hks_shock_resolution.yaml
+    order: 2
+    # No decision. Four shocks (eps_p, eps_b, nu, eta) resolve; income
+    # (y', ytilde') is computed; next-period cash-on-hand x' is formed.
+
+# -----------------------------------------------------------------------------
+# Inter-stage and inter-period value-function wiring
+#
+# Both connectors are mechanically clear (see bellman-excerpt.md §4) but
+# neither has a canonical dolo-plus YAML form yet.
+# -----------------------------------------------------------------------------
+
+wiring:
+
+  inter_stage_within_period:
+    # Consumption.continuation -> Shock-resolution.arrival
+    # On states, (a, p, b) pass through unchanged; on values:
+    #     v_cons_succ(a, p, b) = v_shock_prec(a, p, b)
+    from:   hks_consumption.continuation
+    to:     hks_shock_resolution.arrival
+    states: [a, p, b]
+    # unresolved: canonical dolo-plus declaration of cross-stage value
+    # identification. Written here as a mapping stub; not executable.
+
+  inter_period:
+    # Shock-resolution.continuation -> NEXT-PERIOD Consumption.arrival
+    # On states, (x', p', b') become (x, p, b) of the next period; on values:
+    #     v_shock_succ(x', p', b') = V_{t+1}(x', p', b')
+    from:   hks_shock_resolution.continuation
+    to:     hks_consumption.arrival    # next period
+    states: [x, p, b]
+    # unresolved: inter-period wiring idiom (same status as above).
+
+# -----------------------------------------------------------------------------
+# Shared symbols (pulled up from the two stage files for a single clean view)
+#
+# Only scalars appear here. Function-valued objects (tau, r_X, sigma_X, psi)
+# remain declared inside the shock-resolution stage, where they are used,
+# and are flagged there as `# unresolved:`.
+# -----------------------------------------------------------------------------
+
+symbols:
+
+  spaces:
+    Xx: '@def R'                         # cash-on-hand
+    Xp: '@def R'                         # persistent earnings (paper convention: R)
+    Xb: '@def (0,1)'                     # discount factor; truncated in the numerical implementation
+    Xa: '@def [a_bar, +inf)'             # borrowing-limited asset space
+
+  parameters:
+
+    # --- Preferences ---
+    gamma:       '@in R+'                # CRRA coefficient
+    a_bar:       '@in R'                 # exogenous borrowing limit
+
+    # --- Zero-earnings / redistribution / portfolio rescaling ---
+    chi:         '@in [0,1]'             # probability of zero-earnings state
+    lambda_red:  '@in [0,1]'             # T = lambda_red * aggregate tax revenue (paper's lambda)
+    phi:         '@in R+'                # private-equity volatility rescaling
+
+    # --- Earnings AR(1) ---
+    rho_P:       '@in (0,1)'
+    mu_P:        '@in R'
+    sigma_P:     '@in R+'                # workaround: steady-state value; time-varying in paper
+
+    # --- Discount-factor AR(1) ---
+    rho_beta:    '@in (0,1)'
+    mu_beta:     '@in (0,1)'
+    sigma_beta:  '@in R+'
+
+    # --- Transitory earnings ---
+    sigma_T:     '@in R+'                # workaround: steady-state value; time-varying in paper
+
+    # --- Aggregate prices / policy (held fixed at the household's problem) ---
+    # workaround: partial-equilibrium scope.
+    #   For transition experiments these would be time-indexed exogenous
+    #   sequences. See bellman-excerpt.md §1, §7 item 3.
+    w:           '@in R+'                # wage per efficiency unit
+    r:           '@in R'                 # aggregate return component
+    T:           '@in R'                 # lump-sum transfer
+    tilde_tau:   '@in [0,1]'             # flat tax on tilde_y
+
+# -----------------------------------------------------------------------------
+# Shared calibration (benchmark values from HKS 2018 §§6.1-6.5 / Appendix A)
+#
+# Values not pinned down in scalar form in the paper (tau(.), r_X(.),
+# sigma_X(.), psi(.), and kappa_t, sigma^P_t, sigma^T_t time paths) are
+# NOT listed here. They are flagged `# unresolved:` in the shock-resolution
+# stage and in the `open_issues:` block below.
+# -----------------------------------------------------------------------------
+
+calibration:
+
+  gamma:       1.5
+  a_bar:      -0.22
+  chi:         0.075
+  lambda_red:  0.6
+  phi:         0.52
+
+  rho_P:       0.97     # workaround: HSV (2010) referenced; not tabulated in HKS
+  mu_P:        0.0
+  sigma_P:     0.12     # workaround: time-varying in paper; steady-state approximate
+
+  rho_beta:    0.992
+  mu_beta:     0.944
+  sigma_beta:  0.0006
+
+  sigma_T:     0.25     # workaround: time-varying in paper; steady-state approximate
+
+  w:           1.0      # workaround: endogenous in GE; partial-equilibrium placeholder
+  r:           0.04     # workaround: endogenous in GE; partial-equilibrium placeholder
+  T:           0.0      # workaround: depends on aggregate tax revenue
+  tilde_tau:   0.20     # workaround: time-varying in paper
+
+# -----------------------------------------------------------------------------
+# Open issues — dolo-plus-spec representation gaps, not paper gaps.
+# One-to-one with bellman-excerpt.md §7. See verification.md, section
+# "Dolo-plus-spec gaps, not paper gaps", for the faithful-vs-representation
+# split and why these are not paper-understanding gaps.
+# -----------------------------------------------------------------------------
+
+open_issues:
+
+  # 1. workaround: beta_t as a Markov state that multiplies the continuation
+  #    value. Canonical dolo-plus treats beta as a scalar parameter in the
+  #    mover. Encoded in source/hks_consumption.yaml by writing the Bellman
+  #    as
+  #        V = max_{a} { u(x - a) + b * V[>] }
+  #    with b in Xb = (0,1) a state.
+
+  # 2. unresolved: function-valued objects
+  #         tau(.), r_X(.), sigma_X(.), psi(.)
+  #    The paper uses piecewise / tabulated schedules (11-bracket tax,
+  #    13-bin portfolio schedule, Pareto-tail labour-efficiency map), not
+  #    parametric closed forms. Needs either a lookup-table idiom (not
+  #    currently in the dolo-plus spec) or an explicit parametric
+  #    approximation matched to the paper's tabulations.
+
+  # 3. workaround: partial-equilibrium aggregate-price treatment. Full
+  #    equilibrium / transition experiments would time-index
+  #    (w, r, T, tilde_tau) and (sigma^P_t, sigma^T_t, kappa_t, bar_r_ct)
+  #    as `exogenous` paths.
+
+  # 4. unresolved: EGM feasibility under wealth-dependent returns.
+  #    Carroll-style EGM assumes the gross-return factor is independent of
+  #    a. Here r_X(a) and sigma_X(a) break that; the Euler inversion is
+  #    not obviously well-posed as written. First-pass YAML is likely to
+  #    omit InvEuler / MarginalBellman and rely on direct Bellman
+  #    iteration.
+
+  # 5. unresolved: inter-stage and inter-period value-function wiring
+  #    (the `wiring:` block above). Mechanically clear (bellman-excerpt.md
+  #    §4) but needs a canonical dolo-plus two-stage composition idiom.
