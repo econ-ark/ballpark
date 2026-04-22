@@ -2,6 +2,58 @@
 
 Faithful summary of the household dynamic program in Section 2 of the paper.
 
+## Comprehensive Symbol Table
+
+| Symbol | Role | Domain / Space | Description |
+|--------|------|----------------|-------------|
+| \(e\) | Individual state | \(\{0,1\}\) | Employment status (0 = unemployed, 1 = employed) |
+| \(s\) | Individual state | \(S = \{s_1, s_2, s_3, s_4\}\) | Household skill level |
+| \(a\) | Individual state | \(\mathbb{R}^+\) | Mutual-fund share holdings (beginning of period) |
+| \(e_{\text{old}}\) | Arrival-perch state | \(\{0,1\}\) | Pre-transition employment status |
+| \(s_{\text{old}}\) | Arrival-perch state | \(S\) | Pre-transition skill level |
+| \(X\) | Aggregate state (post-transition) | \(\mathbb{R}^{n_X}\) | \((K, N, Z, D, \mu)\) — capital, employment, TFP, monetary shock, distribution |
+| \(\tilde{X}\) | Aggregate state (pre-transition) | \(\mathbb{R}^{n_X}\) | \((K, \tilde{N}, Z, D, \tilde{\mu})\) — before separations and matching |
+| \(X'\) | Next-period aggregate state | \(\mathbb{R}^{n_X}\) | Post-transition aggregate state at \(t+1\) |
+| \(\tilde{X}'\) | Next-period pre-transition state | \(\mathbb{R}^{n_X}\) | Pre-transition aggregate state at \(t+1\) |
+| \(c\) | Control | \(\mathbb{R}^+\) | Consumption |
+| \(a'\) | Control / poststate | \(\mathbb{R}^+\) | Next-period mutual-fund shares (\(a' \geq 0\)) |
+| \(m\) | Derived (decision-perch) | \(\mathbb{R}^+\) | Market resources: \(m = (p_a + d_a)a + y(e,s,X')\) |
+| \(Z'\) | Exogenous shock | \(\mathbb{R}^+\) | Next-period TFP; AR(1) in logs |
+| \(D'\) | Exogenous shock | \(\mathbb{R}\) | Next-period monetary-policy shock; AR(1) in logs |
+| \(s'\) | Exogenous shock | \(S\) | Next-period skill; Markov chain with matrix \(\pi\) |
+| \(W(X,e,s,a)\) | Value function | \(\mathbb{R}\) | Full-problem value (paper's notation, eqs. 1 & 3) |
+| \(v(e,s,m,X')\) | Value function (decision perch) | \(\mathbb{R}\) | Stage-decomposed decision-perch value |
+| \(v_\prec(e_{\text{old}},s_{\text{old}},a,X)\) | Value function (arrival perch) | \(\mathbb{R}\) | Arrival-perch value (beginning of period) |
+| \(v_\succ(e,s,a',X')\) | Value function (continuation perch) | \(\mathbb{R}\) | Continuation-perch value (end of period) |
+| \(v'\), \(v'_\prec\) | Marginal value functions | \(\mathbb{R}\) | Derivatives w.r.t. \(m\) and \(a\) respectively |
+| \(u(c)\) | Utility | \(\mathbb{R}\) | Period utility: \(c^{1-\sigma}/(1-\sigma)\) (CRRA) |
+| \(p_a(X)\) | Price function | \(\mathbb{R}^+\) | Ex-dividend mutual-fund share price |
+| \(d_a(X)\) | Price function | \(\mathbb{R}^+\) | Dividends per mutual-fund share |
+| \(w(X)\) | Price function | \(\mathbb{R}^+\) | Wage per efficiency unit of labor |
+| \(\tau(X)\) | Price function | \([0,1]\) | Proportional payroll tax rate |
+| \(y(e,s,X)\) | Income map | \(\mathbb{R}^+\) | \(w(X)s(1-\tau(X))\) if \(e=1\); \(bs\) if \(e=0\) |
+| \(f(\tilde{X})\) | Matching function | \([0,1]\) | Job-finding probability (evaluated at pre-transition state) |
+| \(M(\tilde{X},V)\) | Matching function | \(\mathbb{R}^+\) | Cobb–Douglas aggregate matches |
+| \(H(X,Z',D')\) | Aggregate law of motion | \(\mathbb{R}^{n_X}\) | Krusell-Smith forecasting rule; \(X' = H(X,Z',D')\) |
+| \(\hat{G}(\tilde{X})\) | Aggregate transition | \(\mathbb{R}^{n_X}\) | Pre-transition → post-transition (within period) |
+| \(\tilde{G}(X)\) | Aggregate transition | \(\mathbb{R}^{n_X}\) | Post-transition → next pre-transition (across period) |
+| \(\sigma\) | Parameter | \(\mathbb{R}^+\) | Relative risk aversion (= 1.5) |
+| \(\beta\) | Parameter | \((0,1)\) | Time-discount factor (= 0.966) |
+| \(\lambda\) | Parameter | \([0,1]\) | Exogenous job-separation rate (= 0.10) |
+| \(b\) | Parameter | \(\mathbb{R}^+\) | UI benefit per efficiency unit (= 0.446) |
+| \(\alpha\) | Parameter | \([0,1]\) | Matching elasticity w.r.t. searchers (= 0.60) |
+| \(\gamma\) | Parameter | \(\mathbb{R}^+\) | Matching efficiency (= 0.645) |
+| \(\bar{w}\) | Parameter | \(\mathbb{R}^+\) | Steady-state wage per eff. unit (= 0.637) |
+| \(\varepsilon_w\) | Parameter | \(\mathbb{R}^+\) | Wage elasticity w.r.t. output (= 0.45) |
+| \(\rho_Z\) | Parameter | \([0,1)\) | TFP persistence (= 0.95) |
+| \(\sigma_Z\) | Parameter | \(\mathbb{R}^+\) | TFP innovation std. dev. (= 0.006) |
+| \(\rho_D\) | Parameter | \([0,1)\) | Monetary-shock persistence (= 0.70) |
+| \(\sigma_D\) | Parameter | \(\mathbb{R}^+\) | Monetary-shock std. dev. (= 6.25e-4) |
+| \(\rho_\Pi\) | Parameter | \(\mathbb{R}^+\) | Taylor-rule inflation response (= 1.20) |
+| \(\bar{\Pi}\) | Parameter | \(\mathbb{R}^+\) | Inflation target, quarterly gross (= 1.005) |
+| \(\pi_{s,s'}\) | Parameter (matrix) | \([0,1]^{4\times 4}\) | Skill transition matrix (Table 2) |
+| \(s_1,\ldots,s_4\) | Parameter (grid) | \(\mathbb{R}^+\) | Skill grid: \(\{0.123, 0.421, 1.435, 34.65\}\) |
+
 ## States
 
 **Aggregate state** (post labor-market transitions):
