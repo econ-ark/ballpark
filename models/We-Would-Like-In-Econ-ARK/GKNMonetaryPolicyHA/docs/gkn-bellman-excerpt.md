@@ -230,3 +230,45 @@ From Tables 1–2 of the paper (one period = one quarter):
 | \(\bar{\Pi}\) | 1.005 | Inflation target (quarterly gross) |
 
 Borrowing constraint: \(a' \geq 0\) (no borrowing).
+
+---
+
+## Perch Decomposition
+
+The household problem admits a single-stage decomposition into three perches following the ADC (Arrival–Decision–Continuation) convention of SolvingMicroDSOPs §§12–13.
+
+### Stage overview
+
+Working backward from the end of the period:
+
+\[
+\boxed{v_{\succ}(e,s,a',X')}
+\;\xrightarrow{\;\mathbb{B}\;}\;
+\boxed{v(e,s,m,X')}
+\;\xrightarrow{\;\mathbb{I}\;}\;
+\boxed{v_{\prec}(e_{\text{old}},s_{\text{old}},a,X)}
+\]
+
+The full-period operator is \(\mathbb{T} = \mathbb{I} \circ \mathbb{B}\), closed by the identity \(v_{\succ} = v_{\prec}^{\text{next period}}\).
+
+### Perch table
+
+| Perch | Name | State variables | Value function | Control |
+|-------|------|-----------------|----------------|---------|
+| \(\prec\) | Arrival | \((e_{\text{old}}, s_{\text{old}}, a, X)\) | \(v_{\prec}(e_{\text{old}}, s_{\text{old}}, a, X)\) | — |
+| \(\circ\) | Decision | \((e, s, m, X')\) | \(v(e, s, m, X')\) | \(c\) |
+| \(\succ\) | Continuation | \((e, s, a', X')\) | \(v_{\succ}(e, s, a', X')\) | — |
+
+### Within-stage transitions
+
+| Transition | Direction | Mapping |
+|------------|-----------|---------|
+| \(\mathrm{g}_{\prec\circ}\) | Arrival → Decision | Draw \((e, s, Z', D')\); compute \(X' = H(X, Z', D')\); form \(m = (p_a(X') + d_a(X'))a + y(e,s,X')\). |
+| \(\mathrm{g}_{\circ\succ}\) | Decision → Continuation | \(a' = m - c\); \(e, s, X'\) pass through unchanged. |
+
+### Movers
+
+| Mover | Direction | Operation |
+|-------|-----------|-----------|
+| \(\mathbb{B}\) | Continuation → Decision (backward) | Pure optimization: \(v(e,s,m,X') = \max_{c \in [0,m]} \bigl\{ u(c) + \beta\, v_{\succ}(e,s,m-c,X') \bigr\}\). Solvable by EGM: invert \(c^{-\sigma} = \beta\, v'_{\succ}\) to get \(c^*(a') = (\beta\, v'_{\succ})^{-1/\sigma}\), then recover \(m^*(a') = a' + c^*(a')\). |
+| \(\mathbb{I}\) | Decision → Arrival (forward/integration) | Expectation over pre-decision shocks: \(v_{\prec}(e_{\text{old}}, s_{\text{old}}, a, X) = \mathbb{E}_{e,s,Z',D'}[v(e,s,m,X')]\). The shadow marginal value carries the return factor: \(v'_{\prec} = \mathbb{E}[(p_a(X') + d_a(X')) \cdot v'(e,s,m,X')]\). |
