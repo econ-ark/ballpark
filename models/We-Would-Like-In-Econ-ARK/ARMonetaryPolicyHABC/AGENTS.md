@@ -25,16 +25,21 @@
 
 ## Known model features requiring attention in a formalization pass
 
-- **Utility:** Summary excerpt uses a CES consumption–money composite with leisure; YAML uses a separable placeholder — see `docs/verification.md` and `# unresolved:` in `docs/dolo-plus-draft.yaml`.
-- **Law of motion for `q'`:** Draft uses `q' = R a + (1+r_m) m` — verify against Algan–Ragot (2009) text (or `.mmd`).
-- **Borrowing constraint:** `a_min` is a labeled placeholder; replace with paper-specific rule.
-- **Markov `Pi`:** Named but not calibrated in YAML — replace with paper-consistent discretization.
+- **Scope (household block only).** The YAML and `docs/bellman-excerpt.md` encode the household block. The aggregate side from `docs/arg2009-bellman-excerpt.md` — production `Y = K^alpha L^(1-alpha)`, resource constraint, asset-market clearing, money growth `Omega_t`, inflation-tax `tau^{tot}` — is intentionally deferred to a later general-equilibrium pass. Do not rediscover this; scope new work accordingly.
+- **Notation: Markov `P_e` vs inflation `Pi_inf`.** The household-side Markov kernel was renamed from `Pi` to `P_e` (see commit history and `docs/bellman-excerpt.md` symbol table) to avoid collision with the inflation series `Pi_inf` that appears on the aggregate side. Keep `P_e` in future edits to the household YAML; reintroduce `Pi_inf` explicitly when the monetary block is added.
+- **Utility.** Summary excerpt uses a CES consumption–money composite with leisure parameterized by `(sigma, eta, omega, psi)` (rows now in `docs/bellman-excerpt.md` symbol table); YAML still uses a separable placeholder parameterized by `(rho, rho_m, phi_m, phi_l, gamma)` — flagged as `# workaround:` in `docs/dolo-plus-draft.yaml`.
+- **Law of motion for `q'`.** Draft uses `q' = R a + (1+r_m) m` in the shock stage — verify against Algan–Ragot (2009) text (or `.mmd`).
+- **Borrowing constraint `a_min`.** Labeled placeholder in YAML; replace with paper-specific rule once the paper is in-repo.
+- **Transfer `mu`.** Domain is `R` (not `R+`) because the inflation-tax redistribution can make the net transfer negative for some households. Sign rule for an individual household is still TBD against the paper.
+- **`P_e` calibration.** `P_e` is declared in both stages' `parameters:` blocks but its numerical entries are `# unresolved:` until drawn from the paper.
 
 ## Common next tasks (grounded)
 
-1. Align `dolo-plus-draft.yaml` utility with the CES–leisure specification in `docs/arg2009-bellman-excerpt.md`, or document a deliberate simpler kernel under `# workaround:`.
-2. Replace placeholder `(R, r_m, Pi, a_min)` with values or explicit formulas from the paper.
-3. When the exposition layer is refactored to the canonical four-notebook + `index.md` layout, add `self.bib`, `.mmd` if license permits, and wire `index.md` frontmatter (`tier`, `has_formalization_layer`, etc.).
+1. Align `docs/dolo-plus-draft.yaml` utility with the CES–leisure specification in `docs/arg2009-bellman-excerpt.md`, or document a deliberate simpler kernel under `# workaround:`.
+2. Replace placeholder `(R, r_m, P_e, a_min)` with values or explicit formulas from the paper.
+3. Refactor exposition layer to the canonical four-notebook + `index.md` layout (`<citekey>_intro.ipynb`, `_prior-literature.ipynb`, `_summary.ipynb`, `_subsequent-literature.ipynb`); add `references.bib`, `self.bib`, `.mmd` if license permits, wire `index.md` frontmatter (`tier`, `has_formalization_layer`, etc.). Tracked as accepted-but-deferred item #1 in `docs/accept-edit-reject.md`.
+4. Rewrite `docs/verification.md` to cite specific equations from the paper PDF/`.mmd` once it is in-repo. Tracked as accepted-but-deferred item #2 in `docs/accept-edit-reject.md`.
+5. Add a conditional EGM-channel discussion to `docs/bellman-excerpt.md` once the utility is aligned with the paper (rejected-for-now in `docs/accept-edit-reject.md` item #10; revisit after task 1 above lands).
 
 ## Workflow reminders
 
