@@ -13,25 +13,42 @@ This supports a **max-of-expectation** Bellman equation: optimize today given `e
 
 ## Symbol table
 
+### Household block (in scope for this draft)
+
 | Symbol | Role | Domain / type | Description |
 |--------|------|----------------|-------------|
 | `q` | state | `R+` | Beginning-of-period financial resources / cash-on-hand |
 | `e` | state | finite set | Current idiosyncratic productivity (Markov) |
 | `c` | control | `R+` | Consumption |
-| `m` | control | `R+` | Real money balances carried to next period |
+| `m` | control / poststate | `R+` | Real money balances carried to next period (named `m_d` in YAML when viewed as the **chosen** value before the savings identity `m = m_d`; see `docs/dolo-plus-draft.yaml`) |
 | `l` | control | `[0, \bar l]` | Labor supply |
 | `a'` | control | `[a_{\min}, \infty)` | Next-period position in the risky/illiquid asset |
-| `e'` | shock | same finite set | Next-period productivity, `e' \sim \Pi(\cdot\mid e)` |
-| `q'` | state | `R+` | Next period’s beginning-of-period resources (pre-decision state next period) |
+| `e'` | shock | same finite set | Next-period productivity, `e' \sim P_e(\cdot\mid e)` |
+| `q'` | state | `R+` | Next period's beginning-of-period resources (pre-decision state next period) |
 | `w` | parameter | `R+` | Wage factor scaling `e l` |
-| `mu` | parameter | `R` | Transfer / policy-linked income term in the budget |
+| `mu` | parameter | `R` | **Net** transfer / policy-linked income term in the budget (can be negative when household's inflation-tax burden exceeds rebate; verify sign rule in paper) |
 | `beta` | parameter | `(0,1)` | Discount factor |
-| `Pi` | parameter | stochastic matrix | Markov transitions for `e` |
+| `P_e` | parameter | stochastic matrix | Markov transitions for `e` (renamed from `Pi` to avoid collision with inflation `Pi_inf` in the aggregate side; see "Out of scope" table below) |
 | `a_min` | parameter | `R` | Borrowing limit (paper-specific; placeholder in draft YAML) |
 | `R`, `r_m` | parameters | `R+` | Draft return factors in the law of motion for resources (see YAML; **unresolved** vs. paper) |
+| `sigma` | parameter | `R+` | Outer CRRA curvature in the summary's CES-with-leisure utility |
+| `eta` | parameter | `R+` | CES elasticity between consumption and real money balances |
+| `omega` | parameter | `(0,1)` | CES weight on consumption in the `(c, m)` composite |
+| `psi` | parameter | `R+` | Leisure exponent in the summary's utility |
 | `v(q,e)` | value | `R` | Household value function |
 
-**Utility (from summary excerpt — not yet matched to YAML).** The summary notebook records a CES–leisure structure; see `arg2009-bellman-excerpt.md`. The draft `dolo-plus-draft.yaml` currently uses a **separable placeholder** for tractability—flagged there as unresolved relative to the paper.
+### Out of scope for this draft (flagged for a later general-equilibrium pass)
+
+Surfaced in `arg2009-bellman-excerpt.md` but **not** encoded in the current YAML or perch decomposition:
+
+| Symbol | Role | Where it appears in the paper summary | Why deferred |
+|--------|------|----------------------------------------|---------------|
+| `K`, `alpha`, `delta` | aggregate production | `Y_t = K_t^alpha L_t^(1-alpha)`; resource constraint | Household block only in this draft |
+| `Y`, `G` | aggregate quantities | Resource constraint | General-equilibrium pass |
+| `Omega`, `tau^{tot}` | monetary aggregates | `Omega_t = Omega_{t-1}/Pi_inf_t + pi * Omega_{t-1}/Pi_inf_t`; `tau_t^{tot}` | Monetary block; enters `mu` via redistribution rule, still TBD |
+| `Pi_inf` | gross inflation | Inflation-tax expressions (distinct from Markov `P_e`) | Disambiguated in rename above; not yet in YAML |
+
+**Utility (from summary excerpt — not yet matched to YAML).** The summary notebook records a CES–leisure structure parameterized by `(sigma, eta, omega, psi)`; see `arg2009-bellman-excerpt.md`. The draft `dolo-plus-draft.yaml` currently uses a **separable placeholder** for tractability—flagged there as unresolved relative to the paper.
 
 ## Stages, perches, transitions, movers
 
@@ -43,8 +60,8 @@ This supports a **max-of-expectation** Bellman equation: optimize today given `e
 | **decision** | `(q, e)` | `V` | Choose `(c, m, l, a')` subject to budget and borrowing constraint. |
 | **continuation** | `(a', m, e)` | `V_>` | Post-decision objects feed the next stage. |
 
-- **Arrival → decision** (`g_{≺∘}`): identity on `(q, e)` (no within-stage shock between **arrival** and **decision** in this draft).
-- **Decision → continuation** (`g_{∘≻}`): `(a', m, e)` from chosen `a'`, money `m`, and current `e`.
+- **Arrival → decision** (`g_{≺∘}`): **identity (degenerate)** on `(q, e)` — no within-stage shock between **arrival** and **decision** in this draft; carried forward unchanged.
+- **Decision → continuation** (`g_{∘≻}`): `(a', m, e)` from chosen `a'`, chosen money `m` (YAML control `m_d`, with the savings identity `m = m_d`), and current `e`.
 
 **Backward mover (continuation → decision):** Bellman maximization over feasible controls.
 
@@ -60,8 +77,8 @@ This supports a **max-of-expectation** Bellman equation: optimize today given `e
 | **decision** | `(q', e')` | `V` | Degenerate **decision** perch: no optimization; nature draws `e'` and implied `q'` is formed. |
 | **continuation** | `(q', e')` | `V` | Feeds the next period’s **arrival** state. |
 
-- **Arrival → decision:** draw `e' \sim \Pi(\cdot\mid e)`; map `(a, m, e')` into `q'` (draft: `q' = R a + (1+r_m) m` in YAML—**unresolved** vs. paper).
-- **Decision → continuation:** identity on `(q', e')`.
+- **Arrival → decision:** draw `e' \sim P_e(\cdot\mid e)`; map `(a, m, e')` into `q'` (draft: `q' = R a + (1+r_m) m` in YAML — **unresolved** vs. paper).
+- **Decision → continuation:** **identity (degenerate)** on `(q', e')`.
 
 **Backward mover:** pass-through (`V = V[>]` in YAML).
 
