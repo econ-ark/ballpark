@@ -1,0 +1,77 @@
+# Dolo-plus YAML draft: ARSS household consumption-savings stage
+# Based on Matsya stage decomposition (session: topics2026-siying99-ballpark)
+# Single stage: CRRA consumption with Markov idiosyncratic productivity
+
+name: arss_cons_savings
+
+symbols:
+  prestates:
+    a: "End-of-last-period assets"
+  exogenous:
+    e: "Idiosyncratic productivity (Markov)"
+  states:
+    m: "Cash-on-hand (resources available for consumption and saving)"
+  controls:
+    c: "Consumption"
+  poststates:
+    a_prime: "End-of-period assets (savings)"
+  values:
+    V_arvl: "Arrival value V_prec(a, e)"
+    V_dcsn: "Decision value V(m, e)"
+    V_cntn: "Continuation value V_succ(a', e)"
+  parameters:
+    beta: "Discount factor"
+    sigma: "Coefficient of relative risk aversion"
+    r: "Real interest rate"
+    w: "Real wage"
+    N: "Hours worked (union-set, exogenous to household)"
+    a_bar: "Borrowing limit"
+    rho_e: "Persistence of log productivity AR(1)"
+    sigma_eps: "Std dev of productivity innovation"
+
+definitions:
+  u: "c^(1 - sigma) / (1 - sigma)"
+
+equations:
+  arvl_to_dcsn_transition:
+    - "m = (1 + r) * a + e * w * N"
+
+  dcsn_to_cntn_transition:
+    - "a_prime = m - c"
+
+  cntn_to_dcsn_mover:
+    Bellman:
+      - "V_dcsn(m, e) = max_c { u(c) + beta * V_cntn(m - c, e) }"
+    InvEuler:
+      - "c = u'^{-1}(beta * (1 + r) * E_{e'|e}[u'(c'(m', e'))])"
+      - "# With CRRA: c = (beta * (1+r) * E_{e'|e}[c'(m',e')^(-sigma)])^(-1/sigma)"
+    MarginalBellman:
+      - "V'_dcsn(m, e) = u'(c(m, e)) = c(m, e)^(-sigma)"
+
+  dcsn_to_arvl_mover:
+    ShadowBellman:
+      - "V_arvl(a, e) = V_dcsn((1+r)*a + e*w*N, e)"
+    Expectation:
+      - "V_cntn(a', e) = E_{e'|e}[V_arvl^{+}(a', e')]"
+      - "# = sum_{e'} Pi(e'|e) * V_arvl^{+}(a', e')"
+
+  constraints:
+    - "a_prime >= a_bar"
+    - "c >= 0"
+
+exogenous_process:
+  e:
+    type: "MarkovChain"
+    method: "Rouwenhorst"
+    rho: "rho_e"
+    sigma: "sigma_eps"
+
+calibration:
+  beta: 0.96
+  sigma: 2.0
+  r: 0.04
+  w: 1.0
+  N: 1.0
+  a_bar: 0.0
+  rho_e: 0.95
+  sigma_eps: 0.1
