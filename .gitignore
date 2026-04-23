@@ -123,3 +123,6 @@ env-*/
 # Cursor / SpecStory
 .cursor*
 .specstory*/
+
+# Copyrighted material (do not commit)
+source/

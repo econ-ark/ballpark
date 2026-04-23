@@ -1,0 +1,157 @@
+# =============================================================================
+# HKS (2018) — Shock-resolution stage  [DRAFT]
+#
+# No decision.  Four shocks resolve; income is computed; next-period
+# cash-on-hand x' is formed.  Pure "twister" stage.
+#
+# Partial equilibrium assumption: (w, r, T, tilde_tau) are fixed
+# parameters.  For transition-path experiments they would be
+# time-indexed exogenous sequences — that extension is not attempted
+# here.
+#
+# STATUS: DRAFT — not executable.  See # PLACEHOLDER and # TODO markers.
+# =============================================================================
+
+name: hks_shock_resolution
+
+symbols:
+  spaces:
+    Xx: '@def R'
+    Xp: '@def R+'
+    Xb: '@def (0,1)'
+    Xa: '@def [a_bar, +inf)'
+
+  prestate:
+    a: '@in Xa'                          # end-of-period assets (from cons stage)
+    p: '@in Xp'                          # persistent earnings (current)
+    b: '@in Xb'                          # stochastic discount factor (current)
+
+  exogenous:
+    eps_p: '@dist Normal(0, 1)'          # innovation to persistent earnings AR(1)
+    eps_b: '@dist Normal(0, 1)'          # innovation to discount factor AR(1)
+    nu:    '@dist Normal(0, sigma_T^2)'  # transitory earnings shock
+    eta:   '@dist Normal(0, 1)'          # idiosyncratic return shock
+
+  states:
+    x_d: '@in Xx'                        # next-period cash-on-hand (computed)
+    p_d: '@in Xp'                        # next persistent earnings
+    b_d: '@in Xb'                        # next discount factor
+
+  poststates:
+    x_cntn: '@in Xx'
+    p_cntn: '@in Xp'
+    b_cntn: '@in Xb'
+
+  values:
+    V[<]: '@in R'
+    V: '@in R'
+    V[>]: '@in R'                        # TODO: wire to next period's cons stage
+
+  parameters:
+    # --- Earnings AR(1) ---
+    rho_P:     '@in (0,1)'               # persistence of p
+    mu_P:      '@in R+'                  # unconditional mean of p
+    sigma_P:   '@in R+'                  # innovation std dev of p (stationary value)
+
+    # --- Discount factor AR(1) ---
+    rho_beta:  '@in (0,1)'               # persistence of beta
+    mu_beta:   '@in (0,1)'               # unconditional mean of beta
+    sigma_beta: '@in R+'                 # innovation std dev of beta
+
+    # --- Transitory earnings ---
+    sigma_T:   '@in R+'                  # std dev of transitory shock nu
+
+    # --- Aggregate prices / policy (partial equilibrium: fixed) ---
+    w:         '@in R+'                  # wage per efficiency unit
+    r:         '@in R'                   # aggregate return component
+    T:         '@in R'                   # lump-sum transfer
+    tilde_tau: '@in [0,1]'               # flat tax on stochastic return component
+
+    # --- Other ---
+    a_bar:     '@in R'                   # borrowing limit (for space definition)
+
+equations:
+  arvl_to_dcsn_transition: |
+    # --- Persistent state transitions (Gaussian AR(1)) ---
+    p_d = (1 - rho_P) * mu_P + rho_P * p + sigma_P * eps_p
+    b_d = (1 - rho_beta) * mu_beta + rho_beta * b + sigma_beta * eps_b
+
+    # --- Income components ---
+    y_d      = (r + r_X(a)) * a + w * psi(p_d) * exp(nu)
+    ytilde_d = sigma_X(a) * eta * a
+
+    # --- Next-period cash-on-hand ---
+    x_d = a + y_d - tau(y_d) + (1 - tilde_tau) * ytilde_d + T
+
+    # PLACEHOLDER: tau(y)
+    #   Progressive income tax.  In the paper this is an 11-bracket
+    #   step function calibrated from Piketty & Saez (2007) effective
+    #   federal rates.  NOT a parametric closed form.
+    #   A parametric approximation (e.g. HSV) or lookup table is needed
+    #   to make this executable.
+
+    # PLACEHOLDER: r_X(a)
+    #   Wealth-dependent mean excess return.  In the paper:
+    #   r_X(a) = sum_c w_c(a) * (r_bar_{c,t} + r_X_tilde_c(a))
+    #   over 4 asset classes, with portfolio weights and within-class
+    #   heterogeneity tabulated by wealth percentile (Bach et al. 2015).
+    #   Requires tabulation or parametric fit.
+
+    # PLACEHOLDER: sigma_X(a)
+    #   Wealth-dependent return volatility.  In the paper:
+    #   sigma_X(a)^2 = sum_c (w_c(a) * sigma_X_tilde_c(a))^2
+    #   Tabulated by wealth percentile.  Private equity rescaled by
+    #   phi=0.52 in benchmark.  Requires tabulation or parametric fit.
+
+    # PLACEHOLDER: psi(p)
+    #   Maps persistent earnings component to efficiency units.
+    #   psi(p) = exp(p) for F_p(p) <= 0.9; Pareto tail above 90th pctile
+    #   with time-varying shape kappa_t.  See paper eq (9).
+    #   Requires implementation of the piecewise mapping.
+
+  # Identity: everything is already computed at the decision perch
+  dcsn_to_cntn_transition: |
+    x_cntn = x_d
+    p_cntn = p_d
+    b_cntn = b_d
+
+  # No decision — backward pass is pure expectation over four shocks
+  dcsn_to_arvl_mover:
+    Bellman: |
+      V[<] = E_{eps_p, eps_b, nu, eta}(V)
+
+  # No optimisation — identity pass-through
+  cntn_to_dcsn_mover:
+    Bellman: |
+      V = V[>]
+
+calibration:
+  # --- Earnings AR(1) ---
+  rho_P:      0.97                       # TODO: paper cites Heathcote et al (2010)
+                                         # but does not report rho_P directly in the
+                                         # main text; value here is approximate
+  mu_P:       0.0                        # normalisation
+  sigma_P:    0.12                       # TODO: time-varying in paper; steady-state
+                                         # value approximate
+
+  # --- Discount factor AR(1) ---
+  rho_beta:   0.992
+  mu_beta:    0.944
+  sigma_beta: 0.0006
+
+  # --- Transitory earnings ---
+  sigma_T:    0.25                       # TODO: time-varying; approximate ss value
+
+  # --- Aggregate prices / policy ---
+  w:          1.0                        # TODO: endogenous in GE; placeholder
+  r:          0.04                       # TODO: endogenous in GE; placeholder
+  T:          0.0                        # TODO: depends on aggregate tax revenue
+  tilde_tau:  0.20                       # TODO: time-varying; approximate value
+
+  # --- Other ---
+  a_bar:      -0.22
+
+# TODO: Inter-period wiring
+# V[>] of this stage receives V_{t+1}(x', p', b') from the NEXT PERIOD's
+# consumption stage.  The inter-period connector maps:
+#   (x_cntn, p_cntn, b_cntn)  →  (x, p, b)  of hks_consumption prestate.

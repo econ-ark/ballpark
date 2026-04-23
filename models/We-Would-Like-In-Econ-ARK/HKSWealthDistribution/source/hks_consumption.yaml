@@ -1,0 +1,82 @@
+# =============================================================================
+# HKS (2018) — Consumption stage  [DRAFT]
+#
+# Single decision: choose end-of-period assets a.
+# Persistent states (p, b) pass through; b is the stochastic discount
+# factor β_t — encoded as a Markov STATE, not a fixed parameter.
+#
+# NON-STANDARD: canonical dolo-plus treats β as a scalar parameter in
+# the mover.  Here β_t is a state variable because it is stochastic
+# (Gaussian AR(1), see paper Section 6.5).  This is a design choice
+# with no canonical dolo-plus precedent.
+#
+# STATUS: DRAFT — not executable.  See # PLACEHOLDER and # TODO markers.
+# =============================================================================
+
+name: hks_consumption
+
+symbols:
+  spaces:
+    Xx: '@def R'
+    Xp: '@def R+'
+    Xb: '@def (0,1)'
+    Xa: '@def [a_bar, +inf)'           # borrowing constraint built into domain
+
+  prestate:
+    x: '@in Xx'                         # cash-on-hand
+    p: '@in Xp'                         # persistent earnings component
+    b: '@in Xb'                         # stochastic discount factor β_t
+
+  states:
+    x_d: '@in Xx'
+    p_d: '@in Xp'
+    b_d: '@in Xb'
+
+  controls:
+    a: '@in Xa'                         # end-of-period assets (the sole HKS control)
+
+  poststates:
+    a_cntn: '@in Xa'
+    p_cntn: '@in Xp'
+    b_cntn: '@in Xb'
+
+  values:
+    V[<]: '@in R'
+    V: '@in R'
+    V[>]: '@in R'                       # TODO: wire to hks_shock_resolution arrival
+
+  parameters:
+    gamma: '@in R+'                     # CRRA coefficient
+    a_bar: '@in R'                      # exogenous borrowing limit
+
+equations:
+  # Identity: no shocks resolve within this stage
+  arvl_to_dcsn_transition: |
+    x_d = x
+    p_d = p
+    b_d = b
+
+  # Deterministic: control a becomes poststate; persistent states pass through
+  dcsn_to_cntn_transition: |
+    a_cntn = a
+    p_cntn = p_d
+    b_cntn = b_d
+
+  # Backward mover: optimisation over a
+  # No within-stage shocks — no expectation operator here
+  cntn_to_dcsn_mover:
+    Bellman: |
+      V = max_{a}{(x_d - a)^(1 - gamma) / (1 - gamma) + b_d * V[>]}
+      # NON-STANDARD: b_d (stochastic β) enters as a state-dependent
+      # discount factor, not as a fixed parameter.
+
+  # No dcsn_to_arvl_mover: all shocks resolve in the shock-resolution stage
+
+calibration:
+  gamma: 1.5
+  a_bar: -0.22
+
+# TODO: Inter-stage wiring
+# V[>] of this stage receives v_prec^{shock}(a, p, b) from the
+# shock-resolution stage.  The connector maps:
+#   (a_cntn, p_cntn, b_cntn)  →  (a, p, b)  of hks_shock_resolution prestate.
