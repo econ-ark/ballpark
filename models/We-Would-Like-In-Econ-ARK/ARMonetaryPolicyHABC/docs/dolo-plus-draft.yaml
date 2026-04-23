@@ -22,14 +22,19 @@ symbols:
     e: '@in Xe'
 
   controls:
+    # note: m_d is the chosen money balance at the decision perch;
+    # the savings identity m = m_d carries it into the continuation
+    # perch. Symbol table in docs/bellman-excerpt.md documents this.
     c: '@in R+'
     m_d: '@in R+'
     l: '@in Xl'
     a_next: '@in Xa'
 
   exogenous:
-    # unresolved: replace Pi with paper-consistent Markov matrix (summary names shock but not Pi entries)
-    e_next: '@dist MarkovChain(Pi)'
+    # unresolved: calibrate P_e (3x3 stochastic matrix) from the paper;
+    # renamed from Pi to avoid collision with inflation Pi_inf on the
+    # aggregate side (see docs/bellman-excerpt.md "Out of scope" table).
+    e_next: '@dist MarkovChain(P_e)'
 
   values:
     V[<]: '@in R'
@@ -44,13 +49,21 @@ symbols:
     phi_l: '@in R+'
     gamma: '@in R+'
     w: '@in R+'
-    mu: '@in R+'
+    # note: mu is NET of inflation-tax, so the domain is R (not R+);
+    # sign for individual households depends on the redistribution
+    # rule — verify against the paper before fixing a calibration.
+    mu: '@in R'
     R: '@in R+'
     r_m: '@in R+'
-    # unresolved: paper-specific borrowing rule; placeholder scalar until verified against PDF/.mmd
+    # unresolved: paper-specific borrowing rule; placeholder scalar until
+    # verified against PDF/.mmd
     a_min: '@in R'
+    # unresolved: Markov transition matrix (3x3 row-stochastic); values TBD
+    P_e: '@in StochasticMatrix'
 
 equations:
+  # degenerate: identity transition — no within-stage shock between
+  # arrival and decision in the household decision stage.
   arvl_to_dcsn_transition: |
     q = q
     e = e
@@ -61,7 +74,10 @@ equations:
     e = e
 
   cntn_to_dcsn_mover:
-    # workaround: separable CRRA + labor disutility for a minimal interior stage; summary notebook uses CES c–m composite + leisure (see docs/arg2009-bellman-excerpt.md) — align or justify before claiming paper-faithful
+    # workaround: separable CRRA + labor disutility for a minimal interior
+    # stage; summary notebook uses CES c-m composite + leisure (see
+    # docs/arg2009-bellman-excerpt.md) — align or justify before claiming
+    # paper-faithful.
     Bellman: |
       V = max_{c, m_d, l, a_next}{
         c^(1-rho)/(1-rho)
@@ -90,8 +106,8 @@ symbols:
     e: '@in Xe'
 
   exogenous:
-    # unresolved: same Pi as decision stage; calibrate from paper
-    e_next: '@dist MarkovChain(Pi)'
+    # unresolved: same P_e as decision stage; calibrate from paper
+    e_next: '@dist MarkovChain(P_e)'
 
   states:
     q_next: '@in Xq'
@@ -109,13 +125,18 @@ symbols:
   parameters:
     R: '@in R+'
     r_m: '@in R+'
+    # unresolved: Markov transition matrix shared with decision stage
+    P_e: '@in StochasticMatrix'
 
 equations:
   arvl_to_dcsn_transition: |
-    # unresolved: verify next-period resource mapping against Algan–Ragot (2009); draft keeps liquid return on m and linear return on a
+    # unresolved: verify next-period resource mapping against Algan-Ragot
+    # (2009); draft keeps liquid return on m and linear return on a.
     q_next = R * a + (1 + r_m) * m
     e_next = e_next
 
+  # degenerate: identity transition — no further decision between
+  # decision and continuation in the shock-realization stage.
   dcsn_to_cntn_transition: |
     q = q_next
     e = e_next
