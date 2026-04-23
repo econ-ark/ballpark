@@ -1,77 +1,326 @@
-# Dolo-plus YAML draft: ARSS household consumption-savings stage
-# Based on Matsya stage decomposition (session: topics2026-siying99-ballpark)
-# Single stage: CRRA consumption with Markov idiosyncratic productivity
+# ============================================================
+# ARSS Household Block — Three-Stage Period
+# ============================================================
+# Paper: Auclert, Rognlie, Souchier, Straub (2024),
+#   "Exchange Rates and Monetary Policy with Heterogeneous Agents:
+#    Sizing up the Real Income Channel" (NBER WP 28872)
+#
+# Source of derivation: bellman-excerpt.md §8 in this directory.
+# Constructed via Matsya session topics2026-siying99-ballpark
+#   (turns 7–9, 2026-04-23; see verification.md).
+#
+# Period composition: shocks -> cons -> disc
+# Between-period connector (twister): a_p[+] = (1 + r) * psi
+#
+# Notation: ASCII throughout. Perch tags: [<] arrival, (bare) decision, [>] continuation.
+# Time-varying equilibrium prices (w, N, r) are declared as parameters;
+# in a full GE loop these would be passed in from the aggregate block
+# (see bellman-excerpt.md §3 and §7 for the aggregate-block equations).
+# ============================================================
 
-name: arss_cons_savings
+
+# ------------------------------------------------------------
+# Stage 1: shocks (shock realisation, no decision)
+# ------------------------------------------------------------
+# Realises Markov transition e -> e', computes cash-on-hand
+# m = a_p + e' * w * N. No optimisation at this stage.
+# Arrival state is (a_p, e) — e is required to condition the
+# Markov draw of e'. Returns (1+r) are NOT applied here; they
+# live in the between-period connector (twister).
+# ------------------------------------------------------------
+name: shocks
+kind: sequential
 
 symbols:
-  prestates:
-    a: "End-of-last-period assets"
-  exogenous:
-    e: "Idiosyncratic productivity (Markov)"
-  states:
-    m: "Cash-on-hand (resources available for consumption and saving)"
-  controls:
-    c: "Consumption"
-  poststates:
-    a_prime: "End-of-period assets (savings)"
-  values:
-    V_arvl: "Arrival value V_prec(a, e)"
-    V_dcsn: "Decision value V(m, e)"
-    V_cntn: "Continuation value V_succ(a', e)"
-  parameters:
-    beta: "Discount factor"
-    sigma: "Coefficient of relative risk aversion"
-    r: "Real interest rate"
-    w: "Real wage"
-    N: "Hours worked (union-set, exogenous to household)"
-    a_bar: "Borrowing limit"
-    rho_e: "Persistence of log productivity AR(1)"
-    sigma_eps: "Std dev of productivity innovation"
+  spaces:
+    Xap: '@def R+'
+    Xm:  '@def R+'
+    Xe:  '@def linspace(e_1, e_7, 7)'    # 7-state Rouwenhorst grid
 
-definitions:
-  u: "c^(1 - sigma) / (1 - sigma)"
+  prestate:
+    a_p: '@in Xap'
+    e:   '@in Xe'
+
+  states:
+    m_d: '@in Xm'
+    e_d: '@in Xe'
+
+  poststates:
+    m: '@in Xm'
+    e_out: '@in Xe'
+
+  exogenous:
+    e_prime: '@dist MarkovChain(Pi, e)'   # Pi built from (rho_e, sigma_eps, n_e) via Rouwenhorst
+
+  values:
+    V[<]: '@in R'
+    V:    '@in R'
+    V[>]: '@in R'
+
+  values_marginal:
+    dV[<]: '@in R'
+    dV:    '@in R'
+    dV[>]: '@in R'
+
+  parameters:
+    w:         '@in R+'
+    N:         '@in R+'
+    rho_e:     '@in (0,1)'
+    sigma_eps: '@in R+'
+
+  settings:
+    n_e: '@in Z+'
 
 equations:
-  arvl_to_dcsn_transition:
-    - "m = (1 + r) * a + e * w * N"
+  arvl_to_dcsn_transition: |
+    # Markov shock realises; cash-on-hand computed
+    e_d = e_prime
+    m_d = a_p + e_d * w * N
 
-  dcsn_to_cntn_transition:
-    - "a_prime = m - c"
+  dcsn_to_cntn_transition: |
+    # Identity passthrough — no decision at this stage
+    m = m_d
+    e_out = e_d
 
   cntn_to_dcsn_mover:
-    Bellman:
-      - "V_dcsn(m, e) = max_c { u(c) + beta * V_cntn(m - c, e) }"
-    InvEuler:
-      - "c = u'^{-1}(beta * (1 + r) * E_{e'|e}[u'(c'(m', e'))])"
-      - "# With CRRA: c = (beta * (1+r) * E_{e'|e}[c'(m',e')^(-sigma)])^(-1/sigma)"
-    MarginalBellman:
-      - "V'_dcsn(m, e) = u'(c(m, e)) = c(m, e)^(-sigma)"
+    Bellman: |
+      # No optimisation; value passes through
+      V = V[>]
+    MarginalBellman: |
+      dV = dV[>]
 
   dcsn_to_arvl_mover:
-    ShadowBellman:
-      - "V_arvl(a, e) = V_dcsn((1+r)*a + e*w*N, e)"
-    Expectation:
-      - "V_cntn(a', e) = E_{e'|e}[V_arvl^{+}(a', e')]"
-      - "# = sum_{e'} Pi(e'|e) * V_arvl^{+}(a', e')"
+    Bellman: |
+      # Pre-decision expectation over Markov shock
+      V[<] = E_{e_prime | e}(V)
+    ShadowBellman: |
+      # Marginal expectation for EGM in upstream stage
+      dV[<] = E_{e_prime | e}(dV)
 
-  constraints:
-    - "a_prime >= a_bar"
-    - "c >= 0"
 
-exogenous_process:
-  e:
-    type: "MarkovChain"
-    method: "Rouwenhorst"
-    rho: "rho_e"
-    sigma: "sigma_eps"
+# ------------------------------------------------------------
+# Stage 2: cons (consumption choice, no shocks)
+# ------------------------------------------------------------
+# Standard consumption-savings with CRRA utility and EGM.
+# Labour disutility v(N) = psi_N * N^(1+varphi) / (1+varphi)
+# is a deterministic per-period cost (N is union-set, not a control).
+# Per paper eq. (9), the within-period flow is u(c) - v(N_t).
+# ------------------------------------------------------------
+name: cons
+kind: sequential
 
+symbols:
+  spaces:
+    Xm:  '@def R+'
+    Xe:  '@def linspace(e_1, e_7, 7)'
+    Xpsi: '@def R+'
+
+  prestate:
+    m: '@in Xm'
+    e: '@in Xe'
+
+  states:
+    m_d: '@in Xm'
+    e_d: '@in Xe'
+
+  poststates:
+    psi:   '@in Xpsi'
+    e_out: '@in Xe'
+
+  controls:
+    c: '@in R+'
+
+  values:
+    V[<]: '@in R'
+    V:    '@in R'
+    V[>]: '@in R'
+
+  values_marginal:
+    dV[<]: '@in R'
+    dV:    '@in R'
+    dV[>]: '@in R'
+
+  parameters:
+    sigma:  '@in R+'
+    psi_N:  '@in R+'
+    varphi: '@in R+'
+    N:      '@in R+'
+    a_bar:  '@in R'
+
+equations:
+  arvl_to_dcsn_transition: |
+    # Identity — shocks already realised in Stage 1
+    m_d = m
+    e_d = e
+
+  dcsn_to_cntn_transition: |
+    # Budget constraint: end-of-period savings
+    psi = m_d - c
+    e_out = e_d
+    # Borrowing constraint: psi >= a_bar (enforced by EGM upper-envelope)
+
+  cntn_to_dcsn_mover:
+    Bellman: |
+      # Consumption choice with CRRA utility and labour disutility
+      V = max_{c}{ c^(1 - sigma) / (1 - sigma)
+                    - psi_N * N^(1 + varphi) / (1 + varphi)
+                    + V[>] }
+    InvEuler: |
+      # EGM: invert Euler equation on continuation grid
+      c[>] = (dV[>])^(-1 / sigma)
+    MarginalBellman: |
+      # Envelope condition
+      dV = c^(-sigma)
+    cntn_to_dcsn_transition: |
+      # EGM reverse map: recover decision-state from continuation grid
+      m_d[>] = psi + c[>]
+
+  dcsn_to_arvl_mover:
+    Bellman: |
+      # No shocks between arrival and decision at this stage
+      V[<] = V
+    ShadowBellman: |
+      dV[<] = dV
+
+
+# ------------------------------------------------------------
+# Stage 3: disc (discount-factor passthrough)
+# ------------------------------------------------------------
+# Applies the household discount factor beta.
+# Pure value scaling — state passes through unchanged.
+# beta is a period-level parameter, handled here per the
+# stage-cons-with-shocks convention (cons stage carries unit discount).
+# ------------------------------------------------------------
+name: disc
+kind: sequential
+
+symbols:
+  spaces:
+    Xpsi: '@def R+'
+    Xe:   '@def linspace(e_1, e_7, 7)'
+
+  prestate:
+    psi: '@in Xpsi'
+    e:   '@in Xe'
+
+  states:
+    psi_d: '@in Xpsi'
+    e_d:   '@in Xe'
+
+  poststates:
+    psi_out: '@in Xpsi'
+    e_out:   '@in Xe'
+
+  values:
+    V[<]: '@in R'
+    V:    '@in R'
+    V[>]: '@in R'
+
+  values_marginal:
+    dV[<]: '@in R'
+    dV:    '@in R'
+    dV[>]: '@in R'
+
+  parameters:
+    beta: '@in (0,1)'
+
+equations:
+  arvl_to_dcsn_transition: |
+    psi_d = psi
+    e_d = e
+
+  dcsn_to_cntn_transition: |
+    psi_out = psi_d
+    e_out = e_d
+
+  cntn_to_dcsn_mover:
+    Bellman: |
+      # Discount-factor scaling
+      V = beta * V[>]
+    MarginalBellman: |
+      dV = beta * dV[>]
+
+  dcsn_to_arvl_mover:
+    Bellman: |
+      V[<] = V
+    ShadowBellman: |
+      dV[<] = dV
+
+
+# ============================================================
+# Period Composition
+# ============================================================
+name: arss_household
+kind: period
+
+stages:
+  - shocks
+  - cons
+  - disc
+
+# Between-period connector (twister):
+# Maps continuation of disc to arrival of shocks in next period
+twister: |
+  a_p[+] = (1 + r) * psi_out
+  e[+] = e_out
+
+# Wiring (namespace matching):
+#   shocks.poststates (m, e_out)       -> cons.prestate (m, e)
+#   cons.poststates (psi, e_out)       -> disc.prestate (psi, e)
+#   disc.poststates (psi_out, e_out)   -> twister -> shocks.prestate (a_p, e)
+
+
+# ============================================================
+# Calibration (Paper Table 2, benchmark column; Sections 2.1, 5.2)
+# ============================================================
+# All values at quarterly frequency unless noted.
+# Source: bellman-excerpt.md §10.
+# ============================================================
 calibration:
-  beta: 0.96
-  sigma: 2.0
-  r: 0.04
-  w: 1.0
-  N: 1.0
-  a_bar: 0.0
-  rho_e: 0.95
-  sigma_eps: 0.1
+  # --- Preferences ---
+  beta:      0.965       # Discount factor (clears domestic asset market at r_ss)
+  sigma:     1.0         # CRRA coefficient (log utility)
+  psi_N:     1.0         # Labour-disutility weight (normalisation; paper eq. (2))
+  varphi:    2.0         # Inverse Frisch elasticity (paper Table 2)
+
+  # --- Prices (steady-state values; time-varying in GE) ---
+  r:         0.01010     # Quarterly real interest rate: r_ss = 1/beta_star - 1
+                         #   = 1/0.990 - 1 = 0.01010 (4.04% annualised)
+  w:         0.9588      # Real wage: w_ss = 1/mu = 1/1.043 (paper eq. (14),
+                         #   P_Hss = mu * W_ss = 1 => W_ss/P_ss = 1/mu)
+
+  # --- Labour (union-set, not a household choice) ---
+  N:         1.0         # Hours: N_ss = Y_ss = 1 (Section 2.1 normalisation)
+
+  # --- Income process (Rouwenhorst discretisation) ---
+  rho_e:     0.912       # AR(1) persistence of log productivity
+  sigma_eps: 0.3620      # Innovation std: sigma_e * sqrt(1 - rho_e^2)
+                         #   = 0.883 * sqrt(1 - 0.912^2) = 0.883 * 0.4099
+  sigma_e:   0.883       # Cross-sectional std of log e (diagnostic; paper Table 2)
+  n_e:       7           # Number of Rouwenhorst grid points
+
+  # --- Borrowing constraint ---
+  a_bar:     0.0         # Natural borrowing limit (paper Table 2)
+
+  # --- Aggregate parameters (NOT in household Bellman; recorded for reference) ---
+  # beta_star: 0.990     # Foreign discount factor (pins r_ss, not in HH equations)
+  # alpha:     0.40      # Openness / import share (firm + RoW block)
+  # mu:        1.043     # Markup (firm block; used to derive w_ss above)
+  # theta_w:   0.938     # Wage Calvo parameter (union block)
+
+
+# ============================================================
+# Open items (non-blocking; see verification.md round 8)
+# ============================================================
+# 1. Rouwenhorst constructor syntax. We declared the Markov shock as
+#    `@dist MarkovChain(Pi, e)` with Pi assumed to be built externally
+#    from (rho_e, sigma_eps, n_e). A higher-level constructor of the
+#    form `@dist Rouwenhorst(rho_e, sigma_eps, n_e)` would be cleaner
+#    but is not yet canonical in the dolo-plus spec. Conservative
+#    choice retained; revisit when spec evolves.
+# 2. Aggregate block. This YAML covers only the household three-stage
+#    period. The aggregate / GE closure (CPI, real exchange rate, real
+#    UIP, RoW demand, production, sticky-wages Phillips curve, monetary
+#    rule, NFA, current account) is fully written out in
+#    bellman-excerpt.md §§3, 7. A separate aggregate-block YAML is the
+#    natural follow-up.
