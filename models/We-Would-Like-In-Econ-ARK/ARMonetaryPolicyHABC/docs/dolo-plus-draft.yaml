@@ -25,10 +25,13 @@ symbols:
     # note: m_d is the chosen money balance at the decision perch;
     # the savings identity m = m_d carries it into the continuation
     # perch. Symbol table in docs/bellman-excerpt.md documents this.
+    # note: per Matsya Evaluate turn (docs/matsya-evaluate-turn.txt,
+    # Flag C), illiquid savings a_next is NOT a free control: it is
+    # pinned by the budget identity a_next = q + w*e*l + mu - c - m_d
+    # inside dcsn_to_cntn_transition below. Three free controls.
     c: '@in R+'
     m_d: '@in R+'
     l: '@in Xl'
-    a_next: '@in Xa'
 
   exogenous:
     # unresolved: calibrate P_e (3x3 stochastic matrix) from the paper;
@@ -58,8 +61,13 @@ symbols:
     # unresolved: paper-specific borrowing rule; placeholder scalar until
     # verified against PDF/.mmd
     a_min: '@in R'
-    # unresolved: Markov transition matrix (3x3 row-stochastic); values TBD
-    P_e: '@in StochasticMatrix'
+    # unresolved: Markov transition matrix (3x3 row-stochastic); values TBD.
+    # Declared as a plain non-negative parameter per Matsya Evaluate turn
+    # (docs/matsya-evaluate-turn.txt, Question 3): `@in StochasticMatrix`
+    # has no precedent in the canonical dolo-plus examples. Row-stochastic
+    # semantics are carried instead by the `@dist MarkovChain(P_e)`
+    # annotation on the exogenous block above.
+    P_e: '@in R+'
 
 equations:
   # degenerate: identity transition — no within-stage shock between
@@ -69,7 +77,9 @@ equations:
     e = e
 
   dcsn_to_cntn_transition: |
-    a = a_next
+    # budget identity pins illiquid savings a (Matsya Flag C);
+    # m and e pass through from the decision perch.
+    a = q + w * e * l + mu - c - m_d
     m = m_d
     e = e
 
@@ -79,7 +89,7 @@ equations:
     # docs/arg2009-bellman-excerpt.md) — align or justify before claiming
     # paper-faithful.
     Bellman: |
-      V = max_{c, m_d, l, a_next}{
+      V = max_{c, m_d, l}{
         c^(1-rho)/(1-rho)
         + phi_m * m_d^(1-rho_m)/(1-rho_m)
         - phi_l * l^(1+gamma)/(1+gamma)
@@ -125,8 +135,9 @@ symbols:
   parameters:
     R: '@in R+'
     r_m: '@in R+'
-    # unresolved: Markov transition matrix shared with decision stage
-    P_e: '@in StochasticMatrix'
+    # unresolved: Markov transition matrix shared with decision stage;
+    # declared plain per Matsya Evaluate turn (see decision stage above).
+    P_e: '@in R+'
 
 equations:
   arvl_to_dcsn_transition: |

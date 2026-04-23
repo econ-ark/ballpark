@@ -19,16 +19,16 @@ This supports a **max-of-expectation** Bellman equation: optimize today given `e
 |--------|------|----------------|-------------|
 | `q` | state | `R+` | Beginning-of-period financial resources / cash-on-hand |
 | `e` | state | finite set | Current idiosyncratic productivity (Markov) |
-| `c` | control | `R+` | Consumption |
-| `m` | control / poststate | `R+` | Real money balances carried to next period (named `m_d` in YAML when viewed as the **chosen** value before the savings identity `m = m_d`; see `docs/dolo-plus-draft.yaml`) |
-| `l` | control | `[0, \bar l]` | Labor supply |
-| `a'` | control | `[a_{\min}, \infty)` | Next-period position in the risky/illiquid asset |
+| `c` | control (free) | `R+` | Consumption |
+| `m` | control (free) / poststate | `R+` | Real money balances carried to next period (named `m_d` in YAML when viewed as the **chosen** value before the savings identity `m = m_d`; see `docs/dolo-plus-draft.yaml`) |
+| `l` | control (free) | `[0, \bar l]` | Labor supply |
+| `a'` | poststate (pinned by budget) | `[a_{\min}, \infty)` | Next-period illiquid-asset position, **pinned** by the budget identity `a' = q + w\,e\,l + \mu - c - m` (per Matsya Evaluate turn, Flag C: three free controls is the canonical encoding, not four; `a'` is not itself a free control) |
 | `e'` | shock | same finite set | Next-period productivity, `e' \sim P_e(\cdot\mid e)` |
 | `q'` | state | `R+` | Next period's beginning-of-period resources (pre-decision state next period) |
 | `w` | parameter | `R+` | Wage factor scaling `e l` |
 | `mu` | parameter | `R` | **Net** transfer / policy-linked income term in the budget (can be negative when household's inflation-tax burden exceeds rebate; verify sign rule in paper) |
 | `beta` | parameter | `(0,1)` | Discount factor |
-| `P_e` | parameter | stochastic matrix | Markov transitions for `e` (renamed from `Pi` to avoid collision with inflation `Pi_inf` in the aggregate side; see "Out of scope" table below) |
+| `P_e` | parameter | `R+`^{3x3} row-stochastic | Markov transitions for `e` (renamed from `Pi` to avoid collision with inflation `Pi_inf` in the aggregate side; see "Out of scope" table below). **Canonical declaration** (per Matsya Evaluate turn, Question 3): plain non-negative parameter in the `parameters:` block; row-stochastic semantics are carried by `@dist MarkovChain(P_e)` on the exogenous variable `e_next`. Do **not** invent `@in StochasticMatrix` — no precedent in canonical dolo-plus examples. |
 | `a_min` | parameter | `R` | Borrowing limit (paper-specific; placeholder in draft YAML) |
 | `R`, `r_m` | parameters | `R+` | Draft return factors in the law of motion for resources (see YAML; **unresolved** vs. paper) |
 | `sigma` | parameter | `R+` | Outer CRRA curvature in the summary's CES-with-leisure utility |
@@ -57,11 +57,11 @@ Surfaced in `arg2009-bellman-excerpt.md` but **not** encoded in the current YAML
 | Perch | Carried objects | Value | Notes |
 |-------|-----------------|-------|--------|
 | **arrival** | `(q, e)` | `V` | Shocks relevant to the decision are already embedded in observed `e`. |
-| **decision** | `(q, e)` | `V` | Choose `(c, m, l, a')` subject to budget and borrowing constraint. |
+| **decision** | `(q, e)` | `V` | Choose **three** free controls `(c, m, l)` subject to the borrowing constraint; `a'` is determined by the budget identity (not free). |
 | **continuation** | `(a', m, e)` | `V_>` | Post-decision objects feed the next stage. |
 
 - **Arrival → decision** (`g_{≺∘}`): **identity (degenerate)** on `(q, e)` — no within-stage shock between **arrival** and **decision** in this draft; carried forward unchanged.
-- **Decision → continuation** (`g_{∘≻}`): `(a', m, e)` from chosen `a'`, chosen money `m` (YAML control `m_d`, with the savings identity `m = m_d`), and current `e`.
+- **Decision → continuation** (`g_{∘≻}`): `(a', m, e)` from the **budget identity** `a' = q + w\,e\,l + \mu - c - m` (this pins `a'`), the savings identity `m = m_d` (mapping the decision-perch control `m_d` to the continuation-perch poststate `m`), and current `e` passed through. Per the Matsya Evaluate turn (docs/matsya-evaluate-turn.txt, Flag C), eliminating `a'` via the budget is the canonical encoding and matches the `a = w - c` pattern in `cons_stage`.
 
 **Backward mover (continuation → decision):** Bellman maximization over feasible controls.
 
@@ -93,12 +93,12 @@ Let `\mathbb T_{\text{period}} = \mathbb T_{\text{shock}} \circ \mathbb T_{\text
 ## Bellman equation (compact)
 
 $$
-v(q,e) = \max_{c,m,l,a'} \Big\{ u(c,m,l) + \beta \, \mathbb{E}_{e' \mid e}\big[ v(q', e') \big] \Big\}
+v(q,e) = \max_{c,\,m,\,l} \Big\{ u(c,m,l) + \beta \, \mathbb{E}_{e' \mid e}\big[ v(q', e') \big] \Big\}
 $$
 
-subject to
+with the budget identity pinning `a'` and the borrowing constraint:
 
-`c + m + a' = q + w e l + mu`, `a' \ge a_{\min}`,
+`a' = q + w e l + mu - c - m`, `a' \ge a_{\min}`,
 
 with `q'` determined in the shock stage (draft law of motion in `dolo-plus-draft.yaml`).
 
