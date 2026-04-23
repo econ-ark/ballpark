@@ -120,6 +120,12 @@ env-*/
 # Mac
 .DS_Store
 
+# Project-local dotfiles (personal shell config)
+dotfiles/
+
 # Cursor / SpecStory
 .cursor*
 .specstory*/
+
+# Copyrighted source material (papers, LaTeX from MathPix, etc.)
+source/
