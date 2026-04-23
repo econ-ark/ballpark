@@ -1,0 +1,129 @@
+name: AlganRagotDecision
+
+symbols:
+  spaces:
+    Xq: '@def R+'
+    Xa: '@def R+'
+    Xm: '@def R+'
+    Xl: '@def [0,1]'
+    Xe: '@def {0.5, 1.0, 1.5}'
+
+  prestate:
+    q: '@in Xq'
+    e: '@in Xe'
+
+  states:
+    q: '@in Xq'
+    e: '@in Xe'
+
+  poststates:
+    a: '@in Xa'
+    m: '@in Xm'
+    e: '@in Xe'
+
+  controls:
+    c: '@in R+'
+    m_d: '@in R+'
+    l: '@in Xl'
+    a_next: '@in Xa'
+
+  exogenous:
+    # unresolved: replace Pi with paper-consistent Markov matrix (summary names shock but not Pi entries)
+    e_next: '@dist MarkovChain(Pi)'
+
+  values:
+    V[<]: '@in R'
+    V: '@in R'
+    V[>]: '@in R'
+
+  parameters:
+    beta: '@in (0,1)'
+    rho: '@in R+'
+    rho_m: '@in R+'
+    phi_m: '@in R+'
+    phi_l: '@in R+'
+    gamma: '@in R+'
+    w: '@in R+'
+    mu: '@in R+'
+    R: '@in R+'
+    r_m: '@in R+'
+    # unresolved: paper-specific borrowing rule; placeholder scalar until verified against PDF/.mmd
+    a_min: '@in R'
+
+equations:
+  arvl_to_dcsn_transition: |
+    q = q
+    e = e
+
+  dcsn_to_cntn_transition: |
+    a = a_next
+    m = m_d
+    e = e
+
+  cntn_to_dcsn_mover:
+    # workaround: separable CRRA + labor disutility for a minimal interior stage; summary notebook uses CES c–m composite + leisure (see docs/arg2009-bellman-excerpt.md) — align or justify before claiming paper-faithful
+    Bellman: |
+      V = max_{c, m_d, l, a_next}{
+        c^(1-rho)/(1-rho)
+        + phi_m * m_d^(1-rho_m)/(1-rho_m)
+        - phi_l * l^(1+gamma)/(1+gamma)
+        + beta * V[>]
+      }
+
+  dcsn_to_arvl_mover:
+    Bellman: |
+      V[<] = V
+
+---
+name: AlganRagotShock
+
+symbols:
+  spaces:
+    Xa: '@def R+'
+    Xm: '@def R+'
+    Xe: '@def {0.5, 1.0, 1.5}'
+    Xq: '@def R+'
+
+  prestate:
+    a: '@in Xa'
+    m: '@in Xm'
+    e: '@in Xe'
+
+  exogenous:
+    # unresolved: same Pi as decision stage; calibrate from paper
+    e_next: '@dist MarkovChain(Pi)'
+
+  states:
+    q_next: '@in Xq'
+    e_next: '@in Xe'
+
+  poststates:
+    q: '@in Xq'
+    e: '@in Xe'
+
+  values:
+    V[<]: '@in R'
+    V: '@in R'
+    V[>]: '@in R'
+
+  parameters:
+    R: '@in R+'
+    r_m: '@in R+'
+
+equations:
+  arvl_to_dcsn_transition: |
+    # unresolved: verify next-period resource mapping against Algan–Ragot (2009); draft keeps liquid return on m and linear return on a
+    q_next = R * a + (1 + r_m) * m
+    e_next = e_next
+
+  dcsn_to_cntn_transition: |
+    q = q_next
+    e = e_next
+
+  cntn_to_dcsn_mover:
+    Bellman: |
+      V = V[>]
+
+  dcsn_to_arvl_mover:
+    Bellman: |
+      V[<] = E_{e_next}(V)
