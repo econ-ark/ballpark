@@ -1,6 +1,6 @@
 # Tier assessment for this PR
 
-> Evaluated against [`CONTRIBUTING.md`](https://github.com/econ-ark/ballpark/blob/master/CONTRIBUTING.md) after the Opus 4.7 accepted changes in `docs/opus-review.md` / `docs/accept-edit-reject.md` are applied.
+> Evaluated against [`CONTRIBUTING.md`](https://github.com/econ-ark/ballpark/blob/master/CONTRIBUTING.md) after **(a)** the Opus 4.7 accepted changes in `docs/opus-review.md` / `docs/accept-edit-reject.md` and **(b)** the Matsya Evaluate-turn fixes in `docs/matsya-evaluate-turn.txt` are applied.
 
 ## Claimed tier after this PR: **Draft** (with partial Formalized-layer artifacts)
 
@@ -32,9 +32,9 @@ This item cannot yet be claimed at **Primer** or **Formalized**, because each ti
 
 | Requirement | Status |
 |-------------|--------|
-| `bellman-excerpt.md` with comprehensive symbol table, timing, periods/stages/perches decomposition, stage operator | **Satisfied** after this PR (symbol-table closure + identity-mover labels + `P_e` rename) — `docs/bellman-excerpt.md` |
-| `dolo-plus-draft.yaml` (interior period acceptable); unresolved features flagged with `# workaround:` / `# unresolved:` | **Satisfied** after this PR — `docs/dolo-plus-draft.yaml` |
-| `verification.md` comparing Matsya output against the **published paper** | **Not satisfied** — current paragraph is grounded in the summary notebook; paper-grounded rewrite is deferred item #2 |
+| `bellman-excerpt.md` with comprehensive symbol table, timing, periods/stages/perches decomposition, stage operator | **Satisfied** after this PR (symbol-table closure + identity-mover labels + `P_e` rename + three-free-controls / budget-pinned `a'` per Matsya Flag C) — `docs/bellman-excerpt.md` |
+| `dolo-plus-draft.yaml` (interior period acceptable); unresolved features flagged with `# workaround:` / `# unresolved:` | **Satisfied** after this PR — `docs/dolo-plus-draft.yaml`. Canonical patterns confirmed by `docs/matsya-evaluate-turn.txt` (4 CANONICAL verdicts); two non-canonical items from the draft (`@in StochasticMatrix`, four-control budget) were fixed in the Improve commits. |
+| `verification.md` comparing Matsya output against the **published paper** | **Partially satisfied** after this PR — paper gaps and dolo-plus spec gaps are now partitioned explicitly in `docs/verification.md`. Spec-side gaps are closed; paper-side claims still grounded in the summary notebook, with paper-equation rewrite tracked as deferred item #2. |
 | `matsya-session.txt` | **Satisfied** — `docs/matsya-session.txt` |
 | `AGENTS.md` with the six required top-level sections | **Satisfied** after this PR — `AGENTS.md` |
 
