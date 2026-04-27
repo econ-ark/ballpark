@@ -50,13 +50,14 @@ block, which Matsya confirmed is the canonical pattern.
 ## Accept / edit / reject — utility kernel
 
 **Rejected (as paper-faithful).** The separable CRRA + labor-disutility kernel
-in `docs/dolo-plus-draft.yaml` is **not** paper-identical. The summary's
+in `dolo-plus-draft.yaml` is **not** paper-identical. The summary's
 Bellman excerpt records a **CES composite over consumption and money with
 leisure** parameterized by `(sigma, eta, omega, psi)` (rows now in
-`docs/bellman-excerpt.md` symbol table). The current YAML therefore remains a
-**computational scaffold** with explicit `# workaround:` flags. Replacing the
-utility block with the paper's CES-with-leisure form is deferred item #1 in
-`docs/accept-edit-reject.md`.
+`bellman-excerpt.md` symbol table; verbatim equation preserved in
+`docs/legacy-drafts/arg2009-bellman-excerpt.md`). The current YAML therefore
+remains a **computational scaffold** with explicit `# workaround:` flags.
+Replacing the utility block with the paper's CES-with-leisure form is
+deferred item #1 in `docs/accept-edit-reject.md`.
 
 ## Paper gaps vs. dolo-plus spec gaps
 

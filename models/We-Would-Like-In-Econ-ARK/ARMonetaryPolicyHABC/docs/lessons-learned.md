@@ -93,10 +93,23 @@ learned" section of the
     is not.
 
 14. **Don't conflate paper gaps with dolo-plus spec gaps.**
-    `docs/verification.md` partitions each open issue into one of these
-    buckets. The `P_e` declaration was a spec gap (now closed). The utility
-    kernel is a paper gap (deferred until the paper PDF / `.mmd` is
+    `verification.md` (at the item root) partitions each open issue into one
+    of these buckets. The `P_e` declaration was a spec gap (now closed). The
+    utility kernel is a paper gap (deferred until the paper PDF / `.mmd` is
     in-repo). The distinction determines who can close each item.
+
+16. **Item-root layout is non-optional for Formalized.**
+    `CONTRIBUTING.md` §"Formalized" requires `bellman-excerpt.md`,
+    `dolo-plus-draft.yaml`, `verification.md`, and `matsya-session.txt` at
+    the **item root** (alongside `AGENTS.md`), not under `docs/`. The PR #72
+    review surfaced this: an automated mechanical check looks for these four
+    names exactly at the item root. AI iteration history (Opus prompt /
+    review, Matsya turn transcripts, accept-edit-reject log,
+    lessons-learned) belongs under `docs/`, but the four canonical
+    deliverables themselves do not. Earlier drafts of the Bellman excerpt
+    that pre-date the Matsya iteration belong under `docs/legacy-drafts/`,
+    not at the item root — `CONTRIBUTING.md` line 52 explicitly forbids
+    keeping multiple parallel Bellman files.
 
 15. **Comment directly on the offending line.** Each `# unresolved:` /
     `# workaround:` sits immediately above the symbol or equation it

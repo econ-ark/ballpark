@@ -20,7 +20,7 @@ This supports a **max-of-expectation** Bellman equation: optimize today given `e
 | `q` | state | `R+` | Beginning-of-period financial resources / cash-on-hand |
 | `e` | state | finite set | Current idiosyncratic productivity (Markov) |
 | `c` | control (free) | `R+` | Consumption |
-| `m` | control (free) / poststate | `R+` | Real money balances carried to next period (named `m_d` in YAML when viewed as the **chosen** value before the savings identity `m = m_d`; see `docs/dolo-plus-draft.yaml`) |
+| `m` | control (free) / poststate | `R+` | Real money balances carried to next period (named `m_d` in YAML when viewed as the **chosen** value before the savings identity `m = m_d`; see `dolo-plus-draft.yaml`) |
 | `l` | control (free) | `[0, \bar l]` | Labor supply |
 | `a'` | poststate (pinned by budget) | `[a_{\min}, \infty)` | Next-period illiquid-asset position, **pinned** by the budget identity `a' = q + w\,e\,l + \mu - c - m` (per Matsya Evaluate turn, Flag C: three free controls is the canonical encoding, not four; `a'` is not itself a free control) |
 | `e'` | shock | same finite set | Next-period productivity, `e' \sim P_e(\cdot\mid e)` |

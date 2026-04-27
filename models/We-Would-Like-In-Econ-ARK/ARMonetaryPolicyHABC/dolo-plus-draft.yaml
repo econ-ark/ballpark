@@ -24,7 +24,7 @@ symbols:
   controls:
     # note: m_d is the chosen money balance at the decision perch;
     # the savings identity m = m_d carries it into the continuation
-    # perch. Symbol table in docs/bellman-excerpt.md documents this.
+    # perch. Symbol table in bellman-excerpt.md documents this.
     # note: per Matsya Evaluate turn (docs/matsya-evaluate-turn.txt,
     # Flag C), illiquid savings a_next is NOT a free control: it is
     # pinned by the budget identity a_next = q + w*e*l + mu - c - m_d
@@ -36,7 +36,7 @@ symbols:
   exogenous:
     # unresolved: calibrate P_e (3x3 stochastic matrix) from the paper;
     # renamed from Pi to avoid collision with inflation Pi_inf on the
-    # aggregate side (see docs/bellman-excerpt.md "Out of scope" table).
+    # aggregate side (see bellman-excerpt.md "Out of scope" table).
     e_next: '@dist MarkovChain(P_e)'
 
   values:
@@ -86,8 +86,8 @@ equations:
   cntn_to_dcsn_mover:
     # workaround: separable CRRA + labor disutility for a minimal interior
     # stage; summary notebook uses CES c-m composite + leisure (see
-    # docs/arg2009-bellman-excerpt.md) — align or justify before claiming
-    # paper-faithful.
+    # docs/legacy-drafts/arg2009-bellman-excerpt.md) — align or justify before
+    # claiming paper-faithful.
     Bellman: |
       V = max_{c, m_d, l}{
         c^(1-rho)/(1-rho)
