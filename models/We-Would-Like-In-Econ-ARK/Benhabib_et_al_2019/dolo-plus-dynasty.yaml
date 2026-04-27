@@ -1,0 +1,215 @@
+name: bbl_dynasty
+
+# ─────────────────────────────────────────────────────────────────────
+# Benhabib-Bisin-Luo (2019) dynasty-level / cross-generational layer.
+#
+# Composes the 50 within-lifetime value/policy functions (one per
+# (tau, r_type) pair, defined in dolo-plus-draft.yaml) across
+# generations via independent intergenerational Markov chains
+# Pi_tau (10x10) and Pi_r (5x5). The lifetime map g(.; tau, r) is
+# treated as a black-box reference to the within-life solver.
+#
+# See dynasty-excerpt.md for the formal Bellman/algebra description.
+# ─────────────────────────────────────────────────────────────────────
+
+# unresolved (SPECULATIVE block-level): dolo-plus has no canonical
+# syntax for cross-generational composition. Matsya 2026-04-27 review
+# confirmed UNRESOLVED at the dolo-plus spec level for several related
+# items (calibration-override families, terminal-boundary blocks, per-
+# age overrides, period templates with state-dependent parameters);
+# cross-generational composition is one level above any of those, and
+# also has no canonical idiom in matsya's indexed corpus. The structure
+# below is therefore SPECULATIVE throughout — keyword names and sub-key
+# nesting may need renaming once a canonical idiom appears.
+
+# ═══════════════════════════════════════════════════════════════════
+# WITHIN-LIFE REFERENCE
+# ═══════════════════════════════════════════════════════════════════
+# The dynasty layer treats the solution of the within-lifetime
+# problem as a black box: given (tau, r_type) and initial wealth a,
+# it returns terminal wealth a_T = g(a; tau, r_type). The within-
+# life problem itself is fully specified in the sibling YAML.
+
+within_life:
+  source: dolo-plus-draft.yaml
+  family: bbl_consumption_savings
+  description: |
+    The within-life YAML defines a finite-horizon Bellman problem
+    parameterized by (tau, r_type). Solving it produces:
+      - optimal policy c*_t(a_t; tau, r_type) for t = 1..T
+      - terminal-wealth function g(a_1; tau, r_type) = a_{T+1}
+    where the second is the lifetime map this YAML composes
+    across generations.
+  instance_index: [tau, r_type]
+  cardinality: {tau: 10, r_type: 5}              # 50 instances total
+
+# ═══════════════════════════════════════════════════════════════════
+# DYNASTY-LEVEL STATE AND DYNAMICS
+# ═══════════════════════════════════════════════════════════════════
+
+generations:
+  index: n                                        # generation index n = 0, 1, 2, ...
+
+  # ── Cross-generational state ────────────────────────────────────
+  # State at the start of generation n: initial wealth + types.
+  # Both type variables are fixed within a life and resolve only
+  # at birth (between generations), so they are dynasty-layer states
+  # rather than within-life states.
+  states:
+    a:
+      domain: '@in R+'
+      description: |
+        a^n = a^n_0 = newborn wealth of generation n.
+        Equals terminal wealth of generation n-1 via the lifetime map:
+        a^n = g(a^{n-1}; tau^{n-1}, r_type^{n-1}).
+    tau:
+      domain: '@in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}'
+      description: Earnings-decile type for generation n (paper Table 1).
+    r_type:
+      domain: '@in {1, 2, 3, 4, 5}'
+      description: Rate-of-return-type index for generation n (paper Table 4).
+
+  # ── Cross-generational stochastic process ───────────────────────
+  # Independence (paper §I): Pi[(tau,r) | (tau',r')] = Pi_tau[tau|tau'] * Pi_r[r|r'].
+  # Both chains are 'drawn at the boundary between generations' — no
+  # within-life resolution.
+  exogenous:
+    tau_chain: '@dist Markov(Pi_tau)'             # 10-state intergenerational chain
+    r_chain:   '@dist Markov(Pi_r)'               # 5-state intergenerational chain
+    # unresolved: how dolo-plus expresses "two independent Markov chains"
+    # in a single exogenous block — one per declaration is the natural
+    # reading, but matsya did not surface a canonical example.
+
+  # ── Transition: generation n → generation n+1 ───────────────────
+  # The lifetime map carries terminal wealth forward; the type chains
+  # advance independently.
+  transition:
+    a[+1]:      '= g(a; tau, r_type)'             # lifetime map; symbolic reference
+                                                  # to within-life solver output
+    tau[+1]:    '~ Pi_tau[tau, :]'                # next-gen earnings type
+    r_type[+1]: '~ Pi_r[r_type, :]'               # next-gen rate type
+    # unresolved: dolo-plus syntax for "function-of-state" transitions
+    # that invoke an external solver (g) is not documented. The notation
+    # `= g(...)` is symbolic; an implementation would need to wire the
+    # within-life policy function into this transition explicitly.
+
+  # ── Lifetime map (symbolic; not computed in this YAML) ──────────
+  lifetime_map:
+    name: g
+    signature: '(a_0: R+, tau: int, r_type: int) -> R+'
+    description: |
+      g(a_0; tau, r_type) is the terminal wealth of a household born
+      with initial wealth a_0 and types (tau, r_type), obtained by
+      forward-simulating the optimal within-life policy:
+        a_{t+1} = (1 + r) * (a_t - c*_t(a_t; tau, r_type)) + w_t(tau)
+        for t = 1, ..., T, with a_1 = a_0;
+        return a_T.
+      Where r is the value indexed by r_type (see by_r_type in
+      dolo-plus-draft.yaml::calibration_family).
+      Symbolic only at this layer; computation lives in a downstream
+      solver that ingests dolo-plus-draft.yaml.
+    properties:                                   # paper §I Proposition
+      mu_eq_sigma:
+        description: |
+          When mu = sigma, g is affine in a_0:
+            g(a_0; tau, r) = alpha(tau, r) * a_0 + beta_g(tau, r).
+          Savings rate alpha(tau, r) is independent of a_0.
+      mu_lt_sigma:
+        description: |
+          When mu < sigma (paper's empirical case: mu=0.5993 < sigma=2),
+          g is strictly convex in a_0: d^2 g / da_0^2 > 0.
+          Savings rate is increasing in wealth; the rich save
+          proportionally more.
+
+# ═══════════════════════════════════════════════════════════════════
+# INTERGENERATIONAL MARKOV CHAINS
+# ═══════════════════════════════════════════════════════════════════
+# Reproduced here for self-containment of the dynasty layer; the
+# authoritative source is dolo-plus-draft.yaml::calibration_family
+# .population.
+
+Pi_tau:
+  description: |
+    10 x 10 transition matrix for tau (earnings decile across
+    generations), from Chetty et al. (2014) reduced to a 10-state
+    chain (paper §IIB). Online Appendix B.2 documents the
+    construction procedure but does not tabulate the matrix.
+    Reconstruction requires either Chetty et al.'s
+    online_data_tables.xls or the BBL replication package
+    (https://doi.org/10.3886/E113112V1).
+  source_reference: dolo-plus-draft.yaml::calibration_family.population.Pi_tau
+  # unresolved: full matrix entries (not in online Appendix B.2).
+
+Pi_r:
+  description: |
+    5 x 5 transition matrix for r. Paper Table 4 (diagonal) plus
+    online Appendix C.1 (full matrix; downloaded 2026-04-27).
+    Row-stochastic; rows 1-4 are symmetric around the diagonal
+    (decay per paper footnote 13); row 5 has constant off-diagonals
+    0.2448. Full matrix transcribed in the within-life YAML.
+  source_reference: dolo-plus-draft.yaml::calibration_family.population.Pi_r
+  matrix:
+    - [0.0338, 0.5013, 0.2600, 0.1349, 0.0700]
+    - [0.2876, 0.2676, 0.2876, 0.1129, 0.0443]
+    - [0.1158, 0.3163, 0.1360, 0.3163, 0.1158]
+    - [0.0446, 0.1136, 0.2894, 0.2630, 0.2894]
+    - [0.2448, 0.2448, 0.2448, 0.2448, 0.0208]
+
+# ═══════════════════════════════════════════════════════════════════
+# STATIONARY DISTRIBUTION (annotation only, not computed here)
+# ═══════════════════════════════════════════════════════════════════
+# Paper §I Proposition characterizes the stationary distribution of
+# {a^n}_n. This block records the result for downstream solvers
+# without computing anything. See dynasty-excerpt.md → "Stationary
+# distribution and Pareto tail" for the full statement.
+
+stationary_distribution:
+  regime:
+    mu_eq_sigma:
+      description: |
+        Linear stochastic recurrence equation a^{n+1} = alpha * a^n + beta_g.
+        Stationary distribution exists under standard conditions on the
+        joint distribution of (alpha, beta_g) (paper footnote 9; see
+        Grey 1994 / Hay-Rastegar-Roitershtein 2011 / Benhabib-Bisin-Zhu 2011).
+      tail: 'Pr(a > a_underbar) ~ Q * a_underbar^(-gamma) asymptotically'
+      tail_index_implicit_eq: |
+        gamma solves:  lim_{N->inf} E[ prod_{n=0}^{N-1} alpha(tau^{-n}, r^{-n})^gamma ]^(1/N) = 1
+      independence_of_earnings:
+        description: |
+          The constant term beta_g does NOT affect the asymptotic
+          Pareto exponent gamma — only the multiplicative term
+          alpha does. This is the paper's mechanism for generating
+          a thick wealth tail despite a relatively thin earnings
+          distribution.
+    mu_lt_sigma:
+      description: |
+        Convex map; stationary distribution may not exist. When it
+        does, the tail is at least as thick as Pareto:
+          Pr(a > a_underbar) >= Q * a_underbar^(-gamma).
+        Paper's quantitative analysis (Table 5) confirms existence
+        at estimated parameters and matches empirical wealth shares.
+
+  computational_status:
+    description: |
+      Determining gamma numerically requires simulating the dynasty
+      process at calibrated parameters and fitting the empirical
+      stationary tail. Out of scope for this formalization layer
+      (per AGENTS.md: this repo describes models, does not solve them).
+
+# ═══════════════════════════════════════════════════════════════════
+# OUT OF SCOPE FOR THIS BASELINE DYNASTY YAML
+# ═══════════════════════════════════════════════════════════════════
+# - Section IIID wealth-dependent r extension. In that variant,
+#   r^n becomes a function of a^n via a wealth-percentile indexing,
+#   so r_chain becomes a state-conditioned Markov chain. Belongs in
+#   a separate dynasty variant YAML pair. See dynasty-excerpt.md
+#   → "Out-of-scope" and bellman-excerpt.md → Open Issue #6.
+# - Section V transitional-dynamics exercise (non-stationary initial
+#   distribution starting from SCF 1962-63). Same dynasty operator
+#   as the baseline; would specify a different initial distribution.
+#   Out of scope here, in scope for any future replication exercise.
+# - Numerical computation of the lifetime map g and of the
+#   stationary distribution. Out of scope per AGENTS.md "Common
+#   next tasks" — this repo produces formal specifications, not
+#   solvers. The dynasty YAML pair describes the model; downstream
+#   tooling (econ-ARK or otherwise) would compute it.
