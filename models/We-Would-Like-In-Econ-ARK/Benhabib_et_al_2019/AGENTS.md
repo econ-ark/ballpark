@@ -18,10 +18,12 @@
 ## Formalization status
 
 - Explicit recursive formulation: **present** in `_summary.ipynb`.
-- `bellman-excerpt.md`: **committed and iterated with Matsya**. After the Improve step, reflects matsya's recommended patterns (identity forward mover idiom; terminal boundary wiring; calibration-override family; corrected terminal-FOC discussion).
-- `dolo-plus-draft.yaml`: **committed (first Matsya draft)**. Canonical stage structure; two unresolved-syntax blocks (`terminal:`, `calibration_family:`) flagged inline with `# unresolved:` comments per CONTRIBUTING.md line 44; scalar `w` flagged inline as `# unresolved:` (paper has age-varying $w_t(\tau)$).
-- `verification.md`: **committed**. Compares the YAML against the paper's §I; paper's description is sufficient; remaining gaps are dolo-plus spec gaps, not paper gaps.
-- `matsya-session.txt`: **committed** (`topics2026-benhabib-demo`).
+- `bellman-excerpt.md`: **committed**. Within-lifetime stage problem under the online-Appendix-A.1 model (= the authors' actual numerical solution; see Open Issue #10). Paper-faithful: chain-rule factor on `dV[<]`, β-on-bequest convention, and consumption-bound constraint all reconciled with the appendix. Symbol table carries paper-calibrated values (Tables 1, 4).
+- `dolo-plus-draft.yaml`: **committed**. Canonical stage structure under the appendix-A.1 model; `calibration_family` block carries paper Table 1 (10×6 earnings) and Table 4 values; `population.Pi_r` carries the full 5×5 transition matrix from online Appendix C.1. Three SPECULATIVE blocks (`terminal:`, `calibration_family:`, per-age override mechanism) flagged inline as `# unresolved:` (definitively confirmed UNRESOLVED at the dolo-plus spec level by matsya 2026-04-27).
+- `dynasty-excerpt.md`: **committed**. Dynasty-level / cross-generational composition layer — formalizes the lifetime map $g(\cdot;\tau,r)$, the independent intergenerational Markov chains $\Pi_\tau \otimes \Pi_r$, and the paper's Proposition on stationary distributions / Pareto tails. Sibling of `bellman-excerpt.md`.
+- `dolo-plus-dynasty.yaml`: **committed**. Dolo-plus YAML for the dynasty composition; references `dolo-plus-draft.yaml` for the within-life family. Cross-generational composition syntax is SPECULATIVE throughout (no canonical idiom in dolo-plus per matsya). Reproduces the $\Pi_r$ matrix for self-containment; $\Pi_\tau$ matrix is flagged as UNRESOLVED pending separate fetch from Chetty et al. data tables or BBL replication package.
+- `verification.md`: **committed**. Compares the within-life YAML against the paper (§I + online appendix A.1); paper's description is sufficient; remaining gaps are dolo-plus spec gaps, not paper gaps.
+- `matsya-session.txt`: **committed** (`topics2026-benhabib-demo`, 6 turns).
 
 ## Known model features requiring attention in a formalization pass
 
@@ -34,10 +36,12 @@
 
 ## Common next tasks (grounded)
 
-1. **Produce the formalization layer** (`bellman-excerpt.md`, `dolo-plus-draft.yaml`, `verification.md`, `matsya-session.txt`) from the recursive formulation in `_summary.ipynb`, via the Matsya iteration loop described in the repo-root `CONTRIBUTING.md`.
-2. **Add the terminal-period stage** to the YAML (warm-glow closure).
-3. **Formalize the dynasty wrapper** — type-indexed family over $(r, w)$ draws.
+1. ~~**Produce the formalization layer** (`bellman-excerpt.md`, `dolo-plus-draft.yaml`, `verification.md`, `matsya-session.txt`) from the recursive formulation in `_summary.ipynb`, via the Matsya iteration loop described in the repo-root `CONTRIBUTING.md`.~~ ✅ Done (2026-04-19, refined 2026-04-27).
+2. ~~**Add the terminal-period stage** to the YAML (warm-glow closure).~~ ✅ Done (boundary wiring + $\tilde A = A/\beta$ absorption per Open Issue #9).
+3. ~~**Formalize the dynasty wrapper** — type-indexed family over $(r, w)$ draws.~~ ✅ Done 2026-04-27 (`dynasty-excerpt.md` + `dolo-plus-dynasty.yaml`).
 4. **Convert figures to alt-text-annotated MyST directives** for accessibility and LLM legibility.
+5. **Section IIID variant**: separate dynasty pair for the wealth-dependent $r$ extension. Stage structure unchanged; the $r$-chain becomes state-conditioned on $a$. Currently flagged as out-of-scope in both `bellman-excerpt.md` (Open Issue #6) and the new dynasty pair.
+6. **$\Pi_\tau$ matrix transcription**: the 10×10 chain is described in online Appendix B.2 only by procedure (collapse Chetty et al. 2014's 100×100); reconstruction requires either Chetty et al.'s `online_data_tables.xls` or the BBL replication package at `https://doi.org/10.3886/E113112V1`. Mechanical fetch; closes the only remaining data gap (dynasty-layer, doesn't block the within-life formalization).
 
 ## Workflow reminders
 
