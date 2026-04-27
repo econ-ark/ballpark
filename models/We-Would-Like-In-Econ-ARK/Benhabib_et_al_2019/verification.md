@@ -1,46 +1,81 @@
 # Verification of `dolo-plus-draft.yaml` against Benhabib, Bisin, and Luo (2019)
 
-**Matsya session:** `topics2026-benhabib-demo` (Turn 4 produced the YAML; see `matsya-session.txt`).
+**Matsya session:** `topics2026-benhabib-demo` (6 turns; latest 2026-04-27).
+- Turns 1–3 (2026-04-19): forward-mover idiom, parameterized-family analysis, terminal-closure recommendation.
+- Turn 4 (2026-04-19): full first-pass YAML draft.
+- Turn 5 (2026-04-27): self-assessment of paper-side gaps in the Turn-4 draft.
+- Turn 6 (2026-04-27): definitive syntax-status review of residual UNRESOLVED items.
 
-**Source compared:** the published paper (`Benhabib_et_al_2019.mmd` / `.pdf`), §I (theoretical framework), not merely `_summary.ipynb`.
+**Source compared:** published paper (`Benhabib_et_al_2019.mmd` / `.pdf`), §I (theoretical framework), §IIB (data sources), Table 1 (earnings), Table 4 (estimated parameters), and footnote 13 ($r$-chain off-diagonal structure).
 
 ## Accepted from matsya's YAML
 
-- **Stage structure** — the single-stage template with perches (arrival `a`, decision `m`, continuation `a_next`), within-stage transitions (`m = (1+r)*a + w`; `a_next = m - c`), backward mover (Bellman + EGM block), and identity forward mover (`V[<] = V`; `dV[<] = dV`) correctly encodes the paper's within-life deterministic lifecycle problem. Matches paper §I equations (2)–(5).
+- **Stage structure** — single-stage template with perches (arrival `a`, decision `m`, continuation `a_next`), within-stage transitions (`m = (1+r)*a + w`, `a_next = m - c`), backward mover (Bellman + EGM block), and forward mover with chain-rule factor (`V[<] = V`, `dV[<] = (1+r) * dV` — see "Refined post-paper-review" below). Matches paper §I equations.
 - **CRRA utility** `u(c) = c^(1-sigma)/(1-sigma)` matches paper §I exactly.
 - **Warm-glow bequest kernel** `e(a) = A*a^(1-mu)/(1-mu)` matches paper §I exactly.
-- **EGM sub-equations** (InvEuler, reverse transition `m[>] = a_next + c[>]`, MarginalBellman envelope `dV = c^(-sigma)`) are textbook-standard for CRRA buffer-stock problems, and match the pattern used in the instructor worked example (`workspace-course-topics/artifacts/matsya-workflow-example-benhabib-2019/dolo-plus-interior-stage-draft.yaml`).
-- **Omission of `exogenous` block** is correct — the paper's §I explicitly states "$r$ and $w$ are stochastic over generations only: agents face no uncertainty within their life span."
+- **EGM sub-equations** (InvEuler, reverse transition `m[>] = a_next + c[>]`, MarginalBellman envelope `dV = c^(-sigma)`) — textbook-standard for CRRA buffer-stock problems.
+- **Omission of `exogenous` block** is correct — paper §I states "$r$ and $w$ are stochastic over generations only: agents face no uncertainty within their life span."
+- **Canonical structural reference for the forward mover** (matsya Turn 6): `consumption_savings_iid.md`'s `dV[<] = r * E_{y}(dV)`. The YAML uses the no-shock specialization (drop expectation; substitute $(1+r)$ for $r$). Status **CANONICAL-structure**; no canonical example explicitly labels the no-shock degenerate case.
+
+## Refined post-paper-review (2026-04-27)
+
+Three corrections to matsya's Turn-1–4 recommendations following direct paper audit:
+
+1. **Chain-rule factor on `dV[<]`** (Open Issue #1). Matsya Turn 1 recommended `dV[<] = dV` per the "identity twister" dev-spec, but BBL's arrival-to-decision map $m = (1+r)a + w$ is non-trivial. Paper's envelope condition gives $V'_t(a) = (1+r)\, V'_t(m)$, so the correct idiom is `dV[<] = (1+r) * dV`. Patched in YAML and excerpt.
+
+2. **Consumption upper-bound typo** (Open Issue #8). Paper §I writes `0 ≤ c ≤ a` in the recursion, which would force $a' \ge ra + w > 0$ (unusual savings floor). Treated as a typo for the standard `a' ≥ 0` ⟺ `c ≤ m`; the YAML adopts `c ∈ [0, m]`.
+
+3. **β on terminal bequest** (Open Issue #9, option (i)). Paper writes $V_T(a) = u(c) + e(a')$ (no β); standard backward-mover wiring would otherwise give $V_T = u(c) + \beta\, e(a')$. Resolved by absorbing $1/\beta$ into the boundary weight: $\tilde A \equiv A/\beta$. Boundary expressions: `(A / beta) * a_next^(1-mu) / (1-mu)`. Single-template structure preserved; paper's calibrated $A \approx 0.0006$ corresponds to $\tilde A \approx 0.000619$ at the terminal boundary only; the interior template is unchanged.
+
+Plus one structural simplification: replaced the verbose `instances: [...]` array (50 entries, 49 of them carrying redundant copies of the shared parameters) with an axis-product representation (`shared` + `by_r_type` + `by_tau` + `age_bracket_to_period`).
+
+## Paper-calibrated values (2026-04-27)
+
+YAML now carries paper-faithful numerical values where the paper provides them:
+
+- **Shared parameters** (Table 4): $\beta = 0.97$, $\sigma = 2$, $\mu = 0.5993$ (s.e. 0.0061), $A = 0.0006$ (s.e. 0.0004), $T = 36$.
+- **Rate-of-return state space** (Table 4 "State space"): $r \in \{0.0011, 0.0094, 0.0258, 0.0560, 0.0841\}$.
+- **Earnings schedule** (Table 1): full 10×6 matrix in $thousands/year inlined as `calibration_family.by_tau`. **Bracket-piecewise-constant** per paper §IIB ("agents stay in the same decile for their whole lifetime"); 6 brackets of 6 years each. Period $t$ ↔ calendar age $24 + t$ (working life ages 25–60).
+- **$\Pi_r$ diagonal** (Table 4 "Transition diagonal"): $\{0.0338, 0.2676, 0.1360, 0.2630, 0.0208\}$.
+
+YAML parses cleanly via `yaml.safe_load` (verified). Paper values spot-checked at decile-1/bracket-1, decile-5/bracket-6, and decile-10/bracket-4 — all match paper Table 1 exactly.
 
 ## Edited (relative to the paper's own notation)
 
-- **Decision-perch state `m` introduced** in place of the paper's implicit use of `a` as both value-function state and constraint bound. The paper writes `a' = (1+r)a - c + w` with constraint `0 ≤ c ≤ a` — internally inconsistent as written (see `_summary.ipynb` → "The Model" → "Notation convention" for the resolution). The YAML adopts the clean convention, consistent with `bellman-excerpt.md`.
-- **Poststate named `a_next`** rather than the paper's `a'`; equivalent but avoids the quote-mark ambiguity in YAML syntax.
-- **Parameterized-family structure made explicit** — the paper states but does not emphasize that the within-life problem is indexed by a $(\tau, r)$ type drawn at birth. The YAML surfaces this via a (speculative) `calibration_family` block; the paper itself solves 50 such problems in the baseline estimation without naming them a family.
+- **Decision-perch state `m` introduced** for the value-function argument and constraint bound. The paper's `a' = (1+r)a - c + w` with `0 ≤ c ≤ a` carries the inconsistency resolved in `_summary.ipynb` and post-paper-review confirmed (Open Issue #8).
+- **Poststate named `a_next`** rather than the paper's `a'`; equivalent but avoids YAML quote-mark ambiguity.
+- **Parameterized-family structure made explicit** via `calibration_family` block with paper values for all 50 instances. The paper itself solves these 50 problems in baseline estimation without naming them a family.
+- **Terminal bequest weight $\tilde A = A/\beta$** at the boundary only, per Open Issue #9 option (i) — preserves single-template structure while matching paper's no-β-on-bequest convention.
 
 ## Rejected
 
-- Nothing from matsya's YAML output was rejected outright. The two unresolved-syntax blocks (`terminal:`, `calibration_family:`) are preserved with inline `# unresolved:` comments per `CONTRIBUTING.md`'s rule (line 44) that uncanonical features be flagged rather than silently fudged. (The first matsya draft used `# SPECULATIVE` markers; these have been converted to the canonical `# unresolved:` idiom as a copy-edit.)
+Nothing from matsya's output was rejected outright. The corrections in "Refined post-paper-review" above (Open Issues #1 and #9) are refinements of matsya's structural framework, not rejections.
 
-## Flagged as `# unresolved:` (not paper gaps — dolo-plus spec gaps)
+## Flagged as `# unresolved:` (dolo-plus spec gaps, not paper gaps)
 
-The YAML carries inline `# unresolved:` flags on three families of items:
+Per matsya Turn 6 (2026-04-27), the items below are **definitively UNRESOLVED in the dolo-plus spec corpus** — not search failures.
 
-1. **`terminal:` block.** The terminal boundary wiring $V_{[\succ]} = e(a_{[\succ]})$, $dV_{[\succ]} = A\,a_{[\succ]}^{-\mu}$ is the **correct pattern** per matsya's Turn 3 recommendation, but no canonical dolo-plus syntax for terminal-boundary blocks was located in matsya's retrieved corpus. The paper is **not** the bottleneck — the bequest kernel is fully specified; what's missing is the dolo-plus idiom for the keyword `terminal:` and its sub-keys.
+1. **`terminal:` block keyword.** Matsya Turn 6: no `terminal:` or `boundary:` top-level key, no terminal-boundary recipe in `07-appendix-a-recipes.md`. Our placeholder block with sub-keys `parameters:`, `V[>]:`, `dV[>]:` is SPECULATIVE.
 
-2. **`calibration_family:` block.** The option-A calibration-override pattern (per matsya Turn 2) is the **correct approach** for a fixed-at-birth $(\tau, r)$ type family, but no canonical dolo-plus syntax for such families was located. Again, the paper is not the bottleneck — the paper specifies the 10 × 5 type space and the within-life-constant structure fully; what's missing is the dolo-plus idiom for instantiating the template across the family. The placeholder $\Pi_\tau$ and $\Pi_r$ matrices in the `population:` sub-block are 2×2 stubs and explicitly flagged: the paper baselines are 10×10 and 5×5 with the off-diagonal decay structure of footnote 13.
+2. **β-aware boundary mechanism.** No mechanism for the boundary to know it is being plugged into a $\beta$-weighted backward mover. The $A/\beta$ absorption (Open Issue #9, option (i)) is an economically correct workaround.
 
-3. **`w` parameter as scalar.** The paper has an age-varying earnings profile $w_t(\tau)$ for $\tau \in \{1,\ldots,10\}$ and $t \in \{1,\ldots,36\}$ — a 36 × 10 schedule (paper Table 1, interpolated linearly within bracket). The YAML's `parameters:` block carries `w` as a scalar with an inline `# unresolved:` comment recording the gap; closing it requires either (a) locating a HAFiscal-style canonical example for age-varying calibration overrides, or (b) declaring `w` as a function of $t$ and $\tau$ via an external table reference.
+3. **`calibration_family:` block keyword.** Paper values inlined; keyword and sub-keys (`shared`, `by_r_type`, `by_tau`, `cardinality`, `age_bracket_to_period`, `population`) remain SPECULATIVE per matsya's definitive 2026-04-27 confirmation that no canonical example has been indexed.
+
+4. **Per-age parameter overrides on a repeated stage.** Paper Table 1 fully transcribed in `calibration_family.by_tau`; what's missing is the dolo-plus mechanism for addressing the right entry at each $(t, \tau)$ pair. No `lifecycle:` block, no age-indexed override, no repeating-stage period template surfaced.
+
+5. **Sub-equation naming: `ShadowBellman` vs `MarginalBellman`** (matsya Turn 6 new finding). The system prompt says `ShadowBellman:` belongs in `dcsn_to_arvl_mover` while `MarginalBellman:` belongs in `cntn_to_dcsn_mover`. The canonical example (`solving-conjugates.md`) uses `MarginalBellman:` in the same structural position as our `ShadowBellman:`. Conflict noted; YAML retains `ShadowBellman:` per system prompt.
 
 ## Open items not yet in the YAML
 
-Items from `bellman-excerpt.md` → "Still open" that remain outside this draft:
-
-- **Lifecycle nest with age-varying $w_t(\tau)$.** Now flagged inline in the YAML's `parameters:` and `calibration_family:` blocks (see item 3 above). The 36 per-age × 10-type entries are not inlined; a complete YAML would reference paper Table 1 via interpolation.
-- **Section IIID wealth-dependent $r$ extension.** Explicitly out of scope for this baseline YAML (see `bellman-excerpt.md` → "Still open" §6). Would require a separate YAML with a state-contingent (rather than fixed-at-birth) $r$ exogenous process.
+- **Section IIID wealth-dependent $r$ extension.** Explicitly out of scope for this baseline YAML. Would require a separate YAML with state-contingent (rather than fixed-at-birth) $r$.
+- **Online appendix matrices** — $\Pi_r$ off-diagonals (Appendix C.1; structure described in paper footnote 13: decay in rows 1–4, constant in row 5) and $\Pi_\tau$ full matrix (Appendix B.2; from Chetty et al. 2014, reduced to 10 states). Dynasty-layer; not blocking the within-lifetime stage formalization.
 
 ## Verdict
 
-**The paper's description of its model is sufficient to construct a dolo-plus YAML formalization.** Matsya did not request any additional model information beyond what was provided in `bellman-excerpt.md`. The remaining gaps are **dolo-plus spec gaps** (canonical syntax for terminal-boundary blocks, calibration-family instantiation, and age-varying parameter overrides), not paper gaps.
+**The within-lifetime stage problem is mathematically and numerically paper-faithful as of 2026-04-27.** The within-stage equations, the EGM channel, the terminal boundary (with the $A/\beta$ refinement), and the calibration values match the paper exactly.
 
-The committed `dolo-plus-draft.yaml` is a Formalized-tier draft per `CONTRIBUTING.md`'s definition: it parses as YAML (verified via `yaml.safe_load`), encodes what is canonically encodable, and flags what is not with inline `# unresolved:` comments rather than silently fabricating. A full cleanup of the unresolved blocks would require either (a) locating a HAFiscal-style canonical dolo-plus example for type-indexed families and per-age overrides, or (b) a discussion with the dolo-plus maintainers on the intended idiom for these patterns.
+Remaining gaps:
+- **Five dolo-plus spec-level syntactic gaps** (above) — definitively UNRESOLVED per matsya 2026-04-27 review. Closing them requires either dolo-plus spec extension (canonical syntax for terminal-boundary blocks, type-indexed families, per-age overrides, sub-equation naming) or maintainer discussion, not further model work.
+- **Two dynasty-layer matrices** in online appendices, not yet downloaded. Outside the within-Bellman scope.
+
+Per `CONTRIBUTING.md` Formalized-tier definition: this YAML parses (`yaml.safe_load` confirmed), encodes what is canonically encodable, carries paper-faithful numerical values where the paper provides them, and flags spec-level gaps with inline `# unresolved:` comments rather than silently fabricating non-canonical syntax.
