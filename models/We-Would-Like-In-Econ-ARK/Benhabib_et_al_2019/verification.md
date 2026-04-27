@@ -10,22 +10,29 @@
 
 ## Accepted from matsya's YAML
 
-- **Stage structure** — single-stage template with perches (arrival `a`, decision `m`, continuation `a_next`), within-stage transitions (`m = (1+r)*a + w`, `a_next = m - c`), backward mover (Bellman + EGM block), and forward mover with chain-rule factor (`V[<] = V`, `dV[<] = (1+r) * dV` — see "Refined post-paper-review" below). Matches paper §I equations.
+- **Stage structure** — single-stage template with perches (arrival `a`, decision `m`, continuation `a_next`), within-stage transitions (`m = a` identity, `a_next = (1+r)*(m - c) + w` per online appendix A.1), backward mover (Bellman + EGM block), and forward mover as literal pass-through (`V[<] = V`, `dV[<] = dV` — both level and marginal pass through because $m = a$ identity). Matches the paper's appendix-A.1 model.
 - **CRRA utility** `u(c) = c^(1-sigma)/(1-sigma)` matches paper §I exactly.
 - **Warm-glow bequest kernel** `e(a) = A*a^(1-mu)/(1-mu)` matches paper §I exactly.
-- **EGM sub-equations** (InvEuler, reverse transition `m[>] = a_next + c[>]`, MarginalBellman envelope `dV = c^(-sigma)`) — textbook-standard for CRRA buffer-stock problems.
+- **EGM sub-equations** under appendix model: InvEuler `c[>] = (beta * (1+r) * dV[>])^(-1/sigma)` (the $(1+r)$ enters the FOC because $\partial a'/\partial c = -(1+r)$ in the appendix budget); reverse transition `m[>] = c[>] + (a_next - w)/(1+r)`; MarginalBellman envelope `dV = c^(-sigma)` (no $(1+r)$ in the envelope under appendix model since $\partial m/\partial a = 1$).
 - **Omission of `exogenous` block** is correct — paper §I states "$r$ and $w$ are stochastic over generations only: agents face no uncertainty within their life span."
-- **Canonical structural reference for the forward mover** (matsya Turn 6): `consumption_savings_iid.md`'s `dV[<] = r * E_{y}(dV)`. The YAML uses the no-shock specialization (drop expectation; substitute $(1+r)$ for $r$). Status **CANONICAL-structure**; no canonical example explicitly labels the no-shock degenerate case.
+- **Canonical structural reference for the forward mover** (matsya Turn 6): `consumption_savings_iid.md`'s `dV[<] = r * E_{y}(dV)`. Under the appendix model with $m = a$ identity, the YAML's `dV[<] = dV` is the no-shock + identity-transition specialization (drop the expectation AND drop the chain-rule factor). Status **CANONICAL-structure**; no canonical example explicitly labels this fully-degenerate case.
 
-## Refined post-paper-review (2026-04-27)
+## Refined post-paper-and-appendix-review (2026-04-27)
 
-Three corrections to matsya's Turn-1–4 recommendations following direct paper audit:
+Three model-side corrections after direct paper + appendix audit (see Open Issues #1, #8, #9, #10 in `bellman-excerpt.md` for full audit trails):
 
-1. **Chain-rule factor on `dV[<]`** (Open Issue #1). Matsya Turn 1 recommended `dV[<] = dV` per the "identity twister" dev-spec, but BBL's arrival-to-decision map $m = (1+r)a + w$ is non-trivial. Paper's envelope condition gives $V'_t(a) = (1+r)\, V'_t(m)$, so the correct idiom is `dV[<] = (1+r) * dV`. Patched in YAML and excerpt.
+1. **Budget-equation discrepancy: paper §I vs. online appendix A.1** (Open Issue #10). Paper §I writes $a' = (1+r)a - c + w$; the online appendix (= the authors' actual numerical solution) writes $a' = (1+r)(a-c) + w$. These are different models. **Resolution: match the online appendix** since it describes the collocation method that produces the published results. Paper §I's compact statement appears to have a typo (missing $(1+r)$ on the $c$ term, which would make it consistent with the $c \le a$ constraint). YAML and excerpt now encode the appendix model:
+   - $\mathrm{g}_{\prec\circ}$: $m_t = a_t$ (identity)
+   - $\mathrm{g}_{\circ\succ}$: $a_{t+1} = (1+r)(m_t - c_t) + w_t(\tau)$
+   - EGM Inverse Euler: $c_t = (\beta(1+r)\,V'_{t+1}(a_{t+1}))^{-1/\sigma}$
+   - EGM reverse: $m_t = c_t + (a_{t+1} - w_t)/(1+r)$
+   - Forward mover: `V[<] = V; dV[<] = dV` (literal pass-through; no chain-rule factor since $m = a$ identity)
 
-2. **Consumption upper-bound typo** (Open Issue #8). Paper §I writes `0 ≤ c ≤ a` in the recursion, which would force $a' \ge ra + w > 0$ (unusual savings floor). Treated as a typo for the standard `a' ≥ 0` ⟺ `c ≤ m`; the YAML adopts `c ∈ [0, m]`.
+2. **Re-resolution of Open Issue #1 (chain-rule factor).** Under the appendix model adopted in #10, $m = a$ is identity, so the arrival-to-decision Jacobian is 1 — there is **no chain-rule factor**. Matsya Turn 1's original `dV[<] = dV` advice is correct after all. The earlier "correction" to `(1+r) * dV` was based on paper §I literal reading; reverted.
 
-3. **β on terminal bequest** (Open Issue #9, option (i)). Paper writes $V_T(a) = u(c) + e(a')$ (no β); standard backward-mover wiring would otherwise give $V_T = u(c) + \beta\, e(a')$. Resolved by absorbing $1/\beta$ into the boundary weight: $\tilde A \equiv A/\beta$. Boundary expressions: `(A / beta) * a_next^(1-mu) / (1-mu)`. Single-template structure preserved; paper's calibrated $A \approx 0.0006$ corresponds to $\tilde A \approx 0.000619$ at the terminal boundary only; the interior template is unchanged.
+3. **Re-resolution of Open Issue #8 (consumption upper bound).** Under the appendix model, paper's `c ≤ a` is **genuine, not a typo**. The actual typo in paper §I is in the budget equation (missing $(1+r)$ on $c$), which would then make `c ≤ a` consistent. Since the YAML uses $m_t = a_t$ identity, the constraint `c ∈ [0, m]` is equivalent to `c ∈ [0, a]` — implementation correct.
+
+4. **β on terminal bequest** (Open Issue #9, option (i)). Unchanged from morning's resolution: absorb $1/\beta$ into the boundary weight, $\tilde A \equiv A/\beta$, so $\beta V_{[\succ]} = e(a)$ matches paper's no-β-on-bequest terminal recursion. Under the appendix model, the resulting terminal Inverse Euler is $c_T = ((1+r)A)^{-1/\sigma} a_{T+1}^{\mu/\sigma}$.
 
 Plus one structural simplification: replaced the verbose `instances: [...]` array (50 entries, 49 of them carrying redundant copies of the shared parameters) with an axis-product representation (`shared` + `by_r_type` + `by_tau` + `age_bracket_to_period`).
 
@@ -36,13 +43,14 @@ YAML now carries paper-faithful numerical values where the paper provides them:
 - **Shared parameters** (Table 4): $\beta = 0.97$, $\sigma = 2$, $\mu = 0.5993$ (s.e. 0.0061), $A = 0.0006$ (s.e. 0.0004), $T = 36$.
 - **Rate-of-return state space** (Table 4 "State space"): $r \in \{0.0011, 0.0094, 0.0258, 0.0560, 0.0841\}$.
 - **Earnings schedule** (Table 1): full 10×6 matrix in $thousands/year inlined as `calibration_family.by_tau`. **Bracket-piecewise-constant** per paper §IIB ("agents stay in the same decile for their whole lifetime"); 6 brackets of 6 years each. Period $t$ ↔ calendar age $24 + t$ (working life ages 25–60).
-- **$\Pi_r$ diagonal** (Table 4 "Transition diagonal"): $\{0.0338, 0.2676, 0.1360, 0.2630, 0.0208\}$.
+- **$\Pi_r$ full 5×5 matrix** (online Appendix C.1, downloaded 2026-04-27): each row is row-stochastic; diagonal $\{0.0338, 0.2676, 0.1360, 0.2630, 0.0208\}$ matches Table 4. Off-diagonals show the decay structure of paper footnote 13 (rows 1–4 symmetric around diagonal; row 5 constant 0.2448).
 
-YAML parses cleanly via `yaml.safe_load` (verified). Paper values spot-checked at decile-1/bracket-1, decile-5/bracket-6, and decile-10/bracket-4 — all match paper Table 1 exactly.
+YAML parses cleanly via `yaml.safe_load` (verified). Paper values spot-checked at decile-1/bracket-1, decile-5/bracket-6, and decile-10/bracket-4 — all match paper Table 1 exactly. $\Pi_r$ row sums verified at 1.0 (one row 1.0002 within rounding).
 
 ## Edited (relative to the paper's own notation)
 
-- **Decision-perch state `m` introduced** for the value-function argument and constraint bound. The paper's `a' = (1+r)a - c + w` with `0 ≤ c ≤ a` carries the inconsistency resolved in `_summary.ipynb` and post-paper-review confirmed (Open Issue #8).
+- **Decision-perch state `m` introduced as a perch label** with $m_t = a_t$ identity transition (under appendix model). Distinguishes the dolo-plus three-perch slots while remaining mathematically a single-state model.
+- **Budget equation taken from online appendix A.1**, not paper §I literal — the appendix is authoritative for the numerical solution. Paper §I's $a' = (1+r)a - c + w$ is treated as a typo for the appendix's $a' = (1+r)(a-c) + w$. See Open Issue #10.
 - **Poststate named `a_next`** rather than the paper's `a'`; equivalent but avoids YAML quote-mark ambiguity.
 - **Parameterized-family structure made explicit** via `calibration_family` block with paper values for all 50 instances. The paper itself solves these 50 problems in baseline estimation without naming them a family.
 - **Terminal bequest weight $\tilde A = A/\beta$** at the boundary only, per Open Issue #9 option (i) — preserves single-template structure while matching paper's no-β-on-bequest convention.
@@ -68,7 +76,7 @@ Per matsya Turn 6 (2026-04-27), the items below are **definitively UNRESOLVED in
 ## Open items not yet in the YAML
 
 - **Section IIID wealth-dependent $r$ extension.** Explicitly out of scope for this baseline YAML. Would require a separate YAML with state-contingent (rather than fixed-at-birth) $r$.
-- **Online appendix matrices** — $\Pi_r$ off-diagonals (Appendix C.1; structure described in paper footnote 13: decay in rows 1–4, constant in row 5) and $\Pi_\tau$ full matrix (Appendix B.2; from Chetty et al. 2014, reduced to 10 states). Dynasty-layer; not blocking the within-lifetime stage formalization.
+- **$\Pi_\tau$ full 10×10 matrix.** Online Appendix B.2 describes the construction procedure (collapse Chetty et al. 2014's 100×100 matrix to 10×10) but does not tabulate the result. Reconstruction would require either Chetty et al.'s `online_data_tables.xls` or the BBL replication package at `https://doi.org/10.3886/E113112V1`. Dynasty-layer; not blocking the within-lifetime stage formalization. ($\Pi_r$ has been transcribed from Appendix C.1 as of 2026-04-27.)
 
 ## Verdict
 

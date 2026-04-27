@@ -3,9 +3,27 @@ name: bbl_consumption_savings
 # ─────────────────────────────────────────────────────────────────────
 # Benhabib-Bisin-Luo (2019) household consumption-savings stage.
 #
+# Model: per online Appendix A.1 (= the authors' actual numerical
+# solution; see Open Issue #10 in bellman-excerpt.md for the
+# paper-§I-vs-appendix budget-equation discrepancy).
+#
+#   V_t(a) = max_c { u(c) + beta * V_{t+1}(a') }
+#   s.t.  a' = (1 + r) * (a - c) + w
+#         0 <= c <= a
+#
+# Timing: agent arrives with wealth a; consumes c <= a out of
+# beginning-of-period wealth; savings (a - c) earn return r;
+# earnings w arrive at end of period; next-period wealth is a'.
+#
+# Three-perch decomposition:
+#   arrival  (state a) → decision (state m = a, identity transition)
+#   decision (state m) → continuation (state a' = (1+r)(m-c) + w)
+# Within-life there are no shocks, and the arrival-to-decision
+# transition is identity, so the forward mover is a literal pass-
+# through (V[<] = V, dV[<] = dV — no chain-rule factor).
+#
 # Types (tau, r) are drawn at birth and fixed within life.
 # They enter only through calibration overrides (beta, r, w, sigma).
-# No within-period shocks ⟹ identity forward mover.
 #
 # Terminal period: V[>] and dV[>] are replaced by warm-glow bequest
 # e(a) = A * a^(1-mu)/(1-mu) via boundary wiring (see terminal block).
@@ -59,43 +77,47 @@ symbols:
 
 equations:
   # ── Arrival → Decision ──────────────────────────────────────────
-  # Cash-on-hand = gross return on wealth + earnings
+  # Identity (under appendix model): m and a denote the same state at
+  # decision time; m is just a perch label. The (1+r) factor moves to
+  # the dcsn_to_cntn transition where it actually applies (to savings).
   arvl_to_dcsn_transition: |
-    m = (1 + r) * a + w
+    m = a
 
   # ── Decision → Continuation ─────────────────────────────────────
-  # End-of-period wealth = cash-on-hand minus consumption
+  # Appendix-A.1 budget: savings (m - c) earn return r; earnings w
+  # arrive at end of period.
   dcsn_to_cntn_transition: |
-    a_next = m - c
+    a_next = (1 + r) * (m - c) + w
 
   # ── Backward mover: continuation → decision ────────────────────
-  # Standard EGM block. At t = T, V[>] and dV[>] are supplied by
-  # the terminal boundary specification (see terminal block below).
+  # Standard EGM block under the appendix model. At t = T, V[>] and
+  # dV[>] are supplied by the terminal boundary specification (below).
+  #
+  # Under the appendix budget a' = (1+r)(m-c) + w:
+  #   FOC:   u'(c) = beta * (1+r) * V'(a')      ← (1+r) here
+  #   Inv.:  c     = (beta * (1+r) * dV[>])^(-1/sigma)
+  #   Rev.:  m     = c + (a_next - w) / (1+r)   ← inverse of the budget
+  #   Env.:  V'(m) = u'(c) = c^(-sigma)         ← no (1+r) factor here
   cntn_to_dcsn_mover:
     Bellman: |
       V = max_{c}{c^(1-sigma)/(1-sigma) + beta * V[>]}
     InvEuler: |
-      c[>] = (beta * dV[>])^(-1/sigma)
+      c[>] = (beta * (1 + r) * dV[>])^(-1/sigma)
     cntn_to_dcsn_transition: |
-      m[>] = a_next + c[>]
+      m[>] = c[>] + (a_next - w) / (1 + r)
     MarginalBellman: |
       dV = c^(-sigma)
 
   # ── Forward mover: decision → arrival ──────────────────────────
-  # No within-life shocks ⟹ no expectation operator. But the
-  # arrival-to-decision map m = (1 + r)*a + w is a non-trivial
-  # deterministic transformation, so the marginal value picks up
-  # the chain-rule factor (1 + r):
-  #   dV[<] = ∂V/∂a = (∂V/∂m) * (∂m/∂a) = (1 + r) * dV
-  # The Bellman level passes through (V[<] = V) since composing
-  # V with the deterministic transition just renames the argument.
-  # Matches `consumption_savings_iid.md`'s `dV[<] = R * E_{θ}(dV)`
-  # with the expectation dropped (no within-life shocks).
+  # Under the appendix model, m = a is identity, so the forward mover
+  # is a literal pass-through. No expectation (no within-life shocks),
+  # no chain-rule factor (identity transition has unit Jacobian).
+  # Matches matsya Turn 1's original `dV[<] = dV` advice.
   dcsn_to_arvl_mover:
     Bellman: |
       V[<] = V
     ShadowBellman: |
-      dV[<] = (1 + r) * dV
+      dV[<] = dV
 
 # ═══════════════════════════════════════════════════════════════════
 # TERMINAL BOUNDARY SPECIFICATION
@@ -156,9 +178,8 @@ terminal:
 #   by_r_type.r                          : paper Table 4 "State space" row
 #   by_tau.w                             : paper Table 1
 #   age_bracket_to_period                : paper §IIB ("six age brackets")
-#   population.Pi_r.diagonal             : paper Table 4 "Transition diagonal"
-#   population.Pi_r.<off-diagonal>       : online Appendix C.1 (NOT inlined)
-#   population.Pi_tau                    : online Appendix B.2 (NOT inlined)
+#   population.Pi_r.matrix               : online Appendix C.1 (full 5×5 matrix; downloaded 2026-04-27)
+#   population.Pi_tau                    : online Appendix B.2 (procedure only; matrix NOT tabulated)
 #
 # The compact form below replaces the verbose `instances: [...]` array
 # of 50 entries (49 of which would carry only redundant copies of the
@@ -232,21 +253,28 @@ calibration_family:
       outer simulation layer that composes 50 pre-solved value functions.
     Pi_r:
       description: |
-        5 × 5 transition matrix for r. Diagonal estimated in paper Table 4;
-        off-diagonal structure described in paper footnote 13 (rows 1–4
-        decay; row 5 constant); full numerical matrix in online Appendix
-        C.1 (NOT in repo .mmd; download from AEA archive separately).
-      diagonal: [0.0338, 0.2676, 0.1360, 0.2630, 0.0208]    # paper Table 4 "Transition diagonal"
-      # standard errors (paper Table 4): [0.6162, 0.5570, 0.0699, 1.3659, 0.2678]
-      # unresolved: full off-diagonal matrix from online Appendix C.1.
-      # Structure (paper footnote 13): rows 1–4 use a decay rule
-      #   P(r_i | r_j) = P(r_i | r_i) * exp(-lambda * dist(i,j))    for j ≠ i
-      # (footnote's exact index in exp(-lambda j) appears typo'd; the
-      # online Appendix C.1 should be consulted for the literal matrix);
-      # row 5 uses constant off-diagonals: P(r_5 | r_j) = (1 - P(r_5|r_5))/4.
+        5 × 5 transition matrix for r. Full matrix from online Appendix C.1
+        (downloaded 2026-04-27 from https://www.aeaweb.org/articles/materials/10698).
+        Row-stochastic; row j is the transition probabilities P(r_i | r_j)
+        for i = 1..5. Diagonal matches paper Table 4 "Transition diagonal".
+        Off-diagonals: rows 1–4 are symmetric around the diagonal (decay
+        per paper footnote 13); row 5 has constant off-diagonals 0.2448.
+      matrix:
+        - [0.0338, 0.5013, 0.2600, 0.1349, 0.0700]
+        - [0.2876, 0.2676, 0.2876, 0.1129, 0.0443]
+        - [0.1158, 0.3163, 0.1360, 0.3163, 0.1158]
+        - [0.0446, 0.1136, 0.2894, 0.2630, 0.2894]
+        - [0.2448, 0.2448, 0.2448, 0.2448, 0.0208]
+      # standard errors on the diagonal (paper Table 4): [0.6162, 0.5570, 0.0699, 1.3659, 0.2678]
     Pi_tau:
       description: |
-        10 × 10 transition matrix for tau (earnings decile across generations),
-        from Chetty et al. (2014) reduced to a 10-state chain (paper §IIB).
-        Full matrix in online Appendix B.2 (NOT in repo .mmd).
-      # unresolved: full matrix entries from online Appendix B.2.
+        10 × 10 transition matrix for tau (earnings decile across
+        generations), from Chetty et al. (2014) reduced to a 10-state
+        chain (paper §IIB). Online Appendix B.2 describes the construction
+        procedure (collapse Chetty et al.'s 100×100 matrix into 10×10) but
+        does NOT tabulate the resulting matrix. The matrix would have to be
+        either (a) reconstructed from Chetty et al.'s Online Table 1 at
+        http://equality-of-opportunity.org/images/online_data_tables.xls,
+        or (b) extracted from the BBL replication package at
+        https://doi.org/10.3886/E113112V1.
+      # unresolved: full matrix entries (not in online Appendix B.2).
