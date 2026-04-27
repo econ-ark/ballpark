@@ -274,7 +274,7 @@ The items below were drafted as open questions for the first matsya round; their
 
 ### Still open
 
-5. **Lifecycle nest with age-varying $w_t(\tau)$.** The paper provides $w_t(\tau)$ as a $10 \times 6$ age-bracket matrix (paper Table 1), interpolated linearly within bracket; the YAML should reference this table. Canonical dolo-plus syntax for per-age parameter overrides on a repeated stage was not asked of matsya in this round; a follow-up query may be needed.
+5. **Lifecycle nest with age-varying $w_t(\tau)$.** The paper provides $w_t(\tau)$ as a $10 \times 6$ age-bracket matrix (paper Table 1), interpolated linearly within bracket; the YAML should reference this table. Canonical dolo-plus syntax for per-age parameter overrides on a repeated stage was not asked of matsya in this round; a follow-up query may be needed. **Status:** flagged inline as `# unresolved:` in the YAML's `parameters:` block and in each `calibration_family:` instance — pending the canonical-syntax follow-up.
 
 6. **Section IIID wealth-dependent $r$ extension — out of scope for baseline YAML.** The baseline formalization treats $r$ as fixed-within-life. The extension $r = r_0 + b \cdot p(a)$ (where $p(a)$ is a wealth-percentile index) is a **substantive change to the `exogenous` block** (state-contingent $r$ rather than fixed-at-birth $r$) and belongs in a **second, separate YAML** for the extension — not the baseline.
 

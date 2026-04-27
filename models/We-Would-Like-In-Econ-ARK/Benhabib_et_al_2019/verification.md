@@ -20,25 +20,27 @@
 
 ## Rejected
 
-- Nothing from matsya's YAML output was rejected outright. The two speculative blocks (`terminal`, `calibration_family`) are preserved **with matsya's `# SPECULATIVE` flags intact**, per CONTRIBUTING.md's rule that uncanonical features be flagged rather than silently fudged.
+- Nothing from matsya's YAML output was rejected outright. The two unresolved-syntax blocks (`terminal:`, `calibration_family:`) are preserved with inline `# unresolved:` comments per `CONTRIBUTING.md`'s rule (line 44) that uncanonical features be flagged rather than silently fudged. (The first matsya draft used `# SPECULATIVE` markers; these have been converted to the canonical `# unresolved:` idiom as a copy-edit.)
 
-## Flagged as speculative (not paper gaps — dolo-plus spec gaps)
+## Flagged as `# unresolved:` (not paper gaps — dolo-plus spec gaps)
 
-Matsya's YAML flags two blocks as lacking canonical dolo-plus syntax:
+The YAML carries inline `# unresolved:` flags on three families of items:
 
-1. **`terminal:` block.** The terminal boundary wiring $V_{[\succ]} = e(a_{[\succ]})$, $dV_{[\succ]} = A\,a_{[\succ]}^{-\mu}$ is the **correct pattern** per matsya's Turn 3 recommendation, but no canonical dolo-plus syntax for terminal-boundary blocks was found in matsya's retrieved corpus. The paper is **not** the bottleneck here — the bequest kernel is fully specified; what's missing is the dolo-plus idiom.
+1. **`terminal:` block.** The terminal boundary wiring $V_{[\succ]} = e(a_{[\succ]})$, $dV_{[\succ]} = A\,a_{[\succ]}^{-\mu}$ is the **correct pattern** per matsya's Turn 3 recommendation, but no canonical dolo-plus syntax for terminal-boundary blocks was located in matsya's retrieved corpus. The paper is **not** the bottleneck — the bequest kernel is fully specified; what's missing is the dolo-plus idiom for the keyword `terminal:` and its sub-keys.
 
-2. **`calibration_family:` block.** The option-A calibration-override pattern (per matsya Turn 2) is the **correct approach** for a fixed-at-birth $(\tau, r)$ type family, but no canonical dolo-plus syntax for such families was found. Again, the paper is not the bottleneck — the paper specifies the 10 × 5 type space and the within-life-constant structure fully; what's missing is the dolo-plus idiom for instantiating the template across the family.
+2. **`calibration_family:` block.** The option-A calibration-override pattern (per matsya Turn 2) is the **correct approach** for a fixed-at-birth $(\tau, r)$ type family, but no canonical dolo-plus syntax for such families was located. Again, the paper is not the bottleneck — the paper specifies the 10 × 5 type space and the within-life-constant structure fully; what's missing is the dolo-plus idiom for instantiating the template across the family. The placeholder $\Pi_\tau$ and $\Pi_r$ matrices in the `population:` sub-block are 2×2 stubs and explicitly flagged: the paper baselines are 10×10 and 5×5 with the off-diagonal decay structure of footnote 13.
+
+3. **`w` parameter as scalar.** The paper has an age-varying earnings profile $w_t(\tau)$ for $\tau \in \{1,\ldots,10\}$ and $t \in \{1,\ldots,36\}$ — a 36 × 10 schedule (paper Table 1, interpolated linearly within bracket). The YAML's `parameters:` block carries `w` as a scalar with an inline `# unresolved:` comment recording the gap; closing it requires either (a) locating a HAFiscal-style canonical example for age-varying calibration overrides, or (b) declaring `w` as a function of $t$ and $\tau$ via an external table reference.
 
 ## Open items not yet in the YAML
 
 Items from `bellman-excerpt.md` → "Still open" that remain outside this draft:
 
-- **Lifecycle nest with age-varying $w_t(\tau)$.** The YAML has `w` as a scalar parameter; 36 per-age values times 10 types = 360 calibration entries would be needed. The paper provides these as a 10 × 6 age-bracket table (paper Table 1); a complete YAML would reference this table via interpolation rather than hard-coding. Dolo-plus syntax for per-age parameter overrides on a repeated stage was not asked of matsya in this iteration.
+- **Lifecycle nest with age-varying $w_t(\tau)$.** Now flagged inline in the YAML's `parameters:` and `calibration_family:` blocks (see item 3 above). The 36 per-age × 10-type entries are not inlined; a complete YAML would reference paper Table 1 via interpolation.
 - **Section IIID wealth-dependent $r$ extension.** Explicitly out of scope for this baseline YAML (see `bellman-excerpt.md` → "Still open" §6). Would require a separate YAML with a state-contingent (rather than fixed-at-birth) $r$ exogenous process.
 
 ## Verdict
 
-**The paper's description of its model is sufficient to construct a dolo-plus YAML formalization.** Matsya did not request any additional model information beyond what was provided in `bellman-excerpt.md`. The remaining gaps are **dolo-plus spec gaps** (canonical syntax for terminal-boundary blocks and calibration-family instantiation), not paper gaps.
+**The paper's description of its model is sufficient to construct a dolo-plus YAML formalization.** Matsya did not request any additional model information beyond what was provided in `bellman-excerpt.md`. The remaining gaps are **dolo-plus spec gaps** (canonical syntax for terminal-boundary blocks, calibration-family instantiation, and age-varying parameter overrides), not paper gaps.
 
-The committed `dolo-plus-draft.yaml` is a Formalized-tier draft per `CONTRIBUTING.md`'s definition: it encodes what is canonically encodable, and flags what is not with inline `# SPECULATIVE` comments rather than silently fabricating. A full cleanup of the two speculative blocks would require either (a) locating a HAFiscal-style canonical dolo-plus example for type-indexed families, or (b) a discussion with the dolo-plus maintainers on the intended idiom for these two patterns.
+The committed `dolo-plus-draft.yaml` is a Formalized-tier draft per `CONTRIBUTING.md`'s definition: it parses as YAML (verified via `yaml.safe_load`), encodes what is canonically encodable, and flags what is not with inline `# unresolved:` comments rather than silently fabricating. A full cleanup of the unresolved blocks would require either (a) locating a HAFiscal-style canonical dolo-plus example for type-indexed families and per-age overrides, or (b) a discussion with the dolo-plus maintainers on the intended idiom for these patterns.

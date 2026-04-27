@@ -15,8 +15,8 @@ econ_ark_topic:
   - wealth-distribution
 jel: [D31, E21, J62]
 difficulty: stretch
-tier: primer                                # exposition layer complete; formalization layer pending
-has_formalization_layer: false
+tier: formalized                            # formalization layer committed (bellman-excerpt + dolo-plus-draft + verification + matsya-session)
+has_formalization_layer: true
 requires: [CRRA, EGM, bequest-utility]
 ballpark_contributor:
   name: "Ashish Kumar"

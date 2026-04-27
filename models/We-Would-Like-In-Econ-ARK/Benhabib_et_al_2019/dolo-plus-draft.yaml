@@ -43,7 +43,14 @@ symbols:
   parameters:
     beta: '@in (0,1)'      # discount factor (varies by type tau)
     r: '@in R+'            # rate of return on wealth (fixed-at-birth type)
-    w: '@in R+'            # earnings (varies by age and by type tau)
+    # unresolved: w is encoded as a scalar parameter, but the paper has an age-varying
+    # earnings profile w_t(tau) for tau in {1..10}, t in {1..36} — a 36 x 10 schedule
+    # from paper Table 1, interpolated linearly within bracket. Canonical dolo-plus
+    # syntax for per-age parameter overrides on a repeated stage was not located in
+    # the matsya `topics2026-benhabib-demo` session. Closing this requires either
+    # (a) locating a HAFiscal-style canonical example for age-varying calibration,
+    # or (b) declaring w as a function of t and tau via an external table reference.
+    w: '@in R+'            # earnings (paper: w_t(tau) varies by age and by type)
     sigma: '@in R+'        # CRRA coefficient
 
 equations:
@@ -96,14 +103,21 @@ equations:
 # of the curvature of e(a).
 # ═══════════════════════════════════════════════════════════════════
 
-terminal:                                          # SPECULATIVE: no canonical syntax verified
-  parameters:                                      # SPECULATIVE
-    A: '@in R+'                                    # SPECULATIVE — bequest weight
-    mu: '@in R+'                                   # SPECULATIVE — bequest curvature
-  V[>]: |                                          # SPECULATIVE
-    A * a_next^(1-mu) / (1-mu)                     # SPECULATIVE
-  dV[>]: |                                         # SPECULATIVE
-    A * a_next^(-mu)                               # SPECULATIVE
+# unresolved: terminal-boundary block — Matsya's Turn 3 recommendation (use the
+# interior stage template with terminal boundary wiring V[>] = e(a) and
+# dV[>] = e'(a)) is structurally correct, but no canonical dolo-plus syntax for
+# `terminal:` blocks was located in the matsya `topics2026-benhabib-demo` session.
+# The block below expresses the intent; the keyword `terminal:` and its sub-keys
+# may need to be renamed once a canonical idiom is located. The economics
+# (warm-glow bequest e(a) = A a^(1-mu)/(1-mu)) is paper-faithful.
+terminal:
+  parameters:
+    A: '@in R+'                                    # bequest weight (paper: A ~ 0.0006)
+    mu: '@in R+'                                   # bequest curvature (paper: mu ~ 0.60)
+  V[>]: |
+    A * a_next^(1-mu) / (1-mu)
+  dV[>]: |
+    A * a_next^(-mu)
 
 # ═══════════════════════════════════════════════════════════════════
 # CALIBRATION-OVERRIDE PARAMETERIZED FAMILY
@@ -120,40 +134,47 @@ terminal:                                          # SPECULATIVE: no canonical s
 # governing type transmission across generations is a population-
 # level object, not a stage-level object.
 #
-# workaround: The mechanism for declaring a calibration family in
-# dolo-plus is UNRESOLVED — no canonical syntax exists in the
-# retrieved sources. The block below is speculative.
+# unresolved: the mechanism for declaring a calibration family in
+# dolo-plus has no canonical syntax in the retrieved sources. The
+# `calibration_family:` block below expresses the intent; the keyword
+# and sub-keys may need to be renamed once a canonical idiom is
+# located (likely in HAFiscal). The economics (10 tau × 5 r types
+# fixed at birth from paper §I) is paper-faithful.
 # ═══════════════════════════════════════════════════════════════════
 
-calibration_family:                                # SPECULATIVE: entire block
-  description: |                                   # SPECULATIVE
-    BBL type-indexed family. Each (tau, r) pair    # SPECULATIVE
-    produces one instance of the stage template    # SPECULATIVE
-    with overridden parameters.                    # SPECULATIVE
-  index: [tau, r_type]                             # SPECULATIVE
-  instances:                                       # SPECULATIVE
-    - tau: 1                                       # SPECULATIVE
-      r_type: 1                                    # SPECULATIVE
-      calibration:                                 # SPECULATIVE
-        beta: 0.96                                 # SPECULATIVE
-        r: 0.04                                    # SPECULATIVE
-        sigma: 1.5                                 # SPECULATIVE
-        w: 1.0                                     # SPECULATIVE — age-0 value; schedule TBD
-        A: 15.0                                    # SPECULATIVE
-        mu: 1.5                                    # SPECULATIVE
-    - tau: 2                                       # SPECULATIVE
-      r_type: 1                                    # SPECULATIVE
-      calibration:                                 # SPECULATIVE
-        beta: 0.99                                 # SPECULATIVE
-        r: 0.04                                    # SPECULATIVE
-        sigma: 2.0                                 # SPECULATIVE
-        w: 1.2                                     # SPECULATIVE
-        A: 15.0                                    # SPECULATIVE
-        mu: 2.0                                    # SPECULATIVE
-    # ... additional (tau, r_type) pairs           # SPECULATIVE
-  population:                                      # SPECULATIVE
-    description: |                                 # SPECULATIVE
-      Intergenerational Markov chain over types.   # SPECULATIVE
-      Not part of the individual Bellman problem.  # SPECULATIVE
-    Pi_tau: [[0.8, 0.2], [0.3, 0.7]]              # SPECULATIVE
-    Pi_r: [[0.9, 0.1], [0.1, 0.9]]                # SPECULATIVE
+calibration_family:
+  description: |
+    BBL type-indexed family. Each (tau, r) pair
+    produces one instance of the stage template
+    with overridden parameters.
+  index: [tau, r_type]
+  instances:
+    - tau: 1
+      r_type: 1
+      calibration:
+        beta: 0.96
+        r: 0.04
+        sigma: 1.5
+        w: 1.0                                     # unresolved: scalar placeholder; schedule TBD per `parameters:` note
+        A: 15.0
+        mu: 1.5
+    - tau: 2
+      r_type: 1
+      calibration:
+        beta: 0.99
+        r: 0.04
+        sigma: 2.0
+        w: 1.2                                     # unresolved: scalar placeholder; schedule TBD per `parameters:` note
+        A: 15.0
+        mu: 2.0
+    # additional (tau, r_type) pairs follow the same pattern;
+    # unresolved: full calibration table (paper §IV / Table 1) not yet inlined.
+  population:
+    description: |
+      Intergenerational Markov chain over types.
+      Not part of the individual Bellman problem.
+    # unresolved: Pi_tau and Pi_r are 10x10 and 5x5 in the paper baseline (paper
+    # §I and footnote 13: r-chain has decay-rate off-diagonals except the last
+    # row which uses constant off-diagonals). Placeholders below are 2x2.
+    Pi_tau: [[0.8, 0.2], [0.3, 0.7]]
+    Pi_r: [[0.9, 0.1], [0.1, 0.9]]
