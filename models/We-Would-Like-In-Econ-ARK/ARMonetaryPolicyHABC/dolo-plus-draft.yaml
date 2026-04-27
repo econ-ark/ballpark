@@ -84,10 +84,43 @@ equations:
     e = e
 
   cntn_to_dcsn_mover:
-    # workaround: separable CRRA + labor disutility for a minimal interior
-    # stage; summary notebook uses CES c-m composite + leisure (see
-    # docs/legacy-drafts/arg2009-bellman-excerpt.md) — align or justify before
-    # claiming paper-faithful.
+    # unresolved: utility kernel.
+    #
+    # Paper functional form (Algan-Ragot 2009, "Model" / "Households"
+    # section; transcribed verbatim from
+    # ToramanSY_AlganRagot2009_Summary.ipynb and copied into
+    # docs/legacy-drafts/arg2009-bellman-excerpt.md):
+    #
+    #     u(c, m, l) =
+    #         (1/(1-sigma)) * [
+    #             ( omega * c^((eta-1)/eta)
+    #             + (1-omega) * m^((eta-1)/eta) )^(eta/(eta-1))
+    #             * (1-l)^psi
+    #         ]^(1-sigma)
+    #
+    # i.e. CES aggregator over consumption and real money, multiplied
+    # by leisure raised to psi, all under CRRA curvature sigma.
+    #
+    # The Bellman block below uses a separable CRRA + log-money +
+    # convex-labor-disutility WORKAROUND (rho on c, rho_m on m_d,
+    # gamma on l) because the canonical CES-with-leisure form above is
+    # not yet transcribed into modular-DDSL syntax that I am confident
+    # is canonical. To resolve, either:
+    #   (a) replace the separable kernel below with the CES-leisure
+    #       form once a canonical dolo-plus example with a CES inner
+    #       aggregator is located (a focused Matsya Evaluate turn on
+    #       this would close it), and add eta, omega, sigma, psi to
+    #       the parameters block; or
+    #   (b) keep the workaround but justify it explicitly in
+    #       verification.md by citing the calibration regime in the
+    #       paper under which separability and CES coincide
+    #       (eta -> 1 limit, etc.) and ground the citation in the
+    #       paper's PDF/.mmd once that lands in-repo.
+    #
+    # Tracked as a paper-grounded follow-up in verification.md and in
+    # docs/accept-edit-reject.md (Opus item 2 + the deferred
+    # paper-grounded rewrite). See also CONTRIBUTING.md line 44 on
+    # the inline `# unresolved:` / `# workaround:` flag idiom.
     Bellman: |
       V = max_{c, m_d, l}{
         c^(1-rho)/(1-rho)

@@ -55,9 +55,11 @@ Bellman excerpt records a **CES composite over consumption and money with
 leisure** parameterized by `(sigma, eta, omega, psi)` (rows now in
 `bellman-excerpt.md` symbol table; verbatim equation preserved in
 `docs/legacy-drafts/arg2009-bellman-excerpt.md`). The current YAML therefore
-remains a **computational scaffold** with explicit `# workaround:` flags.
-Replacing the utility block with the paper's CES-with-leisure form is
-deferred item #1 in `docs/accept-edit-reject.md`.
+remains a **computational scaffold** with an explicit `# unresolved:` block
+on the `cntn_to_dcsn_mover` `Bellman:` block that spells out the paper's
+canonical form and the two ways to close the deferral. Replacing the utility
+block with the paper's CES-with-leisure form is deferred item #1 in
+`docs/accept-edit-reject.md`.
 
 ## Paper gaps vs. dolo-plus spec gaps
 

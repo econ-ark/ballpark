@@ -98,7 +98,23 @@ learned" section of the
     utility kernel is a paper gap (deferred until the paper PDF / `.mmd` is
     in-repo). The distinction determines who can close each item.
 
-16. **Item-root layout is non-optional for Formalized.**
+15. **Comment directly on the offending line.** Each `# unresolved:` /
+    `# workaround:` sits immediately above the symbol or equation it
+    qualifies, not in a separate "caveats" section. The reviewer sees the
+    reason at the point of encounter.
+
+16. **Make every `# unresolved:` flag explicit at the line itself.** The
+    PR #72 review showed a `# workaround:` one-liner is not enough when the
+    deferral hides a paper-vs-YAML discrepancy as large as the utility
+    kernel. A reviewer-grade `# unresolved:` block (a) names the paper's
+    canonical functional form verbatim at the line, (b) cites where the
+    form came from (paper section + which file in this repo carries the
+    transcription), and (c) lists the exact ways the deferral could be
+    closed. The reader does not have to chase a separate caveats section
+    to know whether the YAML is wrong, deliberately simplified, or just
+    pending.
+
+17. **Item-root layout is non-optional for Formalized.**
     `CONTRIBUTING.md` §"Formalized" requires `bellman-excerpt.md`,
     `dolo-plus-draft.yaml`, `verification.md`, and `matsya-session.txt` at
     the **item root** (alongside `AGENTS.md`), not under `docs/`. The PR #72
@@ -111,14 +127,9 @@ learned" section of the
     not at the item root — `CONTRIBUTING.md` line 52 explicitly forbids
     keeping multiple parallel Bellman files.
 
-15. **Comment directly on the offending line.** Each `# unresolved:` /
-    `# workaround:` sits immediately above the symbol or equation it
-    qualifies, not in a separate "caveats" section. The reviewer sees the
-    reason at the point of encounter.
-
 ## Symbol-collision hygiene
 
-16. **Rename when two symbols would collide.** The household Markov kernel
+18. **Rename when two symbols would collide.** The household Markov kernel
     `Pi` was renamed `P_e` to avoid collision with the aggregate inflation
     series `Pi_inf`. The rename is documented in the bellman-excerpt
     symbol table, the YAML, the verification note, and `AGENTS.md`. Future
@@ -127,14 +138,14 @@ learned" section of the
 
 ## AI-review-plus-implementation rhythm
 
-17. **One Opus pass for a full prioritized list; Matsya for focused
+19. **One Opus pass for a full prioritized list; Matsya for focused
     syntactic questions.** Opus 4.7 returned a ten-item prioritized review
     (`docs/opus-review.md`). Matsya was used afterward for narrow
     dolo-plus-syntax verdicts. Mixing the two roles on one model is
     possible but less efficient: Opus reasons broadly about economics +
     criteria; Matsya retrieves from the canonical dolo-plus corpus.
 
-18. **Record current tier after each pass.** `docs/tier-assessment.md`
+20. **Record current tier after each pass.** `docs/tier-assessment.md`
     lists, item by item from `CONTRIBUTING.md`, what is Draft-tier
     compliant, what is Primer-tier blocked (four-notebook layout; paper
     in-repo), and what Formalized-tier artifacts are present but not yet
