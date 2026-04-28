@@ -1,8 +1,10 @@
 # Benhabib, Bisin, and Luo (2019) — Reading Guide
 
+> 📖 **Rendered version of this entry:** [econ-ark.github.io/ballpark/benhabib-et-al-2019/](https://econ-ark.github.io/ballpark/benhabib-et-al-2019/) — full MyST rendering with citations, math, and the four exposition notebooks assembled into one page. Recommended for human readers.
+
 A *Formalized*-tier ballpark entry for Benhabib, Bisin, and Luo (2019), "Wealth Distribution and Social Mobility in the US: A Quantitative Approach," *American Economic Review* 109(5), 1623–1647 ([DOI: 10.1257/aer.20151684](https://doi.org/10.1257/aer.20151684)).
 
-For the rendered, human-facing version of this entry — citation, pitch, headline result, summary, prior/subsequent literature — see [`Benhabib_et_al_2019.md`](Benhabib_et_al_2019.md), which assembles four notebooks into one MyST page. (Live deploy: https://econ-ark.github.io/ballpark/benhabib-et-al-2019/.) The rest of this README is for someone landing on the GitHub directory listing who wants to know what the technical files are and how to read them.
+The rendered version above is built from [`Benhabib_et_al_2019.md`](Benhabib_et_al_2019.md), which assembles the four exposition notebooks into a single MyST page. The rest of this README is for someone landing on the GitHub directory listing who wants to know what the technical files are and how to read them.
 
 ## Reading the formalization layer
 
