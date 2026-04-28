@@ -18,13 +18,12 @@ We will be delighted to post any such contributions, under the name of the contr
    * The [DemARK](https://github.com/econ-ark/DemARK) repo
       * if it demonstrates some of the ideas or content of the paper 
 
-As an example of the kinds of things we are looking for, see the [paper](https://pdfs.semanticscholar.org/6052/a3eff6257db799e5e54ee0e99a358b11bccf.pdf)  by Iskhakov et al cited below, which is instantiated in the Econ-ARK ecosystem in four ways, in increasing order of importance, in the Econ-ARK:
+As an example of the kinds of things we are looking for, see the [paper](https://pdfs.semanticscholar.org/6052/a3eff6257db799e5e54ee0e99a358b11bccf.pdf)  by Iskhakov et al cited below, which is instantiated in the Econ-ARK ecosystem in three ways, in increasing order of importance, in the Econ-ARK:
 
 1. As an entry in [our public Zotero bibliographical database](https://www.zotero.org/groups/2314611/ballpark)
-1. As a DemARK at 
-1. As a REMARK at 
-1. As a collection of tools under the name `DCEGM`
-    * `from HARK.DCEGM import *`
+1. As a DemARK at [DCEGM-Upper-Envelope.ipynb](https://github.com/econ-ark/DemARK/blob/main/notebooks/DCEGM-Upper-Envelope.ipynb)
+1. As a collection of tools in HARK at [`HARK/dcegm.py`](https://github.com/econ-ark/HARK/blob/main/HARK/dcegm.py)
+    * `from HARK.dcegm import *`
 
 The papers listed herein are a small subset of the ones that we would welcome into the Econ-ARK. If you want to work on a paper that is not listed here, post an "issue" on the repo asking (and providing a link and bibliographical reference for the paper in question). If it is likely to prove interesting to our audience, we are very likely to encourage you to replicate it.
 
