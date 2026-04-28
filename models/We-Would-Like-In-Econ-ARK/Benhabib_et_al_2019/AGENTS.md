@@ -1,6 +1,6 @@
 # Ballpark entry: Benhabib, Bisin, and Luo (2019)
 
-> Structured brief for coding agents (Claude Code, Cursor, etc.). Human-facing content lives in [`index.md`](index.md).
+> Structured brief for coding agents (Claude Code, Cursor, etc.). Human-facing content lives in [`Benhabib_et_al_2019.md`](Benhabib_et_al_2019.md).
 
 ## Paper
 

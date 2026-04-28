@@ -1,17 +1,19 @@
-# Root MyST project for econ-ark/ballpark.
+# Root MyST project for econ-ark/ballpark — single-project setup.
 #
-# This file aggregates the per-entry MyST projects (e.g.
-# `models/We-Would-Like-In-Econ-ARK/Benhabib_et_al_2019/myst.yml`)
-# into a single site that can be deployed to GitHub Pages.
+# All ballpark entries are aggregated under ONE project here so the
+# rendered site has a unified navigation. Each entry's per-directory
+# `myst.yml` (kept for local single-entry development via `myst start`
+# inside the entry) is shadowed by this root config when building from
+# the repo root.
 #
 # Local development:
-#   - For the FULL site: `myst start` from the repo root.
-#   - For ONE entry: `cd models/.../<entry>/ && myst start`.
-# Both should work; the per-entry myst.yml files remain useful for
-# focused single-entry development.
+#   - For the FULL site:    `myst start` from the repo root.
+#   - For ONE entry:        `cd models/.../<entry>/ && myst start`.
 #
-# To add a new entry to the site, add an entry to `project.toc.children`
-# of the appropriate section below (Models or Empirical).
+# To add a new entry:
+#   1. Append the entry's bib files to `project.bibliography`.
+#   2. Append the entry's `index.md` (or a folder section listing it)
+#      to `project.toc` under the appropriate group.
 
 version: 1
 
@@ -19,20 +21,26 @@ project:
   title: "Econ-ARK Ballpark"
   description: "Papers in-ballpark for Econ-ARK: structural-model replications and empirics-driven modeling targets."
   github: https://github.com/econ-ark/ballpark
+  bibliography:
+    - models/We-Would-Like-In-Econ-ARK/Benhabib_et_al_2019/self.bib
+    - models/We-Would-Like-In-Econ-ARK/Benhabib_et_al_2019/references.bib
+    - models/We-Would-Like-In-Econ-ARK/Benhabib_et_al_2019/subsequent-literature.bib
   toc:
     - file: README.md
-    - title: "Project guidelines"
+    - file: CONTRIBUTING.md
+    - title: "Models"
       children:
-        - file: CONTRIBUTING.md
-    - title: "Models (We-Would-Like-In-Econ-ARK)"
-      children:
-        - file: models/We-Would-Like-In-Econ-ARK/Benhabib_et_al_2019/index.md
-    # Add `empirical/` entries here as they are formalized.
+        - file: models/We-Would-Like-In-Econ-ARK/Benhabib_et_al_2019/Benhabib_et_al_2019.md
+    # Add new entries here under the appropriate group. NOTE: the
+    # entry's main markdown file should be named `<citekey>.md`
+    # (matching the directory name), NOT `index.md`. mystmd derives
+    # URL slugs from filenames; a directory-name-matching filename
+    # gives a clean slug like /<citekey>/. Multiple entries named
+    # `index.md` would auto-collide and produce ugly URLs (`index-1`,
+    # `index-2`, ...).
+    # - title: "Empirical"
+    #   children:
+    #     - file: empirical/<dir>/<citekey>/<citekey>.md
 
 site:
   title: "Econ-ARK Ballpark"
-  # The GitHub Pages subpath (https://econ-ark.github.io/ballpark/)
-  # is set at build time via the BASE_URL env var in
-  # .github/workflows/deploy.yml — NOT here. mystmd's static-build
-  # path prefix is read from BASE_URL, not from `site.options`.
-  # Local `myst start` works without BASE_URL (root-relative).

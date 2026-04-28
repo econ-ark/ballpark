@@ -2,7 +2,7 @@
 
 A *Formalized*-tier ballpark entry for Benhabib, Bisin, and Luo (2019), "Wealth Distribution and Social Mobility in the US: A Quantitative Approach," *American Economic Review* 109(5), 1623–1647 ([DOI: 10.1257/aer.20151684](https://doi.org/10.1257/aer.20151684)).
 
-For the rendered, human-facing version of this entry — citation, pitch, headline result, summary, prior/subsequent literature — see [`index.md`](index.md), which assembles four notebooks into one MyST page. The rest of this README is for someone landing on the GitHub directory listing who wants to know what the technical files are and how to read them.
+For the rendered, human-facing version of this entry — citation, pitch, headline result, summary, prior/subsequent literature — see [`Benhabib_et_al_2019.md`](Benhabib_et_al_2019.md), which assembles four notebooks into one MyST page. (Live deploy: https://econ-ark.github.io/ballpark/benhabib-et-al-2019/.) The rest of this README is for someone landing on the GitHub directory listing who wants to know what the technical files are and how to read them.
 
 ## Reading the formalization layer
 
@@ -21,7 +21,7 @@ The construction audit trail lives in [`verification.md`](verification.md) (para
 
 **Exposition layer** (rendered MyST page; the public-facing entry):
 
-- [`index.md`](index.md) — MyST page assembling the four notebooks below.
+- [`Benhabib_et_al_2019.md`](Benhabib_et_al_2019.md) — MyST page assembling the four notebooks below (named `<citekey>.md` rather than `index.md` so the rendered URL slug is `/benhabib-et-al-2019/` rather than the auto-deduplicated `/index-1/`).
 - [`Benhabib_et_al_2019_intro.ipynb`](Benhabib_et_al_2019_intro.ipynb) — citation, contributor info, paper pitch with headline quantitative result.
 - [`Benhabib_et_al_2019_prior-literature.ipynb`](Benhabib_et_al_2019_prior-literature.ipynb) — foundational literature (Bewley / Huggett / Aiyagari / De Nardi / Benhabib-Bisin-Zhu).
 - [`Benhabib_et_al_2019_summary.ipynb`](Benhabib_et_al_2019_summary.ipynb) — headline numbers, identification mechanism, "The Model" recursive formulation, counterfactuals, results, limitations.
