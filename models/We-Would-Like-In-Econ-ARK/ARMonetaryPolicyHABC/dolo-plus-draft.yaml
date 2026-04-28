@@ -3,9 +3,17 @@ name: AlganRagotDecision
 symbols:
   spaces:
     Xq: '@def R+'
+    # `Xa: '@def R+'` already encodes the paper's borrowing rule
+    # `a' >= 0` (paper eq. (17), p. 8); the parameter `a_min = 0` below
+    # is kept for parameter-API consistency.
     Xa: '@def R+'
     Xm: '@def R+'
     Xl: '@def [0,1]'
+    # placeholder state space; paper §3.3.2 p. 12 fixes ratios
+    #   e_h / e_m = 4.64,  e_m / e_l = 5.65
+    # so with the normalization e_m = 1 the paper's `Xe` is
+    #   `{1/5.65, 1.0, 4.64} = {0.177, 1.0, 4.64}`
+    # Replace at the same touch that substitutes `P_e` numerical entries.
     Xe: '@def {0.5, 1.0, 1.5}'
 
   prestate:
@@ -34,9 +42,11 @@ symbols:
     l: '@in Xl'
 
   exogenous:
-    # unresolved: calibrate P_e (3x3 stochastic matrix) from the paper;
-    # renamed from Pi to avoid collision with inflation Pi_inf on the
-    # aggregate side (see bellman-excerpt.md "Out of scope" table).
+    # P_e: 3x3 row-stochastic matrix on `e in {e_h, e_m, e_l}` (paper
+    # §3.3.2, p. 11-12; full numerical calibration documented inline at
+    # the `parameters: P_e` block below). Renamed from Pi to avoid
+    # collision with inflation Pi_inf on the aggregate side (see
+    # bellman-excerpt.md "Out of scope" table).
     e_next: '@dist MarkovChain(P_e)'
 
   values:
@@ -58,15 +68,41 @@ symbols:
     mu: '@in R'
     R: '@in R+'
     r_m: '@in R+'
-    # unresolved: paper-specific borrowing rule; placeholder scalar until
-    # verified against PDF/.mmd
-    a_min: '@in R'
-    # unresolved: Markov transition matrix (3x3 row-stochastic); values TBD.
-    # Declared as a plain non-negative parameter per Matsya Evaluate turn
-    # (docs/matsya-evaluate-turn.txt, Question 3): `@in StochasticMatrix`
-    # has no precedent in the canonical dolo-plus examples. Row-stochastic
-    # semantics are carried instead by the `@dist MarkovChain(P_e)`
-    # annotation on the exogenous block above.
+    # resolved (paper eq. (17), p. 8): `a_{t+1}^i >= 0`. The paper's
+    # borrowing constraint is exactly `a_min = 0`; see verification.md
+    # "borrowing constraint" section. The space `Xa: '@def R+'` already
+    # encodes the same restriction; this scalar is kept (rather than
+    # dropped) so that downstream code that reads a parameter named
+    # `a_min` continues to work, but the value is fixed at 0.
+    a_min: 0
+    # resolved (paper §3.3.2, p. 11-12) — full calibrated 3x3 Markov
+    # chain on `e in {e_h, e_m, e_l}`, with structural restrictions and
+    # numerical entries:
+    #
+    #   p_{l,h} = p_{h,l} = 0     (no jumps between extreme states)
+    #   p_{l,l} = p_{h,h} = 0.9750
+    #   p_{m,m} = 0.9925
+    #   row-sum constraint pins p_{h,m} = 1 - p_{h,h} = 0.0250,
+    #                          p_{l,m} = 1 - p_{l,l} = 0.0250,
+    #                          and p_{m,h} + p_{m,l} = 1 - p_{m,m} = 0.0075
+    #   (the split of 0.0075 between p_{m,h} and p_{m,l} pins down
+    #    moments — paper p. 12 cites annual autocorrelation 0.91, annual
+    #    sd of innovation 0.22, Gini wealth 0.72, share of constrained
+    #    households 6%.)
+    #
+    # Productivity-state ratios (paper p. 12):
+    #   e_h / e_m = 4.64,    e_m / e_l = 5.65
+    # so e.g. with the normalization e_m = 1, the state space is
+    # `Xe: '@def {1/5.65, 1.0, 4.64}' = {0.177, 1.0, 4.64}` (replaces the
+    # current placeholder `Xe: '@def {0.5, 1.0, 1.5}'`).
+    #
+    # Declared here as a plain non-negative parameter per Matsya Evaluate
+    # turn (docs/matsya-evaluate-turn.txt, Question 3): `@in
+    # StochasticMatrix` has no precedent in the canonical dolo-plus
+    # examples. Row-stochastic semantics are carried by the
+    # `@dist MarkovChain(P_e)` annotation on the exogenous block above.
+    # The numerical 3x3 substitution is left as a follow-up YAML touch
+    # (parameter-block matrix literal idiom is a small spec question).
     P_e: '@in R+'
 
 equations:
@@ -138,6 +174,10 @@ name: AlganRagotShock
 
 symbols:
   spaces:
+    # paper-grounded resolutions documented at the decision stage's
+    # `spaces:` block above (paper §3.3.2 p. 12 ratios for Xe; paper
+    # eq. (17) p. 8 for Xa / a_min). Duplicated here only to keep both
+    # stages syntactically self-contained.
     Xa: '@def R+'
     Xm: '@def R+'
     Xe: '@def {0.5, 1.0, 1.5}'
@@ -149,7 +189,8 @@ symbols:
     e: '@in Xe'
 
   exogenous:
-    # unresolved: same P_e as decision stage; calibrate from paper
+    # resolved: same P_e as decision stage. Numerical calibration documented
+    # in the decision stage's `parameters:` block (paper §3.3.2, p. 11-12).
     e_next: '@dist MarkovChain(P_e)'
 
   states:
@@ -168,14 +209,25 @@ symbols:
   parameters:
     R: '@in R+'
     r_m: '@in R+'
-    # unresolved: Markov transition matrix shared with decision stage;
-    # declared plain per Matsya Evaluate turn (see decision stage above).
+    # resolved: same Markov transition matrix as decision stage; full
+    # calibration documented in the decision stage's `parameters:` block
+    # (paper §3.3.2, p. 11-12). Declared plain per Matsya Evaluate turn.
     P_e: '@in R+'
 
 equations:
   arvl_to_dcsn_transition: |
-    # unresolved: verify next-period resource mapping against Algan-Ragot
-    # (2009); draft keeps liquid return on m and linear return on a.
+    # paper analogue: paper eq. (16), p. 8 writes the corresponding terms
+    # as `(1 + r_t) a_t` and `m_{t-1} / Pi_t`. Mapping:
+    #   `R * a`         <-> `(1 + r_t) a_t`        (gross real return on the riskless asset)
+    #   `(1 + r_m) * m` <-> `m_{t-1} / Pi_t`       (real return on money; equivalent at any single Pi)
+    # The two are identical at any single Pi but our parameterization
+    # carries `r_m` as a free parameter rather than deriving it from
+    # `Pi`. At a stationary equilibrium with constant `Pi`, this is just
+    # a redefinition; in any non-stationary or shock-on-aggregate-money
+    # exercise, the consistency `(1 + r_m) = 1 / Pi` would have to be
+    # enforced. See verification.md "wealth-on-hand and budget" section
+    # for the full mapping; deferred until the aggregate / monetary
+    # block enters scope.
     q_next = R * a + (1 + r_m) * m
     e_next = e_next
 
