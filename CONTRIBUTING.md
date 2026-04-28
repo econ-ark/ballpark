@@ -32,6 +32,8 @@ Four notebooks assembled by one `index.md`. Name them with the paper's citekey p
 | `<citekey>_summary.ipynb` | Non-technical motivation + findings overview (**required at Draft**), extended at Primer promotion with a **"The Model"** section stating the recursive formulation **explicitly**: no `u(c)` placeholders, explicit CRRA or EZ kernel, explicit bequest function, explicit transitions, explicit shock distributions, explicit constraint set. This "The Model" section is what the formalization layer will build on. |
 | `<citekey>_subsequent-literature.ipynb` | Research directions that followed the paper. Cite from `subsequent-literature.bib`. |
 
+**Audience and voice for `_intro.ipynb` and `_summary.ipynb`.** Write for a reader (PhD student or faculty researcher) who is deciding whether to invest 90 minutes in the paper itself. Two self-checks before submitting: (1) Does the first screen of `_summary.ipynb` give the paper's *headline quantitative result* — numbers, not adjectives? (2) Does it explain what makes the result credible — the identification strategy or theoretical mechanism, not just the methodology label? If either answer requires the reader to scroll past several paragraphs of prose to find, condense.
+
 The [Benhabib_et_al_2019](models/We-Would-Like-In-Econ-ARK/Benhabib_et_al_2019/) item is the reference instance of this layer.
 
 ### 2. Formalization layer — stretch (recommended for coursework)
