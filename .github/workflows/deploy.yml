@@ -17,6 +17,15 @@ on:
     branches: [master]
   workflow_dispatch:
 
+# Opt JavaScript actions onto Node.js 24 ahead of GitHub's default
+# switchover (currently scheduled for 2026-06-02). Without this, actions
+# like actions/checkout, actions/setup-node, actions/configure-pages,
+# actions/upload-pages-artifact, actions/deploy-pages emit deprecation
+# warnings on every run. The Node.js *runtime* used for our script
+# steps (running mystmd) is set independently via actions/setup-node.
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 permissions:
   contents: read
   pages: write
@@ -63,6 +72,16 @@ jobs:
           test -f _build/html/index.html || { echo "::error::_build/html/index.html missing"; exit 1; }
           test -f _build/html/index.json || { echo "::error::_build/html/index.json missing"; exit 1; }
           echo "Built site contains $(find _build/html -name '*.html' | wc -l) HTML and $(find _build/html -name '*.json' | wc -l) JSON files."
+
+      - name: SPA 404 fallback (copy index.html → 404.html)
+        # mystmd's Book Theme is a single-page app: only index.html
+        # is produced; sub-page routing is client-side via JS that
+        # loads JSON. GitHub Pages otherwise returns a stock 404 for
+        # any deep link (e.g. /models/.../Benhabib_et_al_2019/),
+        # breaking shared URLs. Pages serves 404.html as the fallback
+        # for any unresolved path; bootstrapping the SPA from there
+        # lets it read the URL and route correctly client-side.
+        run: cp _build/html/index.html _build/html/404.html
 
       - name: Configure Pages artifact
         uses: actions/configure-pages@v5
