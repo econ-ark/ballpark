@@ -17,27 +17,48 @@
 1. **Read first:** `bellman-excerpt.md` (item root) — canonical modular Bellman / stages / perches for the household block.
 2. **Draft computational scaffold:** `dolo-plus-draft.yaml` (item root) — interior two-stage draft; read inline `# unresolved:` / `# workaround:` before changing equations.
 3. **AI iteration log:** `docs/opus-review.md` (Opus 4.7 review), `docs/matsya-evaluate-turn.txt` (Matsya Evaluate turn on the decomposition), and `verification.md` at the item root (accept / edit / reject vs. paper and vs. dolo-plus spec).
-4. **Paper source for AI ingestion:** **TBD** — prefer `AlganRagot2009.mmd` once committed per Primer checklist; until then use the summary notebook + PDF.
+4. **Exposition layer (Primer / Formalized tier rendering):** the four-notebook layout at the item root — `ARMonetaryPolicyHABC_intro.ipynb`, `_prior-literature.ipynb`, `_summary.ipynb`, `_subsequent-literature.ipynb` — wired into `index.md` via `{include}` directives and resolved against `self.bib` + `references.bib` + `subsequent-literature.bib` through `myst.yml`.
+5. **Paper source for AI ingestion:** **TBD** — prefer `AlganRagot2009.mmd` (HAL preprint, open-access) once committed; the publisher PDF is *not* committed for the same AER-copyright reason that prompted [PR #75](https://github.com/econ-ark/ballpark/pull/75) to remove `Benhabib_et_al_2019.pdf` after PR #66 merged. Until the `.mmd` is committed, use the summary notebook plus the user-supplied off-repo PDF (RED is published by Elsevier; the HAL preprint is the author-accepted-manuscript version that is open-access).
 
 ## Formalization status
 
-The five files that the `CONTRIBUTING.md` automated Formalized check looks for live at the **item root** (per `CONTRIBUTING.md` §"Formalized" + the Benhabib worked example layout):
+This item targets `tier: formalized` (frontmatter in `index.md`). The full canonical layout that the `CONTRIBUTING.md` automated Formalized check looks for now lives at the **item root** (per `CONTRIBUTING.md` §"Formalized" + the Benhabib worked example layout in [PR #66](https://github.com/econ-ark/ballpark/pull/66)):
+
+**Formalization-layer files (paper-grounded; verified in PR #76):**
 
 - `bellman-excerpt.md`: committed at item root (human-authored + Matsya-Evaluate-synchronized; three free controls with `a'` pinned by budget identity).
-- `dolo-plus-draft.yaml`: committed at item root (draft; utility block does not yet match CES form in summary excerpt; `P_e` declared plain per Matsya Evaluate Q3; three free controls per Matsya Flag C).
-- `verification.md`: committed at item root (partitioned into paper gaps vs. dolo-plus spec gaps).
+- `dolo-plus-draft.yaml`: committed at item root (draft; utility block does not yet match CES form in paper eq. 15; `P_e` declared plain per Matsya Evaluate Q3; three free controls per Matsya Flag C; inline `# unresolved:` flags on the two open items).
+- `verification.md`: committed at item root (paper-grounded against Algan & Ragot 2009 *Review of Economic Dynamics* 13(2); partitioned into paper gaps vs. dolo-plus spec gaps).
 - `matsya-session.txt`: committed at item root (`topics2026-armonetarypolicyhabc`).
 - `AGENTS.md`: this file, at the item root.
 
-Plus iteration history under `docs/` (deliberately not at the item root):
+**Exposition-layer files (Primer-tier deliverables; this PR):**
+
+- `ARMonetaryPolicyHABC_intro.ipynb`: committed at item root — citation, DOI, JEL codes, the required 3-sentence pitch (*what the paper uniquely does / why Econ-ARK cares / what a REMARK would enable*).
+- `ARMonetaryPolicyHABC_prior-literature.ipynb`: committed at item root — five canonical antecedents (within the 3–6 prior-papers Primer-tier bound).
+- `ARMonetaryPolicyHABC_summary.ipynb`: committed at item root — paper digest adapted from the Toraman 2020 single-notebook digest (now under `docs/legacy-drafts/`) with explicit credit; model statement aligned with `bellman-excerpt.md`.
+- `ARMonetaryPolicyHABC_subsequent-literature.ipynb`: committed at item root — three threads of post-2009 literature (HANK, redistribution channel, money-demand / financial-frictions extensions).
+
+**Bibliography files:**
+
+- `self.bib`: BibTeX entry for the paper itself (citekey `algan2009monetary`).
+- `references.bib`: papers cited by Algan–Ragot 2009 and listed in `_prior-literature.ipynb`.
+- `subsequent-literature.bib`: post-2009 HA-monetary literature cited in `_subsequent-literature.ipynb`.
+
+**Site config:**
+
+- `myst.yml`: project-level MyST config wiring `index.md` to the three bib files.
+- `index.md`: stitches the four exposition notebooks together via `{include}` directives.
+
+**Iteration history under `docs/` (deliberately not at the item root):**
 
 - `docs/opus-prompt.md`, `docs/opus-review.md`, `docs/accept-edit-reject.md`: Class 12 Opus 4.7 review artifacts (verbatim).
 - `docs/matsya-evaluate-turn.txt`: verbatim Matsya Evaluate response (4 CANONICAL, 1 PROVISIONAL-now-resolved, 1 UNRESOLVED-now-resolved).
 - `docs/lessons-learned.md`: consolidated reusable patterns mirrored from the Benhabib worked example.
 - `docs/tier-assessment.md`: tier walk-through against the `CONTRIBUTING.md` checklist.
-- `docs/legacy-drafts/`: pre-iteration Bellman drafts (`arg2009-bellman-excerpt.md`, `arg2009-improved-stage-description.md`) retained for history; superseded by the canonical `bellman-excerpt.md` at the item root.
+- `docs/legacy-drafts/`: pre-iteration drafts retained for history — the two earlier Bellman drafts (`arg2009-bellman-excerpt.md`, `arg2009-improved-stage-description.md`) and the Toraman 2020 single-notebook digest (`ToramanSY_AlganRagot2009_Summary.ipynb`); see `docs/legacy-drafts/README.md`.
 
-Also explicitly note (per `CONTRIBUTING.md` line 52) that there is exactly **one** Bellman excerpt at the item root; the two `arg2009-*` drafts under `docs/legacy-drafts/` are **not** parallel canonical files.
+Per `CONTRIBUTING.md` line 52, there is exactly **one** Bellman excerpt at the item root; the two `arg2009-*` drafts under `docs/legacy-drafts/` are **not** parallel canonical files. Per the PR-#66 → PR-#75 lesson, there is also exactly **one** summary notebook at the item root (`ARMonetaryPolicyHABC_summary.ipynb`); the Toraman 2020 single-notebook digest under `docs/legacy-drafts/` is preserved for authorship credit but is **not** an alternative canonical exposition.
 
 ## Known model features requiring attention in a formalization pass
 
@@ -52,11 +73,13 @@ Also explicitly note (per `CONTRIBUTING.md` line 52) that there is exactly **one
 
 ## Common next tasks (grounded)
 
-1. Align `dolo-plus-draft.yaml` utility with the CES–leisure specification in `docs/legacy-drafts/arg2009-bellman-excerpt.md` (verbatim from the summary), or keep the separable kernel and justify the simplification under the existing `# unresolved:` block on the `Bellman:` mover.
-2. Replace placeholder `(R, r_m, P_e, a_min)` with values or explicit formulas from the paper.
-3. Refactor exposition layer to the canonical four-notebook + `index.md` layout (`<citekey>_intro.ipynb`, `_prior-literature.ipynb`, `_summary.ipynb`, `_subsequent-literature.ipynb`); add `references.bib`, `self.bib`, `.mmd` if license permits, wire `index.md` frontmatter (`tier`, `has_formalization_layer`, etc.). Tracked as accepted-but-deferred item #1 in `docs/accept-edit-reject.md` and confirmed required for Formalized in the [class-wide PR #72 review](https://github.com/econ-ark/ballpark/pull/72).
-4. Rewrite `verification.md` to cite specific equations from the paper PDF/`.mmd` once it is in-repo. Tracked as accepted-but-deferred item #2 in `docs/accept-edit-reject.md` and confirmed required for Formalized in the same review.
-5. Add a conditional EGM-channel discussion to `bellman-excerpt.md` once the utility is aligned with the paper (rejected-for-now in `docs/accept-edit-reject.md` item #10; revisit after task 1 above lands).
+1. Align `dolo-plus-draft.yaml` utility with the CES–leisure specification in `docs/legacy-drafts/arg2009-bellman-excerpt.md` (verbatim from the summary), or keep the separable kernel and justify the simplification under the existing `# unresolved:` block on the `Bellman:` mover. (This is the largest remaining substantive gap between the YAML and the paper; closing it is a focused Matsya turn, not a paper-rereading task — see PR #76 / PR #66 precedent.)
+2. Replace the `P_e: '@in R+'` placeholder with the literal 3×3 row-stochastic matrix entries already documented in the YAML's `parameters:` comment block (paper §3.3.2). Closing this is a small spec question for the dolo-plus maintainers about matrix-literal idioms in the parameter block.
+3. Commit `AlganRagot2009.mmd` (Pandoc/MathPix conversion of the open-access HAL preprint). The publisher PDF is **not** to be committed — see the AER-copyright lesson in [PR #75](https://github.com/econ-ark/ballpark/pull/75) and the `# Copyright check` annotation in `AGENTS.md`'s "If a user asks to work on this item" §4 above.
+4. Add the EGM-channel discussion to `bellman-excerpt.md` once the utility is aligned with the paper (rejected-for-now in `docs/accept-edit-reject.md` item #10; revisit after task 1 above lands).
+5. (REMARK precursor.) Begin a working numerical implementation of the model under HARK's `IndShockConsumerType` extended with the money-in-utility kernel, targeting the paper's headline hump-shaped capital–inflation result. This is REMARK territory rather than ballpark territory and would close the promotion-from-Formalized step.
+
+Tasks 1–3 are each at most a focused weekly assignment; tasks 4–5 are larger and live beyond Formalized.
 
 ## Workflow reminders
 
