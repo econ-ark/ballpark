@@ -38,7 +38,7 @@ The construction audit trail lives in [`verification.md`](verification.md) (para
 
 **Asset layer** (paper source material):
 
-- [`Benhabib_et_al_2019.mmd`](Benhabib_et_al_2019.mmd) — Pandoc-converted markdown of the paper, preferred over PDF for AI ingestion. The publisher-typeset PDF is **not** redistributed here for AER copyright reasons; access the paper via the [DOI](https://doi.org/10.1257/aer.20151684).
+- The paper PDF is **not** redistributed here for AER copyright reasons; access via the [DOI](https://doi.org/10.1257/aer.20151684). For AI-assisted reading, produce a local `Benhabib_et_al_2019.mmd` (Mathpix or pandoc conversion of the PDF) — this is gitignored at the repo root and not committed (see repo-root `CONTRIBUTING.md` Asset-layer table for the rationale).
 - [`fig1.png`](fig1.png), [`fig2.png`](fig2.png) — paper Figure 1 (life-cycle earnings profiles) and Figure 2 (wealth distribution).
 - [`references.bib`](references.bib), [`self.bib`](self.bib), [`subsequent-literature.bib`](subsequent-literature.bib) — bibliography (cited literature, the paper's own bib entry, and subsequent-literature citations respectively).
 

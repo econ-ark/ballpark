@@ -6,7 +6,7 @@
 - Turn 5 (2026-04-27): self-assessment of paper-side gaps in the Turn-4 draft.
 - Turn 6 (2026-04-27): definitive syntax-status review of residual UNRESOLVED items.
 
-**Source compared:** published paper (`Benhabib_et_al_2019.mmd` / `.pdf`), §I (theoretical framework), §IIB (data sources), Table 1 (earnings), Table 4 (estimated parameters), and footnote 13 ($r$-chain off-diagonal structure).
+**Source compared:** the published paper itself (accessed via [DOI: 10.1257/aer.20151684](https://doi.org/10.1257/aer.20151684); a local Mathpix `.mmd` conversion was used during the comparison, but `.mmd` files are gitignored and not redistributed here). Sections compared: §I (theoretical framework), §IIB (data sources), Table 1 (earnings), Table 4 (estimated parameters), footnote 13 ($r$-chain off-diagonal structure), and online Appendix A.1 (numerical solution method) plus C.1 ($\Pi_r$ matrix).
 
 ## Accepted from matsya's YAML
 

@@ -13,7 +13,7 @@
 
 1. **Read first:** [`bellman-excerpt.md`](bellman-excerpt.md) — the modular-DDSL Bellman statement with comprehensive symbol table, perch decomposition, stage operators, and EGM channel. This is the authoritative formalization input; a YAML-drafting agent should read this before touching the notebooks.
 2. **For economic context beyond the formalization:** `Benhabib_et_al_2019_summary.ipynb` → "The Model".
-3. **Paper source for AI ingestion:** `Benhabib_et_al_2019.mmd` (Pandoc-converted). Prefer this over `Benhabib_et_al_2019.pdf`.
+3. **Paper source for AI ingestion:** access the paper via [DOI: 10.1257/aer.20151684](https://doi.org/10.1257/aer.20151684) (PDF not redistributed here, AER copyright). For AI-assisted reading, produce a local `Benhabib_et_al_2019.mmd` from the PDF via Mathpix or pandoc — this is gitignored, not committed (see repo-root `CONTRIBUTING.md` Asset-layer table).
 
 ## Formalization status
 
@@ -46,5 +46,5 @@
 ## Workflow reminders
 
 - **Matsya session:** use the course convention `topics2026-<slug>` for new work on this item.
-- **Paper verification:** Matsya output must be checked against the paper PDF (or `.mmd`), not only against the ballpark `_summary.ipynb` — the notebook is a summary with known simplifications.
+- **Paper verification:** Matsya output must be checked against the paper itself (access via the [DOI](https://doi.org/10.1257/aer.20151684), or against a locally-produced `.mmd` if the agent has produced one), not only against the ballpark `_summary.ipynb` — the notebook is a summary with known simplifications.
 - **When flagging workarounds in YAML:** use inline `# workaround:` or `# unresolved:` comments rather than silently fudging non-canonical syntax.
