@@ -4,10 +4,13 @@
 
 ## Paper
 
-- **Citation:** Algan, Yann, and Xavier Ragot (2009), *Monetary Policy and Heterogeneous Agent Models* (exact venue/pages — **TBD**: copy from `ToramanSY_AlganRagot2009_Summary.ipynb` intro cell when polishing).
-- **DOI:** **TBD** — add from the summary notebook or `self.bib` when available.
-- **Core model:** Heterogeneous households with incomplete markets, money and risky savings, idiosyncratic productivity following a finite-state Markov chain; monetary policy interacts with distribution and savings margins.
-- **Why in-ballpark:** Structural heterogeneous-agent monetary economics with explicit household problem and quantitative policy experiments — natural fit for Econ-ARK’s HA / monetary threads.
+- **Citation:** Algan, Yann, and Xavier Ragot (2009), "Monetary policy with heterogeneous agents and borrowing constraints," *Review of Economic Dynamics* 13(2), pp. 295–316. (Available online 2009; print volume 13(2).)
+- **DOI:** [10.1016/j.red.2009.05.001](https://doi.org/10.1016/j.red.2009.05.001).
+- **Author preprint:** HAL [hal-01170621v1](https://sciencespo.hal.science/hal-01170621v1) (open-access archive; the verification is grounded in this preprint).
+- **BibTeX:** see [`self.bib`](self.bib) (citekey: `algan2009monetary`).
+- **JEL:** E2 (general macroeconomics), E5 (monetary policy, central banking).
+- **Core model (paper §3, "The general model").** Heterogeneous households with incomplete markets, money-in-utility (CES with leisure), riskless capital savings, no borrowing (`a' ≥ 0`), idiosyncratic labor productivity following a 3-state Markov chain `e ∈ {e_h, e_m, e_l}`, lump-sum monetary transfer `μ` (sign depends on redistribution scheme), Cobb-Douglas aggregate production `Y = K^α L^(1-α)`, distortionary income tax `χ`, monetary growth rule `Ω_t = Ω_{t-1}/Π_t + π Ω_{t-1}/Π_t`. Quarterly model period.
+- **Why in-ballpark:** Structural heterogeneous-agent monetary economics with explicit household problem (paper eqs. 15-22) and quantitative policy experiments (paper §4). Natural fit for Econ-ARK's HA / monetary threads.
 
 ## If a user asks to work on this item
 

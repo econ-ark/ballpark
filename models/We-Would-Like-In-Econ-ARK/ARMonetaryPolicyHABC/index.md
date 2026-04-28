@@ -2,15 +2,20 @@
 title: "Algan and Ragot (2009) — Ballpark Entry"
 schema_type: ScholarlyArticle
 about:
-  doi: TBD
+  doi: 10.1016/j.red.2009.05.001
   authors: [Algan, Ragot]
   year: 2009
-  journal: TBD
+  journal: "Review of Economic Dynamics"
+  volume: 13
+  issue: 2
+  pages: "295-316"
+  preprint: "hal-01170621v1"
+  preprint_url: "https://sciencespo.hal.science/hal-01170621v1"
 keywords: [heterogeneous-agents, monetary-policy, borrowing-constraints, money-in-utility, inflation-tax]
 econ_ark_topic:
   - HA-macro
   - monetary
-jel: [E21, E52, D31]
+jel: [E2, E5]
 difficulty: stretch
 tier: draft
 has_formalization_layer: true
@@ -30,9 +35,10 @@ Item-root files (the layout `CONTRIBUTING.md` §"Formalized" expects, so that th
 - [`ToramanSY_AlganRagot2009_Summary.ipynb`](ToramanSY_AlganRagot2009_Summary.ipynb) — legacy single-notebook ballpark summary (will be split at the Primer-promotion step).
 - [`bellman-excerpt.md`](bellman-excerpt.md) — canonical modular-DDSL Bellman / stages / perches for the household block.
 - [`dolo-plus-draft.yaml`](dolo-plus-draft.yaml) — two-stage dolo-plus draft (household block only; aggregate side out of scope — see [`AGENTS.md`](AGENTS.md)).
-- [`verification.md`](verification.md) — accept / edit / reject against the summary + AI iteration (paper-grounded rewrite is deferred).
+- [`verification.md`](verification.md) — accept / edit / reject judgments grounded in the published paper (Algan & Ragot 2009, *Review of Economic Dynamics* 13(2), pp.295-316), with paper-equation cross-references.
 - [`matsya-session.txt`](matsya-session.txt) — the `--session` string used for this item (`topics2026-armonetarypolicyhabc`).
 - [`AGENTS.md`](AGENTS.md) — structured brief for coding agents.
+- [`self.bib`](self.bib) — BibTeX entry for the paper itself.
 
 Iteration / review artifacts under `docs/` (kept out of the item root because they are the AI loop's history, not the Formalized deliverables themselves):
 
@@ -43,7 +49,6 @@ Iteration / review artifacts under `docs/` (kept out of the item root because th
 
 ## Next promotion steps (toward Primer → Formalized)
 
-- Add the four exposition notebooks, `references.bib`, `self.bib`, `subsequent-literature.bib`, and the paper `.pdf` / `.mmd`.
-- Rewrite `verification.md` against the published paper (cite equations by number).
-- Align the YAML utility with the CES-with-leisure specification preserved in [`docs/legacy-drafts/arg2009-bellman-excerpt.md`](docs/legacy-drafts/arg2009-bellman-excerpt.md) (verbatim from the summary notebook), or keep the separable kernel and justify the simplification under the `# unresolved:` block already present in [`dolo-plus-draft.yaml`](dolo-plus-draft.yaml).
+- Add the four exposition notebooks, `references.bib`, `subsequent-literature.bib`, and the paper `.pdf` / `.mmd` (or only `.mmd`, depending on licence verification).
+- Re-encode the YAML utility kernel into the paper's CES-with-leisure form (eq. 15 of the paper, transcribed verbatim in [`docs/legacy-drafts/arg2009-bellman-excerpt.md`](docs/legacy-drafts/arg2009-bellman-excerpt.md)), or keep the separable workaround and justify it under the `# unresolved:` block already present in [`dolo-plus-draft.yaml`](dolo-plus-draft.yaml).
 - See [`docs/accept-edit-reject.md`](docs/accept-edit-reject.md) for the full list of deferred items from the Opus 4.7 review and the [class-wide review of PR #72](https://github.com/econ-ark/ballpark/pull/72).
