@@ -1,0 +1,84 @@
+name: MyST → GitHub Pages
+
+# Builds the MyST site at the repo root and deploys it to GitHub Pages.
+# Triggered on pushes to master, plus manual via workflow_dispatch.
+#
+# Required one-time setup in the repo's GitHub UI:
+#   Settings → Pages → Source: "GitHub Actions"
+#   (no need to pick a branch; this workflow does it via actions/deploy-pages).
+#
+# After successful deploy, the site is at:
+#   https://econ-ark.github.io/ballpark/
+# And individual entries at, e.g.:
+#   https://econ-ark.github.io/ballpark/models/We-Would-Like-In-Econ-ARK/Benhabib_et_al_2019/
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment; queue subsequent runs.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+
+      - name: Install mystmd
+        run: npm install -g mystmd@^1.8
+
+      - name: Build site (HTML)
+        env:
+          # Static-build path prefix. Pages serves at
+          # https://econ-ark.github.io/ballpark/, so links must
+          # resolve under /ballpark.
+          BASE_URL: /ballpark
+        # `myst build --html` may not exit cleanly in some terminal
+        # configurations (it can launch a preview server after the
+        # static build completes). The timeout + `|| true` is a
+        # belt-and-suspenders safeguard: the build itself takes a
+        # few seconds; 120s is generous; we proceed regardless.
+        run: timeout 120 myst build --html || true
+
+      - name: Verify build artifacts
+        # Fail the workflow if the build didn't actually produce
+        # the expected static site (which would surface a real
+        # error rather than relying on the timeout's exit code).
+        run: |
+          test -f _build/html/index.html || { echo "::error::_build/html/index.html missing"; exit 1; }
+          test -f _build/html/index.json || { echo "::error::_build/html/index.json missing"; exit 1; }
+          echo "Built site contains $(find _build/html -name '*.html' | wc -l) HTML and $(find _build/html -name '*.json' | wc -l) JSON files."
+
+      - name: Configure Pages artifact
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "_build/html"
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

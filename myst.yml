@@ -1,0 +1,38 @@
+# Root MyST project for econ-ark/ballpark.
+#
+# This file aggregates the per-entry MyST projects (e.g.
+# `models/We-Would-Like-In-Econ-ARK/Benhabib_et_al_2019/myst.yml`)
+# into a single site that can be deployed to GitHub Pages.
+#
+# Local development:
+#   - For the FULL site: `myst start` from the repo root.
+#   - For ONE entry: `cd models/.../<entry>/ && myst start`.
+# Both should work; the per-entry myst.yml files remain useful for
+# focused single-entry development.
+#
+# To add a new entry to the site, add an entry to `project.toc.children`
+# of the appropriate section below (Models or Empirical).
+
+version: 1
+
+project:
+  title: "Econ-ARK Ballpark"
+  description: "Papers in-ballpark for Econ-ARK: structural-model replications and empirics-driven modeling targets."
+  github: https://github.com/econ-ark/ballpark
+  toc:
+    - file: README.md
+    - title: "Project guidelines"
+      children:
+        - file: CONTRIBUTING.md
+    - title: "Models (We-Would-Like-In-Econ-ARK)"
+      children:
+        - file: models/We-Would-Like-In-Econ-ARK/Benhabib_et_al_2019/index.md
+    # Add `empirical/` entries here as they are formalized.
+
+site:
+  title: "Econ-ARK Ballpark"
+  # The GitHub Pages subpath (https://econ-ark.github.io/ballpark/)
+  # is set at build time via the BASE_URL env var in
+  # .github/workflows/deploy.yml — NOT here. mystmd's static-build
+  # path prefix is read from BASE_URL, not from `site.options`.
+  # Local `myst start` works without BASE_URL (root-relative).
