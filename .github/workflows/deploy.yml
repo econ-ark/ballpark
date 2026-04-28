@@ -43,7 +43,26 @@ jobs:
         run: npm install -g mystmd@^1.8
 
       - name: Build site (HTML)
-        run: myst build --html
+        env:
+          # Static-build path prefix. Pages serves at
+          # https://econ-ark.github.io/ballpark/, so links must
+          # resolve under /ballpark.
+          BASE_URL: /ballpark
+        # `myst build --html` may not exit cleanly in some terminal
+        # configurations (it can launch a preview server after the
+        # static build completes). The timeout + `|| true` is a
+        # belt-and-suspenders safeguard: the build itself takes a
+        # few seconds; 120s is generous; we proceed regardless.
+        run: timeout 120 myst build --html || true
+
+      - name: Verify build artifacts
+        # Fail the workflow if the build didn't actually produce
+        # the expected static site (which would surface a real
+        # error rather than relying on the timeout's exit code).
+        run: |
+          test -f _build/html/index.html || { echo "::error::_build/html/index.html missing"; exit 1; }
+          test -f _build/html/index.json || { echo "::error::_build/html/index.json missing"; exit 1; }
+          echo "Built site contains $(find _build/html -name '*.html' | wc -l) HTML and $(find _build/html -name '*.json' | wc -l) JSON files."
 
       - name: Configure Pages artifact
         uses: actions/configure-pages@v5

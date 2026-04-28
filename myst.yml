@@ -31,11 +31,8 @@ project:
 
 site:
   title: "Econ-ARK Ballpark"
-  options:
-    favicon: ""                  # optional: drop in a favicon path if desired
-    logo: ""                     # optional: drop in a logo path if desired
-    # base_url is required for GitHub Pages: the repo serves from
-    # https://econ-ark.github.io/ballpark/, so links must resolve
-    # under the /ballpark subpath. Tracked at deploy time by the
-    # GitHub Actions workflow (.github/workflows/deploy.yml).
-    base_url: "/ballpark"
+  # The GitHub Pages subpath (https://econ-ark.github.io/ballpark/)
+  # is set at build time via the BASE_URL env var in
+  # .github/workflows/deploy.yml — NOT here. mystmd's static-build
+  # path prefix is read from BASE_URL, not from `site.options`.
+  # Local `myst start` works without BASE_URL (root-relative).
