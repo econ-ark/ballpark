@@ -22,11 +22,11 @@ A canonical ballpark item has three layers. The *exposition* layer is required; 
 
 ### 1. Exposition layer — required
 
-Four notebooks assembled by one `index.md`, plus a `00-README.md` orientation file. Name the notebooks with the paper's citekey prefix, e.g. `benhabib2019_intro.ipynb`.
+Four notebooks assembled by one `index.md`, plus a `README.md` orientation file. Name the notebooks with the paper's citekey prefix, e.g. `benhabib2019_intro.ipynb`.
 
 | File | Content |
 |------|---------|
-| `00-README.md` | A short orientation file (sorts first in the directory listing via the `00-` prefix). Provides (1) a brief reading guide for any technical artifacts in the directory — for entries with the Formalization layer, name the conventions used (dolo-plus YAML format, the [Matsya](https://github.com/econ-ark/matsya) iteration loop that produced the YAMLs, inline `# unresolved:` flags), the excerpt-plus-YAML pairing pattern, and where the construction audit trail lives; (2) a one-line index of the main files in the directory. The intent is that a reader landing on the GitHub directory listing has enough orientation to choose what to read next. Keep it short — orientation only, not duplication. |
+| `README.md` | A short orientation file. Written in **GitHub-flavored markdown** (not MyST) so GitHub auto-renders it inline below the directory listing for anyone landing on the GitHub view of the entry. Use Unicode for math (e.g. `Π_r`, `g(·;τ,r)`, `Π_τ ⊗ Π_r`, `c ≤ a`) rather than `$...$`. Provides (1) a brief reading guide for any technical artifacts in the directory — for entries with the Formalization layer, name the conventions used (dolo-plus YAML format, the [Matsya](https://github.com/econ-ark/matsya) iteration loop that produced the YAMLs, inline `# unresolved:` flags), the excerpt-plus-YAML pairing pattern, and where the construction audit trail lives; (2) a one-line index of the main files in the directory. The intent is that a reader landing on the GitHub directory listing has enough orientation to choose what to read next. Keep it short — orientation only, not duplication. |
 | `index.md` | MyST page with `{include}` directives for the four notebooks below (in order), plus YAML frontmatter giving the rendered title. |
 | `<citekey>_intro.ipynb` | Full citation with DOI link. **Original ballpark author** (name + date). **Updated by** (latest + date). 3-sentence pitch: why the paper is in-ballpark for Econ-ARK. |
 | `<citekey>_prior-literature.ipynb` | Where the paper sits in the foundational literature (Bewley / Huggett / Aiyagari / de Nardi / ...). Use `{cite:t}` citations rendered from `references.bib`. |

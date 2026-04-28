@@ -10,12 +10,12 @@ The YAML files in this directory are written in **dolo-plus**, a modular-DP YAML
 
 Two parallel excerpt-plus-YAML pairs cover two layers of the model:
 
-- **Within-life** (one household's finite-horizon Bellman): [`bellman-excerpt.md`](bellman-excerpt.md) is the modular-DDSL Bellman statement (symbol table, perch decomposition, transitions, movers, EGM channel); [`dolo-plus-draft.yaml`](dolo-plus-draft.yaml) is the dolo-plus YAML, paper-calibrated from Tables 1, 4 plus the full $\Pi_r$ matrix from online Appendix C.1.
-- **Dynasty** (cross-generational composition): [`dynasty-excerpt.md`](dynasty-excerpt.md) describes the lifetime map $g(\cdot;\tau,r)$, the joint Markov chain $\Pi_\tau \otimes \Pi_r$, and the paper's Pareto-tail Proposition; [`dolo-plus-dynasty.yaml`](dolo-plus-dynasty.yaml) is the corresponding YAML.
+- **Within-life** (one household's finite-horizon Bellman): [`bellman-excerpt.md`](bellman-excerpt.md) is the modular-DDSL Bellman statement (symbol table, perch decomposition, transitions, movers, EGM channel); [`dolo-plus-draft.yaml`](dolo-plus-draft.yaml) is the dolo-plus YAML, paper-calibrated from Tables 1, 4 plus the full Π_r matrix from online Appendix C.1.
+- **Dynasty** (cross-generational composition): [`dynasty-excerpt.md`](dynasty-excerpt.md) describes the lifetime map g(·; τ, r), the joint Markov chain Π_τ ⊗ Π_r, and the paper's Pareto-tail Proposition; [`dolo-plus-dynasty.yaml`](dolo-plus-dynasty.yaml) is the corresponding YAML.
 
 Inline `# unresolved:` and `# SPECULATIVE` comments in the YAMLs flag places where the dolo-plus spec has no canonical idiom yet — the structural intent is paper-faithful even where keyword names may need to be renamed once the spec stabilizes.
 
-The construction audit trail lives in [`verification.md`](verification.md) (paragraph-level comparison against the published paper, including online Appendix A.1) and in `bellman-excerpt.md` Open Issues #1–#10 (chronological record of corrections, notably Issue #10 — where the published §I budget equation was found inconsistent with its own $c \le a$ constraint, and the online-Appendix-A.1 model was adopted instead).
+The construction audit trail lives in [`verification.md`](verification.md) (paragraph-level comparison against the published paper, including online Appendix A.1) and in `bellman-excerpt.md` Open Issues #1–#10 (chronological record of corrections, notably Issue #10 — where the published §I budget equation was found inconsistent with its own `c ≤ a` constraint, and the online-Appendix-A.1 model was adopted instead).
 
 ## Index of main files
 
