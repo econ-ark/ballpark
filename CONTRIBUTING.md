@@ -70,7 +70,7 @@ The iteration is where the economics lives. `bellman-excerpt.md` on its own is a
 | File | Required? | Content |
 |------|-----------|---------|
 | `<citekey>.pdf` | required | The paper. If license forbids redistribution, replace with a DOI-only pointer in `_intro.ipynb`. |
-| `<citekey>.mmd` | recommended | Pandoc-converted markdown of the paper. Much easier for Cursor / Claude / Matsya to ingest than PDF. Produce via `pandoc <citekey>.pdf -o <citekey>.mmd` or equivalent. |
+| `<citekey>.mmd` | **local-only — gitignored, do not commit** | Markdown conversion of the paper PDF for AI ingestion (Cursor, Claude, Matsya). Produce locally via [Mathpix](https://mathpix.com/) (better for math-heavy papers) or `pandoc <citekey>.pdf -o <citekey>.mmd`. `*.mmd` is gitignored at the repo root because the markdown is a derivative work of the publisher's PDF and inherits its copyright. Each contributor maintains their own local copy. |
 | `references.bib` | required | Bib entries cited from `_prior-literature.ipynb` and `_summary.ipynb`. A superset is acceptable — uncited entries (e.g., a broader reading list the contributor maintains) do not need to be pruned. MyST renders only cited entries in the published bibliography. |
 | `self.bib` | recommended | The paper's own bib entry. Keeps the paper citation separable from its context. |
 | `subsequent-literature.bib` | required if the notebook is non-empty | Bib entries cited from `_subsequent-literature.ipynb`. |
@@ -147,7 +147,7 @@ Copy the template below into `AGENTS.md` in your item directory and fill in the 
 | Section | Where its content comes from |
 |---|---|
 | **Paper** | `<citekey>_intro.ipynb` — citation, DOI, one-sentence pitch of why the paper is in-ballpark. Copy verbatim; this is the one place duplication with `index.md` is intentional, because the agent may open `AGENTS.md` first. |
-| **If a user asks to work on this item** | `<citekey>_summary.ipynb` (section "The Model") is the authoritative recursive statement. `<citekey>.mmd` is the AI-friendly paper source. If your formalization layer is present, point at `bellman-excerpt.md` as "read first" instead of the summary notebook. |
+| **If a user asks to work on this item** | `<citekey>_summary.ipynb` (section "The Model") is the authoritative recursive statement. `<citekey>.mmd` is the AI-friendly paper source — locally-produced (gitignored), so an agent may need to produce one from the PDF if not already present. If your formalization layer is present, point at `bellman-excerpt.md` as "read first" instead of the summary notebook. |
 | **Formalization status** | Tick which layer files you committed: `bellman-excerpt.md`, `dolo-plus-draft.yaml`, `verification.md`, `matsya-session.txt`. Be honest about what is not yet present. |
 | **Known model features requiring attention** | Pull from `verification.md` (the items you rejected or edited) and from the inline `# workaround:` / `# unresolved:` comments in `dolo-plus-draft.yaml`. This is the single most useful section for an agent — it is the list of things it should not re-discover. If the formalization layer is absent, list the model features you already know will be awkward (state-contingent shocks, mechanical deductions, non-standard normalizations, etc.). |
 | **Common next tasks** | List what you intentionally left undone. Examples from real items: *"add terminal-period stage to YAML"*, *"formalize the dynasty wrapper"*, *"add age-varying wage overrides"*. Cite the specific file or line a next-task should touch. Do **not** list tasks you would have liked to do but have no grounding for. |
@@ -170,7 +170,7 @@ Copy the template below into `AGENTS.md` in your item directory and fill in the 
 ## If a user asks to work on this item
 
 1. **Read first:** <file> — <why this is authoritative>.
-2. **Paper source for AI ingestion:** `<citekey>.mmd` (Pandoc-converted). Prefer this over `<citekey>.pdf`.
+2. **Paper source for AI ingestion:** `<citekey>.mmd` (locally-produced via Mathpix or pandoc; gitignored, not committed). Prefer this over `<citekey>.pdf` for AI ingestion; produce a local `.mmd` from the PDF if one isn't already present.
 
 ## Formalization status
 
@@ -214,7 +214,7 @@ Copy the template below into `AGENTS.md` in your item directory and fill in the 
 ### Content-form conventions for LLM legibility
 
 - **Every committed `.ipynb` is also exported to `.md`** at build time. Reviewers and LLMs read the `.md`; the `.ipynb` remains authoritative.
-- **Paper ships as `.mmd` alongside `.pdf`** where license permits (Pandoc-converted markdown — much easier for Cursor / Claude / Matsya to ingest than PDF).
+- **`.mmd` files are local-only (gitignored).** A locally-produced Mathpix or pandoc conversion of the paper PDF is much easier for Cursor / Claude / Matsya to ingest, but `*.mmd` is gitignored at the repo root because the markdown is a derivative of the publisher's PDF and inherits its copyright. Each contributor produces and maintains their own local copy.
 - **Every equation carries an `:alt:` attribute** describing it in prose, for models that can't render LaTeX but can read HTML.
 - **Every figure has alt-text** (WCAG and LLM indexability are the same action).
 
@@ -294,7 +294,7 @@ Qualifying checklist — everything in Draft, plus:
 - [ ] `<citekey>_summary.ipynb` extended (the notebook already exists from Draft, carrying the non-technical motivation + findings overview) with a **"The Model"** section stating the recursive formulation **explicitly**: no `u(c)` placeholders, explicit CRRA or EZ kernel, explicit bequest function (if any), explicit transitions, explicit shock distributions, explicit constraint set.
 - [ ] `<citekey>_subsequent-literature.ipynb` + `subsequent-literature.bib`. **No hard citation count is required**, since recent papers may have few subsequent citations; the notebook should cite whatever subsequent work exists (typically 0–6 papers) and note explicitly if the paper is too recent to have accumulated much. (Paper eligibility itself is gated by the Google-Scholar-≥3 rule in "Before you start.")
 - [ ] `self.bib` with the paper's own bib entry.
-- [ ] `<citekey>.mmd` (Pandoc-converted markdown of the paper) unless license forbids — this is what Cursor / Claude / Matsya read most effectively.
+- *(Note: `<citekey>.mmd` — a locally-produced Mathpix or pandoc conversion of the paper PDF — makes AI ingestion much smoother for Cursor / Claude / Matsya, but `*.mmd` is **gitignored** and not part of this checklist. Each contributor maintains their own local copy.)*
 - [ ] `myst.yml` configured; `myst build` completes cleanly.
 - [ ] `index.md` `{include}`s all four exposition notebooks in order.
 
@@ -354,7 +354,7 @@ A `.github/workflows/ballpark-check.yml` action (forthcoming in a follow-up PR) 
 Per-tier mechanical gates the CI will enforce:
 
 - **Draft:** directory path correct; `index.md` frontmatter present with required fields and `tier:` value in controlled set; `<citekey>_intro.ipynb` exists and contains citation / DOI / author; `<citekey>_summary.ipynb` exists (non-technical motivation + findings overview — "The Model" heading is not yet required); `references.bib` exists; paper `.pdf` committed or DOI pointer present.
-- **Primer** (additive): the remaining exposition notebooks (`_prior-literature.ipynb`, `_subsequent-literature.ipynb`) exist; `_summary.ipynb` now contains a **"The Model"** heading; `_prior-literature.ipynb` resolves **3–6** unique `{cite:t}` references against bib files; `self.bib` and `subsequent-literature.bib` exist; `<citekey>.mmd` exists or license-note present; `myst.yml` present and `myst build` succeeds; `index.md` `{include}`s all four notebooks; every `{cite:t}` resolves; every referenced figure exists.
+- **Primer** (additive): the remaining exposition notebooks (`_prior-literature.ipynb`, `_subsequent-literature.ipynb`) exist; `_summary.ipynb` now contains a **"The Model"** heading; `_prior-literature.ipynb` resolves **3–6** unique `{cite:t}` references against bib files; `self.bib` and `subsequent-literature.bib` exist; `myst.yml` present and `myst build` succeeds; `index.md` `{include}`s all four notebooks; every `{cite:t}` resolves; every referenced figure exists. (`<citekey>.mmd` — gitignored, local-only — is no longer a Primer-tier CI check.)
 - **Formalized** (additive): `bellman-excerpt.md`, `dolo-plus-draft.yaml`, `verification.md`, `matsya-session.txt`, `AGENTS.md` all exist; `dolo-plus-draft.yaml` parses as YAML; `bellman-excerpt.md` contains a markdown table (heuristic: at least one pipe-delimited row with a Symbol column) and references all three perch names (`arrival`, `decision`, `continuation`); `AGENTS.md` contains the six required top-level sections (heading-based check).
 
 What CI does **not** check at Formalized (and therefore what the human reviewer is responsible for): the Bellman equation being correct, the perch decomposition being correct, the YAML workarounds being defensible, and `verification.md` genuinely comparing against the published paper.
