@@ -1,0 +1,649 @@
+======================================================================
+Session: topics2026-armonetarypolicyhabc  (6 turns)
+======================================================================
+
+--- Turn 1  2026-04-14 03:33:32 ---
+Q: I am using a named session for my Topics ballpark dynamic program work.
+A: Understood. Based on the retrieved context from the bellman-ddsl road-map, the convention for session logs is:
+
+> use `AI/working/<USER>/.../session.md`
+
+So for your "Topics ballpark dynamic program" work, you'd place your session file at a path like:
+
+```
+AI/working/<your-username>/topics-ballpark/session.md
+```
+
+This keeps it separate from:
+- `CHANGELOG.md` (for comprehensive changelogs)
+- `AI/road-map/road-map-todo.md` (for planning)
+
+**Source**: `AI/road-map/road-map-todo.md` — *"Non-goal: a comprehensive changelog (use `CHANGELOG.md`) or a session log (use `AI/working/<USER>/.../session.md`)."* **(CANONICAL)**
+
+If you'd like help with any aspect of the dynamic program itself — translating it to YAML, writing up a formal MDP, or reviewing its structure against the DDSL spec — just share the details and I'll assist.
+
+--- Turn 2  2026-04-14 03:33:40 ---
+Q: Referring to our previous exchange: confirm you have session context and list one thing we are set up to do next.
+A: **Session context confirmed.** You are using a named session for your **Topics ballpark dynamic program** work.
+
+**One thing we are set up to do next:** Translate your ballpark dynamic program into a formal object — either as a **dolo-plus stage YAML** (Mode 2) or a **formal MDP writeup** (Mode 1) — once you share the model's mathematical structure (state/action spaces, transitions, preferences, shocks).
+
+Ready when you are.
+
+--- Turn 3  2026-04-14 03:41:50 ---
+Q: Using this Bellman excerpt from Algan-Ragot 2009: value function v(q,e)=max_{c,m,l,a'} u(c,m,l)+beta E[v(q',e')], subject to c+m+a' = q + w*e*l + mu; e is a 3-state Markov shock; controls are c,m,l,a'; borrowing constraints exist but exact algebraic bound not provided. Break this into modular stages using arrival/decision/continuation perches. Be explicit about state variables, controls, transitions, and which objects are exogenous/policy-determined.
+A: # Modular Decomposition of the Algan-Ragot Bellman Equation
+
+## The Original Problem
+
+$$
+v(q, e) = \max_{c,\,m,\,l,\,a'}\;\Big\{ u(c, m, l) \;+\; \beta\,\mathbb{E}\big[v(q', e')\big]\Big\}
+$$
+
+subject to $c + m + a' = q + w\cdot e\cdot l + \mu$, a borrowing constraint $a' \geq \underline{a}$, and $e$ following a 3-state Markov chain with transition matrix $\Pi$.
+
+---
+
+## Inventory of Objects
+
+Before decomposing, let me classify every object in the equation:
+
+| Object | Role | Determined by |
+|--------|------|---------------|
+| $q$ | Composite "cash-on-hand" state | Last period's poststate + current-period returns |
+| $e \in \{e_1, e_2, e_3\}$ | Discrete Markov state | Nature (realized before decision) |
+| $c$ | Consumption (control) | Agent's decision |
+| $m$ | Money holdings (control) | Agent's decision |
+| $l$ | Labor supply (control) | Agent's decision |
+| $a'$ | End-of-period assets (control) | Agent's decision |
+| $e'$ | Next-period Markov state | Nature (realized next period) |
+| $q'$ | Next-period cash-on-hand | Transition from $(a', m, e')$ |
+| $w, \mu, \beta, \underline{a}$ | Parameters | Exogenous/fixed |
+
+**Key timing observation.** The agent observes $(q, e)$ *before* choosing $(c, m, l, a')$. The expectation $\mathbb{E}[\cdot]$ is over the *future* Markov draw $e' \sim \Pi(\cdot \mid e)$. This is a **pre-decision shock at the successor stage** (equivalently, a post-decision shock from the current stage's perspective). The current-period decision is made under full knowledge of $e$.
+
+---
+
+## Two-Stage Decomposition
+
+The period decomposes naturally into two stages composed in sequence:
+
+$$
+\underbrace{\text{Stage 1: Decision}}_{\text{agent chooses } (c,m,l,a')} \;\;\longrightarrow\;\; \underbrace{\text{Stage 2: Shock Realization}}_{\text{nature draws } e', \text{ form } q'}
+$$
+
+The composition yields the period operator $\mathbb{T} = \mathbb{T}_{\text{shock}} \circ \mathbb{T}_{\text{decision}}$.
+
+---
+
+### Stage 1 — Decision Stage (Consumption–Labor–Portfolio)
+
+This is the agent's optimization stage. All four controls are chosen simultaneously subject to the budget constraint.
+
+**Arrival perch** $\;\mathsf{X}_\prec = \mathsf{Q} \times \mathsf{E}$
+
+$$
+x_\prec = (q,\; e)
+$$
+
+- $q \in \mathsf{Q} \subseteq \mathbb{R}_+$ : beginning-of-period resources (continuous)
+- $e \in \mathsf{E} = \{e_1, e_2, e_3\}$ : current Markov state (discrete, already realized)
+
+**Arrival → Decision transition** $\;\mathrm{g}_{\prec\circ}$: identity
+
+$$
+(q_d,\; e_d) \;=\; (q,\; e)
+$$
+
+No shock is realized between arrival and decision in this stage — $e$ is already known.
+
+**Decision perch** $\;\mathsf{X} = \mathsf{Q} \times \mathsf{E}$
+
+$$
+x = (q,\; e)
+$$
+
+**Action space** (state-dependent):
+
+$$
+\mathsf{A}(q, e) \;\coloneqq\; \Big\{(c, m, l, a') \in \mathbb{R}_+^3 \times [\underline{a}, \infty) \;\Big|\; c + m + a' = q + w\cdot e\cdot l + \mu,\;\; l \in [0, \bar{l}]\Big\}
+$$
+
+Note that this is a *single* linear budget constraint binding four controls, leaving three effective degrees of freedom. The constraint mixes a control ($l$) on the RHS — labor supply generates income $w \cdot e \cdot l$ — making this a non-separable simultaneous choice.
+
+**Controls:**
+
+| Control | Domain | Economic role |
+|---------|--------|---------------|
+| $c$ | $\mathbb{R}_+$ | Consumption |
+| $m$ | $\mathbb{R}_+$ | Money holdings (carried forward) |
+| $l$ | $[0, \bar{l}]$ | Labor supply |
+| $a'$ | $[\underline{a}, \infty)$ | End-of-period assets (borrowing-constrained) |
+
+**Decision → Continuation transition** $\;\mathrm{g}_{\circ\succ}$:
+
+$$
+x_\succ \;=\; (a',\; m,\; e)
+$$
+
+The continuation state carries forward the savings choice $a'$, money $m$, and the *current* Markov state $e$ (needed to condition next stage's shock draw).
+
+**Continuation perch** $\;\mathsf{X}_\succ = \mathsf{A} \times \mathsf{M} \times \mathsf{E}$
+
+$$
+x_\succ = (a,\; m,\; e)
+$$
+
+where I drop the prime to use the continuation-perch convention: $a$ here is the post-decision asset level.
+
+**Reward:**
+
+$$
+\mathrm{r}(x, \mathbf{a}) \;=\; u(c, m, l)
+$$
+
+where $\mathbf{a} = (c, m, l, a')$ is the full action vector.
+
+**Stage 1 Bellman equation:**
+
+$$
+\mathrm{v}(q, e) \;=\; \max_{(c,m,l,a') \in \mathsf{A}(q,e)} \Big\{ u(c, m, l) \;+\; \beta\, \mathrm{v}_\succ(a', m, e) \Big\}
+$$
+
+where $\mathrm{v}_\succ$ is the continuation value provided by Stage 2.
+
+---
+
+### Stage 2 — Shock Realization Stage (Markov Transition, No Decision)
+
+This stage has **no agent decision**. Nature draws $e'$ and the economy transitions to next period's cash-on-hand $q'$.
+
+**Arrival perch** $\;\mathsf{X}_\prec = \mathsf{A} \times \mathsf{M} \times \mathsf{E}$
+
+$$
+x_\prec = (a,\; m,\; e)
+$$
+
+Connected from Stage 1's continuation perch by the identity connector.
+
+**Exogenous shock:**
+
+$$
+e' \;\sim\; \Pi(\cdot \mid e), \qquad e' \in \{e_1, e_2, e_3\}
+$$
+
+where $\Pi$ is the $3 \times 3$ Markov transition matrix.
+
+**Arrival → Decision transition** $\;\mathrm{g}_{\prec\circ}$:
+
+$$
+(q',\; e') \;=\; \big(\underbrace{g(a, m, e')}_{\text{asset returns}},\;\; e'\big)
+$$
+
+The function $g(a, m, e')$ maps last period's savings and money holdings into this period's resources. The exact functional form is model-specific — a typical specification would be:
+
+$$
+q' = R\cdot a + (1 + r_m)\cdot m
+$$
+
+but $g$ could also depend on $e'$ if returns are state-contingent. **The user's excerpt does not specify this transition algebraically — this is an identified gap.**
+
+**Decision perch** $\;\mathsf{X} = \mathsf{Q} \times \mathsf{E}$
+
+$$
+x = (q',\; e')
+$$
+
+There is **no control** at this stage. The "decision" perch exists structurally but the action set is trivial (singleton).
+
+**Decision → Continuation transition** $\;\mathrm{g}_{\circ\succ}$: identity
+
+$$
+x_\succ = (q',\; e')
+$$
+
+**Stage 2 Bellman equation** (pure expectation, no max):
+
+$$
+\mathrm{v}_\prec(a, m, e) \;=\; \mathbb{E}_{e' \sim \Pi(\cdot|e)}\Big[\mathrm{v}\big(g(a, m, e'),\; e'\big)\Big]
+$$
+
+This is the **dcsn_to_arvl mover** — it computes the expected continuation value by integrating over the Markov shock. In DDSL terms, this is analogous to the `noport_stage` pattern from the canonical examples: a shock-realization stage with no optimization. **(CANONICAL pattern, per `noport_stage.md`)**
+
+---
+
+## Composed Period Operator
+
+Substituting Stage 2's continuation value into Stage 1:
+
+$$
+\mathrm{v}(q, e) \;=\; \max_{(c,m,l,a') \in \mathsf{A}(q,e)} \bigg\{ u(c, m, l) \;+\; \beta\, \mathbb{E}_{e' \sim \Pi(\cdot|e)}\Big[\mathrm{v}\big(g(a', m, e'),\; e'\big)\Big] \bigg\}
+$$
+
+which recovers the original Bellman equation $v(q,e) = \max_{c,m,l,a'}\{u(c,m,l) + \beta\,\mathbb{E}[v(q',e')]\}$. ✓
+
+The nesting is **max-of-E**: the agent maximizes over an expected continuation, consistent with the shock $e'$ being post-decision (realized after the agent acts). This matches the Dyn-X modular Bellman pattern from the retrieved context:
+
+> $\mathscr{V}_j(x_{v,j}) = \max_{a \in A(x_{v,j})} \{ r(x_{v,j}, a) + \beta\, \mathbb{E}\, \mathscr{V}_{j+1}(x_{v,j+1}) \}$
+>
+> — **(Source: modular-bellman.md, CANONICAL)**
+
+---
+
+## Summary: Perch-by-Perch Rosetta Stone
+
+| Perch | Stage 1 (Decision) | Stage 2 (Shock) |
+|-------|-------------------|-----------------|
+| **Arrival** $x_\prec$ | $(q, e)$ | $(a, m, e)$ |
+| **Shock** | — (none) | $e' \sim \Pi(\cdot \mid e)$ |
+| **Decision** $x$ | $(q, e)$ | $(q', e')$ |
+| **Controls** | $c, m, l, a'$ | — (none) |
+| **Continuation** $x_\succ$ | $(a, m, e)$ | $(q', e')$ |
+| **Mover type** | $\max$ (agent optimizes) | $\mathbb{E}$ (nature draws) |
+| **Reward** | $u(c, m, l)$ | $0$ |
+
+**Connector** between stages: Stage 1's continuation perch $(a, m, e) \in \mathsf{A} \times \mathsf{M} \times \mathsf{E}$ maps identically to Stage 2's arrival perch — the field names match, which is the standard DDSL wiring convention.
+
+---
+
+## Identified Gaps and Observations
+
+1. **Transition $g(a, m, e')$ unspecified.** The excerpt does not provide the law of motion for $q'$. This must be supplied to complete the YAML or any numerical implementation.
+
+2. **Borrowing constraint $\underline{a}$ unspecified algebraically.** It enters as a bound on the action space but its value/form is not given.
+
+3. **Labor in the budget constraint.** The control $l$ appearing on the RHS of the budget constraint ($w \cdot e \cdot l$) means the feasible set $\mathsf{A}(q, e)$ is coupled across controls. This is a simultaneous four-control problem — **not naturally decomposable into sequential sub-stages** without further structural assumptions (e.g., separability of $u$ in $l$ vs. $(c, m)$).
+
+4. **Money $m$ as both control and poststate.** Money holdings $m$ is chosen at the decision perch and then carried forward as a poststate. This is structurally similar to the portfolio share $\alpha$ in the canonical `port_stage` — a control that becomes part of the continuation state.
+
+5. **EGM applicability.** With four controls and one budget constraint, standard one-dimensional EGM is not directly applicable. The non-separable labor-consumption interaction would require either (a) a nested solution approach (e.g., fix $l$, solve for $(c, m, a')$ by EGM, then optimize over $l$), or (b) a multi-dimensional root-finding approach. This is a **solution method** question beyond the scope of the mathematical decomposition, but it's worth flagging.
+
+---
+
+Shall I translate this decomposition into a **dolo-plus stage YAML** (one file per stage), or write up the full **formal MDP** with FOCs and forward operator?
+
+--- Turn 4  2026-04-14 03:42:56 ---
+Q: Using the same Algan-Ragot setup in this session, do we have enough information to construct a dolo-plus YAML draft? If not, list the minimum missing items and provide explicit placeholder assumptions that are reasonable for a draft file.
+A: # Readiness Assessment for Dolo-Plus YAML Draft
+
+## What We Have (from the session's Bellman decomposition)
+
+| Item | Status | Source |
+|------|--------|--------|
+| State space $(q, e)$ | ✅ Fully specified | Bellman excerpt |
+| Control set $\{c, m, l, a'\}$ | ✅ Named and classified | Bellman excerpt |
+| Budget constraint $c + m + a' = q + wel + \mu$ | ✅ Algebraic form | Bellman excerpt |
+| Markov shock $e \in \{e_1, e_2, e_3\}$ | ✅ Structure known | Bellman excerpt |
+| Shock timing (post-decision / pre-next-arrival) | ✅ Established | Session decomposition |
+| Two-stage decomposition (Decision → Shock) | ✅ Perch-by-perch | Session decomposition |
+| Poststate identification $(a, m, e)$ | ✅ | Session decomposition |
+
+**Verdict: We have enough *structural* information for a draft. We do NOT have enough *algebraic* information to write a complete, runnable file.** Five items are missing.
+
+---
+
+## The Five Missing Items
+
+### 1. Utility function $u(c, m, l)$ — **CRITICAL**
+
+The excerpt says $u(c, m, l)$ but gives no functional form. This determines whether EGM sub-equations can be written and what the FOCs look like.
+
+**Placeholder assumption (standard in money-in-utility literature):**
+
+$$
+u(c, m, l) \;=\; \frac{c^{1-\rho}}{1-\rho} \;+\; \phi_m\,\frac{m^{1-\rho_m}}{1-\rho_m} \;-\; \phi_l\,\frac{l^{1+\gamma}}{1+\gamma}
+$$
+
+*Rationale:* Additively separable CRRA in $(c, m)$ with convex labor disutility is the workhorse specification in Algan-Ragot-type models. The separability is a strong assumption but is the most common starting point and makes FOCs tractable.
+
+**New parameters introduced:** $\rho$ (consumption CRRA), $\rho_m$ (money CRRA), $\phi_m$ (money weight), $\phi_l$ (labor weight), $\gamma$ (inverse Frisch elasticity).
+
+---
+
+### 2. Transition function $q' = g(a, m, e')$ — **CRITICAL**
+
+The excerpt provides no law of motion for next-period cash-on-hand.
+
+**Placeholder assumption:**
+
+$$
+q' \;=\; R \cdot a \;+\; (1 + r_m) \cdot m
+$$
+
+where $R$ is the gross return on illiquid assets and $r_m$ is the net return on money. Note that $e'$ does not enter $g$ under this assumption — it enters only through the labor income channel at *next period's* decision stage.
+
+*Rationale:* This is the simplest asset-return specification consistent with the two-asset structure. If Algan-Ragot have state-contingent returns, this placeholder would need revision.
+
+**New parameters introduced:** $R$ (gross asset return), $r_m$ (money return).
+
+---
+
+### 3. Markov transition matrix $\Pi$ — **REQUIRED for computation, not for structure**
+
+We know $e \in \{e_1, e_2, e_3\}$ with transition matrix $\Pi$, but no values are given.
+
+**Placeholder assumption (Rouwenhorst discretization of AR(1)):**
+
+$$
+\Pi = \begin{pmatrix} 0.70 & 0.25 & 0.05 \\ 0.15 & 0.70 & 0.15 \\ 0.05 & 0.25 & 0.70 \end{pmatrix}, \qquad (e_1, e_2, e_3) = (0.5,\; 1.0,\; 1.5)
+$$
+
+*Rationale:* Symmetric, persistent 3-state chain centered at 1.0 is standard. Exact values are calibration — the YAML structure is independent of them.
+
+---
+
+### 4. Borrowing constraint bound $\underline{a}$ — **REQUIRED for action space**
+
+The excerpt states $a' \geq \underline{a}$ but gives no value.
+
+**Placeholder assumption:**
+
+$$
+\underline{a} = 0 \qquad \text{(natural borrowing constraint: no debt)}
+$$
+
+*Rationale:* Zero is the simplest and most common. Some models use $\underline{a} < 0$ (ad hoc) or $\underline{a} = -w \cdot e_{\min} \cdot \bar{l} / (R-1)$ (natural). Zero suffices for a draft.
+
+---
+
+### 5. Parameter values $(w, \mu, \beta, \bar{l})$ — **REQUIRED for calibration block**
+
+**Placeholder assumptions:**
+
+| Parameter | Placeholder | Rationale |
+|-----------|-------------|-----------|
+| $\beta$ | $0.96$ | Standard annual discount factor |
+| $w$ | $1.0$ | Normalized wage |
+| $\mu$ | $0.0$ | No lump-sum transfer (simplest case) |
+| $\bar{l}$ | $1.0$ | Normalized time endowment |
+| $\rho$ | $2.0$ | Standard CRRA |
+| $\rho_m$ | $2.0$ | Same curvature for money (symmetric start) |
+| $\phi_m$ | $0.1$ | Money valued but subordinate to consumption |
+| $\phi_l$ | $1.0$ | Moderate labor disutility |
+| $\gamma$ | $2.0$ | Frisch elasticity of 0.5 |
+| $R$ | $1.04$ | 4% real return |
+| $r_m$ | $0.0$ | Money earns zero nominal return (liquidity motive) |
+| $\underline{a}$ | $0.0$ | No borrowing |
+
+---
+
+## Structural Observations for the YAML Draft
+
+### Solution method implication
+
+With the separable utility placeholder, the FOCs decouple partially:
+
+$$
+c^{-\rho} = \lambda, \qquad \phi_m \, m^{-\rho_m} = \lambda, \qquad \phi_l \, l^{\gamma} = \lambda \cdot w \cdot e
+$$
+
+where $\lambda$ is the budget constraint multiplier. This gives closed-form controls *as functions of $\lambda$*, which could enable a **generalized EGM** (invert the Euler equation for $\lambda$ from the continuation marginal value, then recover all controls). However, this is a **solution method** consideration — for the YAML we note:
+
+- **InvEuler is potentially applicable** but would require a custom multi-control inversion. For a first draft, I would **omit InvEuler** sub-equations and write only the `Bellman` sub-equation (direct VFI), flagging the EGM extension as a TODO.
+
+### Mover structure (two stages)
+
+| Stage | cntn_to_dcsn_mover | dcsn_to_arvl_mover |
+|-------|-------------------|-------------------|
+| **Decision** | `Bellman: V = max_{c,m,l,a'}{u(c,m,l) + β·V[>]}` | `Bellman: V[<] = V` (identity, no pre-decision shock) |
+| **Shock realization** | `Bellman: V = V[>]` (no decision, pass-through) | `Bellman: V[<] = E_{e'}(V)` (Markov expectation) |
+
+---
+
+## Bottom Line
+
+> **We can write a structurally complete draft YAML now**, using the five placeholder assumptions above. The file will be:
+> - **Structurally faithful** to the Bellman excerpt and our session decomposition
+> - **Algebraically provisional** in utility, transition, and calibration
+> - **Solution-method agnostic** (Bellman sub-equations only, no InvEuler)
+>
+> Every placeholder is clearly labeled so a domain expert can substitute the true Algan-Ragot specification.
+
+Shall I proceed with the two-stage YAML draft (one file per stage, plus a period file wiring them together)?
+
+--- Turn 5  2026-04-14 03:47:30 ---
+Q: Give only a minimal YAML skeleton (no explanations) for the current session model with q,e states and c,m,l,a_next controls.
+A: 
+
+```yaml
+name: AlganRagotDecision
+
+symbols:
+  spaces:
+    Xq: '@def R+'
+    Xa: '@def R+'
+    Xm: '@def R+'
+    Xl: '@def [0,1]'
+    Xe: '@def {0.5, 1.0, 1.5}'
+
+  prestate:
+    q: '@in Xq'
+    e: '@in Xe'
+
+  states:
+    q: '@in Xq'
+    e: '@in Xe'
+
+  poststates:
+    a: '@in Xa'
+    m: '@in Xm'
+    e: '@in Xe'
+
+  controls:
+    c: '@in R+'
+    m_d: '@in R+'
+    l: '@in Xl'
+    a_next: '@in Xa'
+
+  exogenous:
+    e_next: '@dist MarkovChain(Pi)'
+
+  values:
+    V[<]: '@in R'
+    V: '@in R'
+    V[>]: '@in R'
+
+  parameters:
+    beta: '@in (0,1)'
+    rho: '@in R+'
+    rho_m: '@in R+'
+    phi_m: '@in R+'
+    phi_l: '@in R+'
+    gamma: '@in R+'
+    w: '@in R+'
+    mu: '@in R+'
+    R: '@in R+'
+    r_m: '@in R+'
+    a_min: '@in R'
+
+equations:
+  arvl_to_dcsn_transition: |
+    q = q
+    e = e
+
+  dcsn_to_cntn_transition: |
+    a = a_next
+    m = m_d
+    e = e
+
+  cntn_to_dcsn_mover:
+    Bellman: |
+      V = max_{c, m_d, l, a_next}{
+        c^(1-rho)/(1-rho) + phi_m * m_d^(1-rho_m)/(1-rho_m) - phi_l * l^(1+gamma)/(1+gamma)
+        + beta * V[>]
+      }
+
+  dcsn_to_arvl_mover:
+    Bellman: |
+      V[<] = V
+
+---
+name: AlganRagotShock
+
+symbols:
+  spaces:
+    Xa: '@def R+'
+    Xm: '@def R+'
+    Xe: '@def {0.5, 1.0, 1.5}'
+    Xq: '@def R+'
+
+  prestate:
+    a: '@in Xa'
+    m: '@in Xm'
+    e: '@in Xe'
+
+  exogenous:
+    e_next: '@dist MarkovChain(Pi)'
+
+  states:
+    q_next: '@in Xq'
+    e_next: '@in Xe'
+
+  poststates:
+    q: '@in Xq'
+    e: '@in Xe'
+
+  values:
+    V[<]: '@in R'
+    V: '@in R'
+    V[>]: '@in R'
+
+  parameters:
+    R: '@in R+'
+    r_m: '@in R+'
+
+equations:
+  arvl_to_dcsn_transition: |
+    q_next = R * a + (1 + r_m) * m
+    e_next = e_next
+
+  dcsn_to_cntn_transition: |
+    q = q_next
+    e = e_next
+
+  cntn_to_dcsn_mover:
+    Bellman: |
+      V = V[>]
+
+  dcsn_to_arvl_mover:
+    Bellman: |
+      V[<] = E_{e_next}(V)
+```
+
+--- Turn 6  2026-04-14 03:48:03 ---
+Q: Rewrite the model description in SolvingMicroDSOPs style (sections 12-13 tone): clearly list timing, states, controls, constraints, Bellman equation, and stage decomposition for this Algan-Ragot model. Keep it concise markdown.
+A: 
+
+# The Algan-Ragot Money-in-Utility Problem
+
+## Timing
+
+Within each period, events unfold in two stages:
+
+1. **Decision stage.** The agent enters with resources $q$ and productivity $e$ already known. She simultaneously chooses consumption $c$, money holdings $m$, labor supply $l$, and end-of-period assets $a'$, subject to a single budget constraint.
+
+2. **Shock realization stage.** After the agent acts, nature draws next-period productivity $e'$ from a 3-state Markov chain. Asset returns are realized and next-period resources $q'$ are formed. No decision is made.
+
+The composed period operator is $\mathbb{T} = \mathbb{T}_{\text{shock}} \circ \mathbb{T}_{\text{decision}}$, which nests as **max-of-E**: the agent maximizes over an expected continuation value.
+
+## States
+
+| Variable | Domain | Description |
+|----------|--------|-------------|
+| $q$ | $\mathbb{R}_+$ | Beginning-of-period resources ("cash-on-hand") |
+| $e$ | $\{e_1, e_2, e_3\}$ | Current productivity (discrete Markov state) |
+
+The pair $(q, e)$ is sufficient to characterize the agent's problem at the start of each period.
+
+## Controls
+
+| Variable | Domain | Description |
+|----------|--------|-------------|
+| $c$ | $\mathbb{R}_+$ | Consumption |
+| $m$ | $\mathbb{R}_+$ | Money holdings carried forward |
+| $l$ | $[0, \bar{l}]$ | Labor supply |
+| $a'$ | $[\underline{a}, \infty)$ | End-of-period illiquid assets |
+
+All four controls are chosen simultaneously. The budget constraint binds them together, leaving three effective degrees of freedom.
+
+## Constraints
+
+**Budget constraint:**
+
+$$
+c + m + a' = q + w \cdot e \cdot l + \mu
+$$
+
+**Borrowing constraint:**
+
+$$
+a' \geq \underline{a}
+$$
+
+Note that labor supply $l$ appears on the income side of the budget constraint — the agent's choice of how much to work directly affects available resources.
+
+## Preferences
+
+$$
+u(c, m, l) = \frac{c^{1-\rho}}{1-\rho} + \phi_m \frac{m^{1-\rho_m}}{1-\rho_m} - \phi_l \frac{l^{1+\gamma}}{1+\gamma}
+$$
+
+This is the standard money-in-utility specification: CRRA over consumption, CRRA over real balances, and convex disutility of labor. The additive separability across $(c, m, l)$ is a strong but common assumption.
+
+## Bellman Equation
+
+$$
+v(q, e) = \max_{c,\, m,\, l,\, a'} \left\{ u(c, m, l) + \beta \sum_{e'} \Pi(e' \mid e)\, v\!\left(R \cdot a' + (1+r_m) \cdot m,\; e'\right) \right\}
+$$
+
+subject to the budget and borrowing constraints above.
+
+## Stage Decomposition
+
+### Stage 1: Decision
+
+| Perch | Variables |
+|-------|-----------|
+| Arrival | $(q, e)$ |
+| Decision | $(q, e)$; controls $(c, m, l, a')$ |
+| Continuation | $(a, m, e)$ |
+
+The arrival-to-decision transition is the identity (no shock at this stage). The decision-to-continuation transition extracts the poststates:
+
+$$
+a = a', \qquad m = m, \qquad e = e
+$$
+
+The backward mover solves:
+
+$$
+v(q, e) = \max_{c,m,l,a'} \big\{ u(c,m,l) + \beta\, v_\succ(a', m, e) \big\}
+$$
+
+The forward mover is trivial: $v_\prec = v$ (no pre-decision shock).
+
+### Stage 2: Shock Realization
+
+| Perch | Variables |
+|-------|-----------|
+| Arrival | $(a, m, e)$ |
+| Decision | $(q', e')$ — no choice made |
+| Continuation | $(q', e')$ |
+
+The arrival-to-decision transition realizes the shock and forms next-period resources:
+
+$$
+q' = R \cdot a + (1 + r_m) \cdot m, \qquad e' \sim \Pi(\cdot \mid e)
+$$
+
+The backward mover is a pass-through: $v = v_\succ$. The forward mover computes the expectation:
+
+$$
+v_\prec(a, m, e) = \sum_{e'} \Pi(e' \mid e)\, v(q', e')
+$$
+
+This is the **noport** pattern from the consumption-savings literature: a stage where nature acts and the agent does not.
+
+### Wiring
+
+Stage 1's continuation perch $(a, m, e)$ connects to Stage 2's arrival perch $(a, m, e)$ by field-name matching. Stage 2's continuation perch $(q', e')$ connects back to Stage 1's arrival perch $(q, e)$ at the next period — closing the recursive loop.

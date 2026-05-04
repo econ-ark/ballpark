@@ -1,0 +1,194 @@
+name: AlganRagotDecision
+
+symbols:
+  spaces:
+    Xq: '@def R+'
+    Xa: '@def R+'
+    Xm: '@def R+'
+    Xl: '@def [0,1]'
+    Xe: '@def {0.5, 1.0, 1.5}'
+
+  prestate:
+    q: '@in Xq'
+    e: '@in Xe'
+
+  states:
+    q: '@in Xq'
+    e: '@in Xe'
+
+  poststates:
+    a: '@in Xa'
+    m: '@in Xm'
+    e: '@in Xe'
+
+  controls:
+    # note: m_d is the chosen money balance at the decision perch;
+    # the savings identity m = m_d carries it into the continuation
+    # perch. Symbol table in bellman-excerpt.md documents this.
+    # note: per Matsya Evaluate turn (docs/matsya-evaluate-turn.txt,
+    # Flag C), illiquid savings a_next is NOT a free control: it is
+    # pinned by the budget identity a_next = q + w*e*l + mu - c - m_d
+    # inside dcsn_to_cntn_transition below. Three free controls.
+    c: '@in R+'
+    m_d: '@in R+'
+    l: '@in Xl'
+
+  exogenous:
+    # unresolved: calibrate P_e (3x3 stochastic matrix) from the paper;
+    # renamed from Pi to avoid collision with inflation Pi_inf on the
+    # aggregate side (see bellman-excerpt.md "Out of scope" table).
+    e_next: '@dist MarkovChain(P_e)'
+
+  values:
+    V[<]: '@in R'
+    V: '@in R'
+    V[>]: '@in R'
+
+  parameters:
+    beta: '@in (0,1)'
+    rho: '@in R+'
+    rho_m: '@in R+'
+    phi_m: '@in R+'
+    phi_l: '@in R+'
+    gamma: '@in R+'
+    w: '@in R+'
+    # note: mu is NET of inflation-tax, so the domain is R (not R+);
+    # sign for individual households depends on the redistribution
+    # rule — verify against the paper before fixing a calibration.
+    mu: '@in R'
+    R: '@in R+'
+    r_m: '@in R+'
+    # unresolved: paper-specific borrowing rule; placeholder scalar until
+    # verified against PDF/.mmd
+    a_min: '@in R'
+    # unresolved: Markov transition matrix (3x3 row-stochastic); values TBD.
+    # Declared as a plain non-negative parameter per Matsya Evaluate turn
+    # (docs/matsya-evaluate-turn.txt, Question 3): `@in StochasticMatrix`
+    # has no precedent in the canonical dolo-plus examples. Row-stochastic
+    # semantics are carried instead by the `@dist MarkovChain(P_e)`
+    # annotation on the exogenous block above.
+    P_e: '@in R+'
+
+equations:
+  # degenerate: identity transition — no within-stage shock between
+  # arrival and decision in the household decision stage.
+  arvl_to_dcsn_transition: |
+    q = q
+    e = e
+
+  dcsn_to_cntn_transition: |
+    # budget identity pins illiquid savings a (Matsya Flag C);
+    # m and e pass through from the decision perch.
+    a = q + w * e * l + mu - c - m_d
+    m = m_d
+    e = e
+
+  cntn_to_dcsn_mover:
+    # unresolved: utility kernel.
+    #
+    # Paper functional form (Algan-Ragot 2009, "Model" / "Households"
+    # section; transcribed verbatim from
+    # ToramanSY_AlganRagot2009_Summary.ipynb and copied into
+    # docs/legacy-drafts/arg2009-bellman-excerpt.md):
+    #
+    #     u(c, m, l) =
+    #         (1/(1-sigma)) * [
+    #             ( omega * c^((eta-1)/eta)
+    #             + (1-omega) * m^((eta-1)/eta) )^(eta/(eta-1))
+    #             * (1-l)^psi
+    #         ]^(1-sigma)
+    #
+    # i.e. CES aggregator over consumption and real money, multiplied
+    # by leisure raised to psi, all under CRRA curvature sigma.
+    #
+    # The Bellman block below uses a separable CRRA + log-money +
+    # convex-labor-disutility WORKAROUND (rho on c, rho_m on m_d,
+    # gamma on l) because the canonical CES-with-leisure form above is
+    # not yet transcribed into modular-DDSL syntax that I am confident
+    # is canonical. To resolve, either:
+    #   (a) replace the separable kernel below with the CES-leisure
+    #       form once a canonical dolo-plus example with a CES inner
+    #       aggregator is located (a focused Matsya Evaluate turn on
+    #       this would close it), and add eta, omega, sigma, psi to
+    #       the parameters block; or
+    #   (b) keep the workaround but justify it explicitly in
+    #       verification.md by citing the calibration regime in the
+    #       paper under which separability and CES coincide
+    #       (eta -> 1 limit, etc.) and ground the citation in the
+    #       paper's PDF/.mmd once that lands in-repo.
+    #
+    # Tracked as a paper-grounded follow-up in verification.md and in
+    # docs/accept-edit-reject.md (Opus item 2 + the deferred
+    # paper-grounded rewrite). See also CONTRIBUTING.md line 44 on
+    # the inline `# unresolved:` / `# workaround:` flag idiom.
+    Bellman: |
+      V = max_{c, m_d, l}{
+        c^(1-rho)/(1-rho)
+        + phi_m * m_d^(1-rho_m)/(1-rho_m)
+        - phi_l * l^(1+gamma)/(1+gamma)
+        + beta * V[>]
+      }
+
+  dcsn_to_arvl_mover:
+    Bellman: |
+      V[<] = V
+
+---
+name: AlganRagotShock
+
+symbols:
+  spaces:
+    Xa: '@def R+'
+    Xm: '@def R+'
+    Xe: '@def {0.5, 1.0, 1.5}'
+    Xq: '@def R+'
+
+  prestate:
+    a: '@in Xa'
+    m: '@in Xm'
+    e: '@in Xe'
+
+  exogenous:
+    # unresolved: same P_e as decision stage; calibrate from paper
+    e_next: '@dist MarkovChain(P_e)'
+
+  states:
+    q_next: '@in Xq'
+    e_next: '@in Xe'
+
+  poststates:
+    q: '@in Xq'
+    e: '@in Xe'
+
+  values:
+    V[<]: '@in R'
+    V: '@in R'
+    V[>]: '@in R'
+
+  parameters:
+    R: '@in R+'
+    r_m: '@in R+'
+    # unresolved: Markov transition matrix shared with decision stage;
+    # declared plain per Matsya Evaluate turn (see decision stage above).
+    P_e: '@in R+'
+
+equations:
+  arvl_to_dcsn_transition: |
+    # unresolved: verify next-period resource mapping against Algan-Ragot
+    # (2009); draft keeps liquid return on m and linear return on a.
+    q_next = R * a + (1 + r_m) * m
+    e_next = e_next
+
+  # degenerate: identity transition — no further decision between
+  # decision and continuation in the shock-realization stage.
+  dcsn_to_cntn_transition: |
+    q = q_next
+    e = e_next
+
+  cntn_to_dcsn_mover:
+    Bellman: |
+      V = V[>]
+
+  dcsn_to_arvl_mover:
+    Bellman: |
+      V[<] = E_{e_next}(V)
