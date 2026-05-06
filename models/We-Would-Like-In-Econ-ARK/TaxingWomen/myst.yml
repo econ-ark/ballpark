@@ -1,0 +1,13 @@
+version: 1
+
+project:
+  title: "Taxing Women: A Macroeconomic Analysis — Ballpark Entry"
+  bibliography:
+    - self.bib
+    - references.bib
+    - subsequent-literature.bib
+  toc:
+    - file: index.md
+
+site:
+  title: "Taxing Women: A Macroeconomic Analysis — Ballpark Entry"
