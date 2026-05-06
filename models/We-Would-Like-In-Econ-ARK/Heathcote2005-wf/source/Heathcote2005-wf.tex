@@ -1,0 +1,1034 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{caption}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+
+\title{Fiscal Policy with Heterogeneous Agents and Incomplete Markets }
+
+\author{JONATHAN HEATHCOTE\\
+Georgetown University}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\DeclareUnicodeCharacter{00D7}{\ifmmode\times\else{$\times$}\fi}
+
+\begin{document}
+\maketitle
+\captionsetup{singlelinecheck=false}
+First version received April 2002; final version accepted December 2003 (Eds.)
+
+\begin{abstract}
+I undertake a quantitative investigation into the short run effects of changes in the timing of proportional income taxes for model economies in which heterogeneous households face a borrowing constraint. Temporary tax changes are found to have large real effects. In the benchmark model, a temporary tax cut increases aggregate consumption on impact by around 29 cents for every dollar of tax revenue lost. Comparing the benchmark incomplete-markets model to a complete-markets economy, income tax cuts provide a larger boost to consumption and a smaller investment stimulus when asset markets are incomplete.
+\end{abstract}
+
+\section*{1. INTRODUCTION}
+The Ricardian insight, revisited by Barro (1974), is that with lump-sum taxes, perfect capital markets, and dynastic households, changes in the timing of taxes should not affect households' optimal consumption decisions. Thus the Ricardian theory predicts an equivalence in terms of prices and allocations between any time paths for taxes that imply the same total present value for tax revenue. In contrast to this theoretical result, a large amount of empirical work suggests that the timing of taxes does matter. For example, Bernheim (1987) argues that "virtually all (aggregate consumption function) studies indicate that every dollar of deficits stimulates between $\$ 0 \cdot 20$ and $\$ 0.50$ of current consumer spending". In the hope of reconciling the apparent gap between the Ricardian view and the empirical evidence, various authors have explored quantitative theoretical models in which one or more of the conditions for Ricardian equivalence are not satisfied.
+
+First, when taxes are not lump-sum, changes in the timing of taxes will typically affect the optimal intertemporal allocation of labour effort, consumption and investment (see, for example, Auerbach and Kotlikoff (1987), Trostel (1993), Braun (1994), McGrattan (1994)). Second, if asset market imperfections are such that some households in the economy would like to borrow but cannot find credit, then these households will adjust consumption in response to temporary tax changes (see Hubbard and Judd (1986), Feldstein (1988), Altig and Davis (1989), Daniel (1993)). Third, Ricardian equivalence will fail if a tax cut reduces the tax burden on the current generation at the expense of future generations and if intergenerational altruism is imperfect (see Poterba and Summers, 1987). Fourth, households may adjust consumption in response to temporary tax changes if they myopically ignore the implications of long run budget balance.
+
+In this paper I consider various alternative model economies in order to quantify the importance of distortionary taxation, capital market imperfections and imperfect intergenerational altruism for generating deviations for Ricardian equivalence. I do not experiment with alternatives to the rational expectations assumption, and assume throughout that households always assign the correct probability to each possible future sequence for tax rates.
+
+Capital market imperfections are modelled following the approach developed by Bewley (undated), Huggett (1993) and Aiyagari (1994). Heterogeneous households receive idiosyncratic\\
+shocks to labour efficiency which cannot be insured. They can reduce the sensitivity of consumption to income changes by accumulating precautionary holdings of a single asset. However, if asset holdings ever reach zero then further dis-saving is prohibited; households face a borrowing constraint. Since households differ in their productivity histories, the model generates an endogenous cross-sectional distribution of asset holdings.
+
+The tax rate in the model is stochastic, so households face aggregate as well as idiosyncratic risk. Real government consumption and transfers are assumed constant, in order to isolate the effects of changes in the timing of taxes from other aspects of fiscal policy. The process for taxes is such that the share of aggregate output paid in taxes has the same persistence and variance as in the post-war U.S., and such that the ratio of debt to GDP remains bounded.
+
+I consider both lump-sum and proportional tax systems. When taxes are proportional to income, changes in the tax rate temporarily alter the returns to saving and to working, encouraging intertemporal substitution in consumption and labour supply. The intuition for why the borrowing constraint generates real effects from tax changes is straightforward. Households that are unfortunate enough to have both very low asset holdings and low current income would like to borrow against future income to increase consumption. They are unable to do so because of the borrowing constraint. If the government cuts taxes, such households can now increase consumption by the extent to which the tax cut raises disposable income. In this framework, the magnitude of the response of aggregate variables to tax changes depends on the fraction of households that are wealth-poor and thus potentially borrowing constrained. I therefore specify the process for labour productivity so that the model endogenously generates a distribution for asset holdings resembling that in the U.S. At the same time, the productivity process is restricted to be consistent with empirical estimates of the variance and persistence of wages.
+
+The main finding of the paper is that a combination of distortionary taxation and capital market imperfections can give rise to quantitatively important departures from Ricardian equivalence. For example, in simulations of the benchmark incomplete-markets model, income tax rate cuts from $34 \cdot 2 \%$ to $31 \cdot 8 \%$ are associated with an average immediate increase in aggregate consumption of 28.8 cents for each dollar of tax revenue lost. ${ }^{1}$ Simulation of a similar economy with complete asset markets indicates that most of this consumption response is attributable to the distortionary nature of the tax system rather than the presence of the borrowing constraint. However, in the incomplete-markets economy, the average percentage increase in consumption following a tax cut is almost twice as large as the increase in investment, while investment responds more strongly to tax changes than consumption when asset markets are assumed to be complete. Intergenerational redistribution of the tax burden is the least important source of non-neutrality.
+
+The rest of the paper is organized as follows. In the next section I review the empirical evidence on the response of aggregate consumption to tax changes, and the evidence on the importance of liquidity constraints at the household level. Section 3 contains a description of the model economies, along with a discussion of the choices for parameter values and the numerical solution methods. Section 4 discusses the results, and Section 5 concludes.
+
+\section*{2. EMPIRICAL EVIDENCE}
+There is a large and rather inconclusive literature that tests for Ricardian equivalence (RE) by estimating consumption functions or Euler equations on aggregate time series (see, for opposing
+
+\footnotetext{\begin{enumerate}
+  \item The long run implications of debt accumulation in this type of economy are explored by Aiyagari and McGrattan (1998), who find that increasing the steady-state level of debt crowds out aggregate capital, raises the real interest rate, and reduces per capita consumption. A higher real interest rate makes assets less costly to hold and therefore more effective in smoothing individual consumption. Woodford (1990) examines similar questions in a more stylized model.
+\end{enumerate}
+}
+conclusions, the surveys in Bernheim (1987) and Seater (1993)). One explanation for the lack of consensus is the problem of endogeneity. Cardia (1997) illustrates how the coefficient on the current budget deficit in an estimated consumption function (in which both output and the budget deficit are treated as independent variables) may be uninformative regarding the validity of RE if output responds immediately to tax changes. A second potential problem is that if current tax changes imply expected future government expenditure changes, then consumption might respond even if RE is true. As a third example, even if RE is false, consumption might not respond to anticipated tax changes; this is a central implication of the permanent income/life cycle hypothesis (PILCH) model.
+
+Given these difficulties, several authors have looked at various interesting natural experiments in which households saw large and reasonably well-understood changes in their disposable income. Various studies of the 1968 surtax and the 1975 rebate find quite large changes in aggregate consumption from these explicitly temporary tax changes. Modigliani and Steindal (1977) use large scale econometric models and estimate a marginal propensity to consume (MPC) over two quarters out of the 1975 rebate of between $0 \cdot 3$ and $0 \cdot 58$. Blinder (1981) examines both tax changes using a model based on the permanent income hypothesis and estimates a MPC of 0.16 over a quarter. Poterba (1988), using an Euler-equation-based estimation, reports a MPC of between 0.13 and 0.27 within a month. ${ }^{2}$ Wilcox (1989) finds large effects on consumption from the sequence of increases in social security benefits since 1965, even though these increases were always announced at least 6 weeks in advance.
+
+Studies based on micro data have typically found even larger consumption responses to policy-induced income changes. Looking at the pre-announced Reagan tax cuts and using data from the Consumer Expenditure Survey (CEX), Souleles (2002) estimates a very large MPC for non-durables of between 0.6 and 0.9 . Parker (1999), also using the CEX, estimates a MPC for non-durable goods of 0.20 for income changes associated with predictable changes in social security tax with-holding. Souleles (1999) finds the MPC out of predictable income tax refunds to be between 0.35 and 0.6 within a quarter. Finally, Shapiro and Slemrod $(1995,2003)$ report that $43 \%$ of survey respondents planned to spend most of the extra disposable income associated with the 1992 reduction in the standard rate of income tax with-holding, while $22 \%$ planned to spend most of the income tax rebates associated with Bush’s Tax Relief Act in 2001.
+
+This apparent sensitivity of U.S. consumption to predictable changes in taxes or transfers is often attributed to the presence of liquidity constraints. What other evidence (in addition to the response of consumption to tax changes) supports the view that borrowing constraints affect a large fraction of the population?
+
+Borrowing constraints should have the largest impact on those households closest to the constraint, an implication that has been repeatedly exploited in empirical work on panel data. In a sample from the Panel Study of Income Dynamics (PSID), Zeldes (1989) identifies the wealth-poorest and richest households. He rejects a permanent-income-hypothesis-based Euler equation for the poor, estimates a positive missing multiplier (suggesting they face a binding borrowing constraint), and finds that they exhibit excess consumption growth. ${ }^{3}$ Further crosssectional evidence consistent with the presence of borrowing constraints is that households with
+
+\footnotetext{\begin{enumerate}
+  \setcounter{enumi}{1}
+  \item Poterba also finds that consumption did not appear to respond significantly to the passage of five large tax bills (including the 1968 and 1975 changes), even though it did respond when these tax changes were eventually implemented. The finding that aggregate consumption responds to predictable tax changes is in principle consistent with optimal forward-looking behaviour if some households are borrowing constrained.
+  \item Euler-equation-based tests may not be the best way to identify the presence of borrowing constraints. In the models described in Section 3, the borrowing constraint is typically binding for very few households in equilibrium (so the Euler equation is satisfied with equality for most households), yet the presence of the constraint affects the consumption and savings decisions of every household in the economy. See Attanasio (1999) for more discussion of this point.
+\end{enumerate}
+}
+low asset holdings appear to consume too little and have too little debt (see Hayashi (1985), Cox and Jappelli (1993)). ${ }^{4}$
+
+In the 1983 Survey of Consumer Finance, Jappelli (1990) finds that $12 \cdot 5 \%$ of households report having requests for credit rejected, while a further $6.5 \%$ do not apply because they expected credit to be refused. Thus, according to this measure, $19 \%$ of the U.S. population was liquidity constrained on at least one date in the year or two prior to the survey. Jappelli also finds that $74 \cdot 1 \%$ of those households whose net worth is less than $15 \%$ of their disposable income are liquidity constrained, suggesting that wealth-poor households are much more susceptible to finding themselves in the position of wishing to borrow but being unable to find credit. Gross and Souleles (2002) find that increases in credit card limits generate immediate and significant increases in debt, and that the propensity to consume out of extra liquidity is much larger for people near their credit limits.
+
+Because both theory and empirical evidence suggest a close connection between the characteristics of having low wealth and being unable to borrow, it is important to know how many wealth-poor households there are in the U.S. Díaz-Giménez, Quadrini and Ríos-Rull (1997) report that in 1992 the poorest $40 \%$ of households held only $1.35 \%$ of total wealth, that approximately $3 \cdot 4 \%$ of households had zero wealth, and that another $3 \cdot 5 \%$ had negative wealth (suggesting that these households were able to take out imperfectly collateralized loans). ${ }^{5}$
+
+Overall, these numbers suggest that a large fraction of the population may be at or near to their borrowing limit, and that this limit is close to zero. In the model described below I assume that no borrowing is permitted. To the extent that non-collateralized borrowing is possible, the constraint imposed here is too tight. To the extent that certain types of wealth such as consumer durables are too illiquid to be readily adjusted to smooth through income shocks, it is too loose.
+
+\section*{3. THE MODELS}
+I start with some very simple models and gradually add layers of realism. In particular, beginning with a complete-markets, exogenous-labour, fixed-price, lump-sum-taxation, infinite-horizon setting, I sequentially incorporate asset market incompleteness, endogenous labour supply, endogenous factor prices and proportional taxation. ${ }^{6}$ All these economies are closely related, so rather than describe each in fine detail, in the remainder of this section I focus on the version with incomplete markets, endogenous labour supply, closed economy-equilibrium prices and proportional taxation. I shall refer to this as the benchmark model, since it is the richest and the most realistic. After describing the details of this economy, I outline the calibration strategy and the numerical solution method.
+
+A large (measure one) number of households are ex ante identical and infinitely lived (or, equivalently, perfectly altruistic towards their children). They maximize expected discounted utility from consumption and leisure. In aggregate, household savings decisions determine the evolution of the capital stock, which in turn determines aggregate output and the return to saving.
+
+Households face idiosyncratic labour productivity shocks, and markets which in principle could allow complete insurance against this risk are assumed not to exist. Instead there is a single risk-free savings instrument which enables households to partially self-insure by accumulating precautionary asset holdings. Given this market structure, a household with positive wealth\\
+4. Souleles (1999) finds that on receipt of tax refunds, the non-durable consumption of those with low asset holdings rises much more than that of the rich. However, neither Souleles (2002) nor Parker (1999) find much evidence of a link between low asset holdings and excess sensitivity of consumption to predictable changes in income.\\
+5. Weicher (1997) investigates the position of households with negative net worth in some detail. In 1992 only $11.8 \%$ of those households with negative net worth (or $0.57 \%$ of the total population) had net worth of less than $-\$ 10,000$.\\
+6. In the Appendix, I also consider the implications of adding an age dimension to the household's problem.\\
+responds to a fall in household income by temporarily dis-saving. An important assumption is that no borrowing is permitted, which limits the ability of low-wealth households to smooth consumption in the face of falls in their disposable income.
+
+The government finances constant government spending by issuing one period debt and levying taxes. Contrary to the assumption in Aiyagari and McGrattan (1998), the tax level is stochastic. The presence of aggregate risk means that in equilibrium there is intertemporal variation in the joint distribution over productivity and wealth.
+
+Individual states. A household's effective labour supply depends both on the hours it works and on its household-specific labour productivity, which is stochastic. At any date $t$, a household's productivity takes one of $l$ values in the set $E$. Each household's productivity evolves independently according to a first-order Markov chain with transition probabilities defined by the $l \times l$ matrix $\Pi$. The probability distribution at $t$ over $E$ is represented by a row vector $p_{t} \in \mathrm{R}^{l}$, where $p_{t} \geq 0$ and $\sum_{i=1}^{l} p_{i t}=1$. If the probability distribution at date 0 is given by $p_{0}$ the distribution at $t$ is given by $p_{t}=p_{0} \Pi^{t}$. Given certain assumptions (which will be satisfied here) $E$ has a unique ergodic set with no cyclically moving subsets and $\left\{p_{t}\right\}_{t=0}^{\infty}$ converges to a unique limit $p^{*}$ for any $p_{0}$. Thus, given a population of measure 1 , we can reinterpret $p_{t}$ as describing the distribution of the population across productivity states at date $t$. I assume that $p_{0}=p^{*}$, and impose an appropriate normalization such that $\sum_{i=1}^{l} p_{i}^{*} e_{i}=1$.
+
+There are two assets in this economy (capital and government debt) but by assumption they will pay the same return state by state. Thus the household effectively has access to a single savings instrument. Let $A$ be the set of possible values for a household's holdings of this asset. I assume that a household's wealth at the start of period 0 , denoted $a_{-1}$, is non-negative and that households are never able to borrow. This may be thought of either as an ad hoc borrowing limit or as the appropriate endogenous constraint for an economy in which there is no punishment for default. Thus $A \subset \mathrm{R}_{+}$. Let ( $A, \mathcal{A}$ ) and ( $E, \mathcal{E}$ ) be measurable spaces where $\mathcal{A}$ denotes the Borel sets that are subsets of $A$ and $\mathcal{E}$ is the set of all subsets of $E$. Let $e^{t}=\left\{e_{0}, \ldots, e_{t}\right\}$ denote a partial sequence of productivity shocks from date 0 up to date $t$, and let $e_{s}\left(e^{t}\right)$ denote the $s$-th element of this sequence $(s \leq t)$. Let $\left(E^{t}, \mathcal{E}^{t}\right), t=0,1, \ldots$ denote product spaces, and define probability measures
+
+
+\begin{equation*}
+\mu^{t}: \mathcal{E}^{t} \rightarrow[0,1], \quad t=0,1, \ldots \tag{3.1}
+\end{equation*}
+
+
+where, for example, $\mu^{t}\left(e^{t}\right)$ is the probability of individual history $e^{t}$.\\
+Aggregate states. The aggregate state of the economy at date zero, $z_{0}$, is defined by two objects: a measure $\lambda: \mathcal{A} \times \mathcal{E} \rightarrow[0,1]$ describing the distribution of households across individual wealth and individual productivity at time 0 , and the date 0 level of government debt $B_{-1} .^{7}$
+
+The only source of aggregate uncertainty in the model is the stochastic process for the economy-wide tax rate. This means that (given $z_{0}$ ) the aggregate state of the economy at $t$ can be described by the history of the tax rate from date 0 up to and including date $t$. I call this object the aggregate history to date $t$, and denote it $h^{t}$. Let $\tau_{s}\left(h^{t}\right)$ denote the $s$-th element of this sequence. Let $\left(h^{t}, \mathcal{H}^{t}\right), t=0,1, \ldots$ denote product spaces, and define probability measures
+
+
+\begin{equation*}
+v^{t}: \mathcal{H}^{t} \rightarrow[0,1], \quad t=0,1, \ldots \tag{3.2}
+\end{equation*}
+
+
+where, for example, $\nu^{t}\left(h^{t}: z_{0}\right)$ is the probability of aggregate history $h^{t}$. I shall use the notation $h^{t} \succeq h^{t-1}$ to indicate that $h^{t}$ is a possible continuation of $h^{t-1}$.
+
+\footnotetext{\begin{enumerate}
+  \setcounter{enumi}{6}
+  \item The dependence of aggregate variables on $z_{0}$ and the dependence of household specific variables on $a_{-1}$ are henceforth generally suppressed in the interests of brevity.
+\end{enumerate}
+}The household's problem. In period 0 , each household chooses labour supply, savings and consumption for each possible sequence of individual productivity shocks and aggregate tax shocks, given the individual and aggregate states ( $a_{-1}$ and $z_{0}$ ). Let the sequences of measurable functions
+
+\[
+\left.\begin{array}{l}
+n_{t}: H^{t} \times E^{t} \rightarrow[0,1]  \tag{3.3}\\
+a_{t}: H^{t} \times E^{t} \rightarrow A \\
+c_{t}: H^{t} \times E^{t} \rightarrow \mathrm{R}_{+}
+\end{array}\right\} \quad t=0,1, \ldots
+\]
+
+describe this plan, where, for example, $a_{t}\left(h^{t}, e^{t}\right)$ denotes the choice for savings that will be implemented at $t$ if the aggregate history to date $t$ is $h^{t}$ and the individual history is $e^{t}$. Note that choices for consumption and labour supply have to be non-negative after every history, and labour supply cannot exceed the total time endowment which is equal to 1 .
+
+Expected discounted lifetime utility is given by
+
+
+\begin{equation*}
+\sum_{t=0}^{\infty} \beta^{t} \sum_{h^{t} \in H^{t}} \nu^{t}\left(h^{t}\right) \sum_{e^{t} \in E^{t}} \mu^{t}\left(e^{t}\right) u\left(c_{t}\left(h^{t}, e^{t}\right), n_{t}\left(h^{t}, e^{t}\right)\right) \tag{3.4}
+\end{equation*}
+
+
+where $\beta$ is the subjective discount factor. For the benchmark version of the model, I assume that the period utility function has the form introduced by Greenwood, Hercowitz and Huffman (1988):
+
+
+\begin{equation*}
+u(c, n)=\frac{1}{1-\gamma}\left[\left(c-\psi \frac{n^{1+1 / \varepsilon}}{1+1 / \varepsilon}\right)^{1-\gamma}-1\right] \tag{3.5}
+\end{equation*}
+
+
+Here $\gamma$ is the coefficient of relative risk aversion and $\varepsilon$ is the intertemporal (Frisch) elasticity of labour supply. ${ }^{8}$
+
+The pre-tax real return to supplying one unit of effective labour at date $t$ is given by the measurable function $w_{t}: H^{t} \rightarrow \mathrm{R}$. Similarly, the net one-period pre-tax return to one unit of the asset purchased at $t-1$ after history $h^{t}$ is $r_{t}\left(h^{t}\right)$. The tax rate at $t$ is assumed to take one of two possible values, $\tau_{t}\left(h^{t}\right) \in T=\left\{\tau_{l}, \tau_{h}\right\}$. In the benchmark version of the model, taxes are proportional, and apply equally to both asset and labour income. Thus the household budget constraint is given by
+
+
+\begin{align*}
+c_{t}\left(h^{t}, e^{t}\right)+a_{t}\left(h^{t}, e^{t}\right)= & {\left[1+\left(1-\tau_{t}\left(h^{t}\right)\right) r_{t}\left(h^{t}\right)\right] a_{t-1}\left(h^{t-1}, e^{t-1}\right) } \\
+& +\left(1-\tau_{t}\left(h^{t}\right)\right) w_{t}\left(h^{t}\right) e_{t}\left(e^{t}\right) n_{t}\left(h^{t}, e^{t}\right) \tag{3.6}
+\end{align*}
+
+
+for all $e^{t} \in E^{t}$ such that $e^{t} \succeq e^{t-1}$, for all $h^{t} \in H^{t}$ such that $h^{t} \succeq h^{t-1}$, for $t=0,1, \ldots$, and where $a_{-1}\left(h^{-1}, e^{-1}\right)=a_{-1}$.
+
+The solution to the household's problem is a set of decision functions (3.3) that maximize equation (3.4) taking as given (i) the household budget constraints (3.6), (ii) the price and tax functions $w_{t}, r_{t}$ and $\tau_{t}$, (iii) the probability measures (3.2) and (3.1), and (iv) the initial state $\left(a_{-1}, z_{0}\right)$.
+
+Production. Aggregate output after history $h_{t}, Y_{t}\left(h^{t}\right)$, is produced by competitive firms according to a Cobb-Douglas technology:
+
+$$
+Y_{t}\left(h^{t}\right)=K_{t-1}\left(h^{t-1}\right)^{\alpha} N_{t}\left(h^{t}\right)^{1-\alpha} \quad h^{t} \succeq h^{t-1}
+$$
+
+where $K_{t-1}\left(h^{t-1}\right)$ denotes the capital stock in place at the start of period $t, N_{t}\left(h^{t}\right)$ denotes aggregate effective labour supply, and $\alpha \in(0,1)$. Output can be transformed into private\\
+8. The utility function is only defined for $c \geq 0, n \geq 0$ and $c \geq \psi \frac{n^{1+1 / \varepsilon}}{1+1 / \varepsilon}$.\\
+consumption, government consumption, and new capital according to
+
+
+\begin{equation*}
+C_{t}\left(h^{t}\right)+G_{t}\left(h^{t}\right)+K_{t}\left(h^{t}\right)=Y_{t}\left(h^{t}\right)+(1-\delta) K_{t-1}\left(h^{t-1}\right) \quad h^{t} \succeq h^{t-1} \tag{3.7}
+\end{equation*}
+
+
+where $C_{t}\left(h^{t}\right)$ denotes aggregate private consumption, $G_{t}\left(h^{t}\right)$ denotes government consumption, and $\delta \in[0,1]$ is the rate of depreciation.
+
+Labour supply. The utility function given in equation (3.5) has the convenient property that the labour supply choice is independent of the consumption/savings choice. In particular, assuming an interior solution, optimal individual labour supply is a simple function of the household-specific after-tax real return to working:
+
+
+\begin{equation*}
+n_{t}\left(h^{t}, e^{t}\right)=\left[\frac{w_{t}\left(h^{t}\right) e_{t}\left(e^{t}\right)\left(1-\tau_{t}\left(h^{t}\right)\right)}{\psi}\right]^{\varepsilon} \tag{3.8}
+\end{equation*}
+
+
+Note that optimal labour supply does not depend on household wealth or on the history of productivity shocks up to $t-1$. In the context of this heterogeneous agents model, these properties have the useful implication that equilibrium aggregate effective labour supply depends only on the inherited aggregate capital stock, the current economy-wide tax rate, and the time-invariant distribution over the set of productivity shocks:
+
+
+\begin{equation*}
+N_{t}\left(h^{t}\right)=\left(\sum_{i=1}^{l} p_{i}^{*} e_{i}^{1+\varepsilon}\left[\frac{(1-\alpha) K_{t-1}\left(h^{t-1}\right)^{\alpha}\left(1-\tau_{t}\left(h^{t}\right)\right)}{\psi}\right]^{\varepsilon}\right)^{\frac{1}{1+\alpha \varepsilon}} \tag{3.9}
+\end{equation*}
+
+
+Government. Real government spending is assumed constant and equal to $G$. Real government debt issued at date $t$ is denoted $B_{t}\left(h^{t}\right)$. Income from debt and income from capital are assumed to be taxed at the same rate. After any history debt is assumed to pay a pre-tax one-period real return equal to the economy-wide rate of return $r_{t}\left(h^{t}\right)$. In versions of the model with either lump-sum taxation or exogenous labour supply, the one-period-ahead pre-tax return to capital is known, since next period capital is determined before observing next period’s tax rate. Thus in these cases return equalization emerges as a property of equilibrium rather than reflecting an assumption about debt policy; one-period debt must offer the same pre-tax rate of return as capital if households are to be willing to hold both. More generally, the advantage of having debt and capital pay the same return state by state is that households do not have to keep track of how their wealth is divided between capital and debt or solve a portfolio choice problem. ${ }^{9}$
+
+Let aggregate asset holdings at the start of period $t+1$ be given by $A_{t}\left(h^{t}\right)$. The government's budget constraint is
+
+
+\begin{equation*}
+B_{t}\left(h^{t}\right)+\tau_{t}\left(h^{t}\right)\left[r_{t}\left(h^{t}\right) A_{t-1}\left(h^{t-1}\right)+w_{t}\left(h^{t}\right) N_{t}\left(h^{t}\right)\right]=\left(1+r_{t}\left(h^{t}\right)\right) B_{t-1}\left(h^{t-1}\right)+G \tag{3.10}
+\end{equation*}
+
+
+where $h^{t} \succeq h^{t-1}$ and $B_{-1}\left(h^{-1}\right)=B_{-1}$.\\
+The process for taxes. The observation that the effects of current tax changes cannot be studied independently of the future tax changes that they imply is at the heart of the Ricardian equivalence proposition. However, even if government spending is held constant, many different paths for taxes are consistent with a stationary debt to GDP ratio.\\
+9. One example of an alternative assumption in the endogenous-labour, proportional tax case would be to have debt offer a risk-free one-period pre-tax return. However, the difference between this alternative and the assumed debt policy is likely to be small. The reason is that the pre-tax return to assets is already close to risk-free. The only shock in the model that affects this return is the tax shock, and the only way tax shocks affect the pre-tax return is by affecting hours, which in turn are relatively tax-insensitive.
+
+The approach taken in this paper is to impose exogenous constant bounds on the level of debt issued by the government in the period, $B_{t}\left(h^{t}\right) \in D=\left[D_{l}, D_{h}\right]$, and to assume that the tax rate follows a Markov process such that if initial debt lies in the set $D$, then future debt always remains within $D$. This is implemented by ensuring that debt is always falling when $\tau=\tau_{h}$ and always rising when $\tau=\tau_{l}$, and by specifying transition probabilities such that for values of $B_{t}\left(h^{t}\right)$ close to $D_{h}$ the probability of the high tax is always 1 , while for $B_{t}\left(h^{t}\right)$ close to $D_{l}$ it is always $0 .^{10}$ There is evidence that this is a reasonable specification for taxes. In particular, Bohn (1998) finds that the U.S. government has historically responded to increases in the debt-GDP ratio by raising the primary surplus, and that the debt-GDP ratio is mean-reverting once one controls for war-time spending and cyclical fluctuations.
+
+Let $\pi_{\tau}: T \times D \times T \rightarrow[0,1]$ denote the time invariant transition probability function for taxes, where $\pi_{\tau}\left((\tau, B), \tau^{\prime}\right)$ is the probability that next period's tax rate is $\tau^{\prime}$ given that the current tax rate is $\tau$ and the amount of new debt issued is $B$. The specification for $\pi_{\tau}$ adopted is as follows:
+
+\begin{center}
+\begin{tabular}{cccc}
+\hline
+ & $B \leq \underline{D}$ & $\underline{D}<B<\bar{D}$ & $B \geq \bar{D}$ \\
+\hline
+$\pi_{\tau}\left(\left(\tau_{h}, B\right), \tau_{h}\right)$ & 0 & $\left[\frac{B-\underline{D}}{\bar{D}-\underline{D}}\right]^{\lambda}$ & 1 \\
+$\pi_{\tau}\left(\left(\tau_{l}, B\right), \tau_{l}\right)$ & 1 & $\left[\frac{\bar{D}-B}{\bar{D}-\underline{D}}\right]^{\lambda}$ & 0 \\
+\hline
+\end{tabular}
+\end{center}
+
+where $\underline{D}$ and $\bar{D}$ are simple functions of $D_{h}$ and $D_{l}$, and $\lambda \in(0,1]$.\\
+One feature of this specification is that the expected duration of a low tax regime is decreasing in $B$, the indebtedness of the government, while the expected duration of a high tax regime is increasing in $B$. The parameter $\lambda$ controls the persistence of tax levels. If $\lambda=1$, then the probability distribution over next period's tax rate is independent of the current rate. Reducing $\lambda$ reduces the probability of a change in tax levels, conditional on a particular value for $B$.
+
+Aggregate labour supply (equation (3.9)) is an increasing function of aggregate capital and a decreasing function of the tax rate. Thus a large capital stock improves the government's fiscal position via three channels: (i) more capital by itself implies more output and tax revenue, (ii) more capital raises the marginal product of labour, implying more labour supply and a further increase in output, and (iii) more capital implies a higher capital/labour ratio and thus lower interest rates and debt servicing costs. It is immediate that the government's fiscal position is also improved the lower is outstanding government debt and the higher is the current tax rate (assuming we are on the left side of the Laffer curve). Let $\kappa=\left[K_{l}, K_{h}\right]$ denote a set such that in equilibrium aggregate capital always lies in this set. ${ }^{11}$ Taken together, the preceding observations imply that sufficient conditions for the upper bound on debt $D_{h}$ not to be violated are:
+
+
+\begin{equation*}
+\tau_{h} \geq \frac{r\left(K_{l}, N\left(K_{l}, \tau_{h}\right)\right) D_{h}+G}{r\left(K_{l}, N\left(K_{l}, \tau_{h}\right)\right)\left(D_{h}+K_{l}\right)+w\left(K_{l}, N\left(K_{l}, \tau_{h}\right)\right) N\left(K_{l}, \tau_{h}\right)} \tag{3.11}
+\end{equation*}
+
+
+and
+
+
+\begin{equation*}
+\bar{D} \leq \frac{D_{h}-G+\tau_{l}\left[w\left(K_{l}, N\left(K_{l}, \tau_{l}\right)\right) N_{l}\left(K_{l}, \tau_{l}\right)+r\left(K_{l}, N\left(K_{l}, \tau_{l}\right)\right) K_{l}\right]}{1+r\left(K_{l}, N\left(K_{l}, \tau_{l}\right)\right)\left(1-\tau_{l}\right)}, \tag{3.12}
+\end{equation*}
+
+
+where factor prices are marginal productivities, and aggregate effective labour supply is given by equation (3.9).
+
+The first condition says that conditional on the tax level being high, debt is non-increasing for all values for inherited debt $B \in D$ and for all values for inherited capital $K \in \kappa$. The second\\
+10. Dotsey and Mao (1997) take a similar approach.\\
+11. Appropriate values for $K_{l}$ and $K_{h}$ are determined within the numerical solution procedure.\\
+condition says that for all levels of inherited debt consistent with a low current tax level (i.e. $\forall B<\bar{D}$ ), new debt issued does not exceed $D_{h}$.
+
+Similar conditions guarantee that the lower bound on debt $D_{l}$ is not violated. The calibration section describes how values are assigned to $D_{h}, D_{l}, \tau_{h}, \tau_{l}$ and $\lambda$ while ensuring that the conditions guaranteeing boundedness are satisfied. The parameters $\bar{D}$ and $\underline{D}$ are then set so that equation (3.12) and the analogous condition for the lower bound on debt are satisfied with equality.
+
+\subsection*{3.1. Definition of equilibrium}
+An equilibrium for the benchmark economy is a set of functions $e_{t}, a_{t}, c_{t}, n_{t}, w_{t}, r_{t}, \tau_{t}, K_{t}$, $B_{t}, A_{t}, N_{t}, C_{t}, Y_{t}$, probability measures $\mu^{t}$ and $\nu^{t}$, and an initial state $z_{0}=\left(\lambda, B_{-1}\right)$ such that $\forall h^{t} \in H^{t}, \forall e^{t} \in E^{t}, \forall a_{-1} \in A$ and $\forall t=0,1, \ldots$.\\
+(1) $a_{t}, c_{t}$ and $n_{t}$ solve the household maximization problem.\\
+(2) $\left\{\mu^{t}(\cdot)\right\}_{t=0}^{\infty}$ is consistent with the transition matrix $\Pi$, so that $\forall s \in\{1, \ldots, t\}$,
+
+$$
+\mu^{s}\left(e^{s}\right)=\mu^{s-1}\left(e^{s-1}\right) \Pi_{i j},
+$$
+
+where $e^{s}=\left\{e_{0}\left(e^{t}\right), \ldots, e_{s}\left(e^{t}\right)\right\}$, and the subscripts $i$ and $j$ indicate that $e_{s-1}\left(e^{t}\right)=e_{i}$ and $e_{s}\left(e^{t}\right)=e_{j}$. Note that $\mu^{0}\left(e^{0}\right)=p_{i}^{*}$ where the $i$ subscript indicates that $e_{0}\left(e^{t}\right)=e_{i}$.\\
+(3) $\left\{\nu^{t}(\cdot)\right\}_{t=0}^{\infty}$ is consistent with the transition function $\pi_{\tau}$, so that $\forall s \in\{1, \ldots, t\}$,
+
+$$
+v^{s}\left(h^{s}\right)=v^{s-1}\left(h^{s-1}\right) \pi_{\tau}\left(\left(\tau_{s-1}\left(h^{t}\right), B_{s-1}\left(h^{s-1}\right)\right), \tau_{s}\left(h^{t}\right)\right) .
+$$
+
+I assume the tax rate is low in period 0 . Thus $\nu^{0}\left(h^{0}\right)=1$ if $\tau_{0}\left(h^{t}\right)=\tau_{l}$ and 0 otherwise.\\
+(4) Aggregate quantities are consistent with individual decision rules:
+
+
+\begin{align*}
+& A_{t}\left(h^{t}\right)=\int_{A \times E} \sum_{e^{t} \in E^{t}} \mu^{t}\left(e^{t}\right) a_{t}\left(h^{t}, e^{t}\right) d \lambda \\
+& C_{t}\left(h^{t}\right)=\int_{A \times E} \sum_{e^{t} \in E^{t}} \mu^{t}\left(e^{t}\right) c_{t}\left(h^{t}, e^{t}\right) d \lambda \\
+& N_{t}\left(h^{t}\right)=\int_{A \times E} \sum_{e^{t} \in E^{t}} \mu^{t}\left(e^{t}\right) e_{t}\left(e^{t}\right) n_{t}\left(h^{t}, e^{t}\right) d \lambda \tag{3.13}
+\end{align*}
+
+
+(5) The market for savings clears:
+
+$$
+K_{t-1}\left(h^{t-1}\right)+B_{t-1}\left(h^{t-1}\right)=A_{t-1}\left(h^{t-1}\right)
+$$
+
+where $B_{-1}\left(h^{-1}\right)=B_{-1}$ and $A_{-1}=\int_{A \times E} a_{-1} d \lambda$.\\
+(6) Factor markets clear:
+
+
+\begin{align*}
+r_{t}\left(h^{t}\right) & =\alpha K_{t-1}\left(h^{t-1}\right)^{\alpha-1} N_{t}\left(h^{t}\right)^{1-\alpha}-\delta  \tag{3.14}\\
+w_{t}\left(h^{t}\right) & =(1-\alpha) K_{t-1}\left(h^{t-1}\right)^{\alpha} N_{t}\left(h^{t}\right)^{-\alpha} \tag{3.15}
+\end{align*}
+
+
+where $h^{t} \succeq h^{t-1}$. Note that combining (3.13) and (3.15) gives (3.9).\\
+(7) The goods market clears (3.7).\\
+(8) The government budget constraint (3.10) is satisfied and $B_{t}\left(h^{t}\right) \in[0, \infty)$.
+
+\subsection*{3.2. Calibration}
+The model period is one year, the most appropriate horizon for considering tax changes. Table 1 contains parameter values that are common to all the model economies considered. Table 2 contains the parameter values that differ across economies. For every economy, the calibration strategy is essentially the same. In what follows I therefore focus on the benchmark incompletemarkets model with proportional taxes.
+
+\begin{table}[h]
+\begin{center}
+\captionsetup{labelformat=empty}
+\caption{TABLE 1\\
+Parameter values and simulation targets common across economies}
+\begin{tabular}{|l|l|l|l|l|l|}
+\hline
+\multicolumn{6}{|c|}{Parameters set outside the model} \\
+\hline
+\multirow[t]{3}{*}{Preferences} & $\beta$ & 0.96 & Production & $\alpha$ & $0 \cdot 36$ \\
+\hline
+ & $\gamma$ & 1.0 &  & $\delta$ & $0 \cdot 10$ \\
+\hline
+ & $\varepsilon$ & $0 \cdot 3$ &  &  &  \\
+\hline
+\multicolumn{6}{|c|}{Simulation targets*} \\
+\hline
+Wealth distribution &  &  &  & Debt/GDP &  \\
+\hline
+Mean Gini & 0.78 &  &  & Mean & 0.67 \\
+\hline
+Mean wealth poorest 40\% & 1.35\% &  &  &  &  \\
+\hline
+ &  &  &  & Tax revenue/GDP &  \\
+\hline
+Log household productivity &  &  &  & Mean & $0 \cdot 26$ \\
+\hline
+Standard deviation & 0.51 &  &  & Standard deviation & 0.01 \\
+\hline
+Autocorrelation & 0.9 &  &  & Autocorrelation & 0.63 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+*These target values apply to a 10,000 period simulation. In the complete-markets and over-lapping-generations economies, household productivity is constant and the wealth distribution targets do not apply.
+
+\begin{table}[h]
+\begin{center}
+\captionsetup{labelformat=empty}
+\caption{TABLE 2\\
+Parameter values varying across economies}
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|}
+\hline
+\multicolumn{2}{|c|}{\multirow{3}{*}{}} & \multicolumn{3}{|r|}{\multirow{2}{*}{\begin{tabular}{l}
+Economy \\
+Lump-sum taxes \\
+\end{tabular}}} & \multicolumn{3}{|c|}{\multirow{2}{*}{}} & \multirow[b]{3}{*}{\begin{tabular}{l}
+OLG \\
+Fixed labour, fixed prices \\
+\end{tabular}} \\
+\hline
+ &  &  &  &  & \multicolumn{3}{|c|}{} &  \\
+\hline
+ &  & Fixed labour, fixed prices & Flex labour, fixed prices & Flex labour, flex prices & Incomplete markets & Complete markets & Stochastic ageing &  \\
+\hline
+Preferences & $\psi$ & 0 & 100 & 100 & 50 & 35 & 65 & 0 \\
+\hline
+\multirow[t]{5}{*}{Productivity} & $e_{1}$ & 0.213 & 0.235 & 0.235 & 0.184 & 1.0 & 0.177 & 1.0 \\
+\hline
+ & $e_{2}$ & 0.848 & 0.839 & 0.839 & 0.850 & $1 \cdot 0$ & 0.817 & $1 \cdot 0$ \\
+\hline
+ & $e_{3}$ & 3.940 & 3.845 & 3.845 & 4.382 & 1.0 & $4 \cdot 212$ & 1.0 \\
+\hline
+ & $\Pi_{3,3}$ & 0.900 & 0.900 & 0.900 & 0.900 &  & 0.674 &  \\
+\hline
+ & $\Pi_{2,2}$ & 0.986 & 0.985 & 0.985 & 0.988 &  & 0.969 &  \\
+\hline
+\multirow[t]{7}{*}{Fiscal ${ }^{\dagger}$} & Tr & 0.237 & 0.240 & 0.240 & 0.0 & $0 \cdot 0$ & 0.0 & $0 \cdot 0$ \\
+\hline
+ & G & $0 \cdot 0$ & $0 \cdot 0$ & 0.0 & 0.228 & 0.217 & 0.224 & 0.229 \\
+\hline
+ & $\tau_{h}$ & 0.248 & 0.248 & 0.248 & 0.342 & 0.327 & 0.337 & 0.247 \\
+\hline
+ & $\tau_{l}$ & 0.267 & 0.267 & 0.266 & 0.318 & 0.303 & 0.313 & 0.267 \\
+\hline
+ & $D_{h}$ & 0.88 & 0.93 & 0.94 & 0.82 & 0.83 & 0.79 & 0.90 \\
+\hline
+ & $D_{l}$ & 0.46 & 0.41 & 0.40 & 0.52 & 0.51 & 0.55 & 0.44 \\
+\hline
+ & $\lambda$ & 0.29 & 0.30 & 0.31 & 0.325 & 0.38 & 0.31 & 0.36 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+*In all the economies with proportional taxes, labour supply and prices are endogenous.\\
+${ }^{\dagger}$ The fiscal policy parameters are: the mean simulation ratios of transfers and government consumption to GDP, mean ratios of the high and low lump-sum tax levels to GDP in the economies with lump-sum taxes and high and low tax rates in the economies with proportional taxes, the high and low debt bound parameters as fractions of mean GDP, and the tax persistence parameter.
+
+Production technology and preferences. The parameters relating to aggregate production are standard: capital's share in the production function $\alpha$ is set equal to 0.36 and the depreciation rate is $0 \cdot 1$.
+
+The risk aversion parameter in the utility function, $\gamma$, is set to 1 , and the discount factor, $\beta$, is 0.96 . Given a value for $\varepsilon$, the intertemporal (Frisch) elasticity of labour supply, the parameter $\psi$ is set so that aggregate effective labour supply is equal to $0 \cdot 3$.
+
+The appropriate value for $\varepsilon$ is important and somewhat controversial (see Blundell and MaCurdy, 1999 for a survey). MaCurdy (1981) estimates this elasticity to be in the range 0.10.45 for prime-age males. Blundell, Meghir and Neves (1993) study married women in the U.K.\\
+and estimate Frisch labour supply elasticities in the $0 \cdot 5-1 \cdot 0$ range. I use a relatively conservative value of $0 \cdot 3$, in part because there is little evidence of large labour supply responses to the changes in marginal tax rates that occurred during the 1980s (see Slemrod and Bakija, 2000).
+
+Although the Greenwood et al. (1988) specification for preferences is widely used in quantitative work (Marimon and Zilibotti (2000) and Neumeyer and Perri (2001) are recent examples), it is appropriate to discuss two properties of this functional form. The first property has already been discussed: labour supply is not affected by household wealth or the level of nonlabour income. Given a baseline value of 0.15 for the Frisch elasticity, MaCurdy estimates that hours worked are virtually unresponsive to changes in permanent non-wage income, virtually unresponsive to temporary income changes associated with temporary wage changes, and only mildly responsive to income changes associated with permanent wage changes. Recent evidence from lottery and inheritance studies suggests that market hours do respond to unanticipated changes in wealth, but that the elasticity is small; for every dollar increase in wealth, earnings decline by about one cent. Large wealth effects as a result of unanticipated capital gains during the stock market boom of the late 1990s are also hard to find; Cheng and French (2000) document that the participation rates of older age groups who benefited most actually increased.
+
+A second implication of the Greenwood et al. specification is that consumption and leisure are substitutes, in the sense that reducing hours worked reduces the marginal utility of consumption. ${ }^{12}$ Substitutability is consistent with the tendency of consumption and market hours to co-move over the life cycle, as originally pointed out by Heckman (1974).
+
+The household productivity process. The response of aggregate variables to tax changes will depend on the distribution of wealth in the model economy, and in particular on the fraction of households on or close to the borrowing constraint. The reason is that these households are likely to have the highest propensities to consume out of additional disposable income. In the model described above, heterogeneity is generated endogenously as a consequence of households receiving uninsurable idiosyncratic productivity shocks. Thus the specification of the process for these shocks is critical.
+
+I follow Domeij and Heathcote (2004) in searching for a process for idiosyncratic labour productivity that satisfies two criteria. The first criterion is that the process for wages is broadly consistent with empirical estimates from panel data. The second criterion is that the model economy generates realistic heterogeneity in terms of the distribution of wealth, and in particular, comes close to replicating the bottom tail of the observed wealth distribution.
+
+I assume that $l$, the number of elements in the set $E$, is equal to three, since Domeij and Heathcote find this to be the smallest number of states required to match overall U.S. wealth concentration and at the same time reproduce the fact that the wealth-poorest two quintiles hold a positive fraction of total wealth. Thus $E=\left\{e_{1}, e_{2}, e_{3}\right\}$, where the subscripts 1,2 and 3 denote low, medium and high productivity, respectively. I also assume that households cannot move between the high and low productivity levels directly, that the fractions of high and low productivity households are equal, and that the probabilities of moving from the medium productivity state into either of the others are the same. Thus the matrix $\Pi$ is defined by just two parameters: $\Pi_{1,1}$ and $\Pi_{2,2}$, where $\Pi_{i, j}$ denotes the probability of transiting from state $i$ to state $j$.
+
+\[
+\Pi=\left[\begin{array}{ccc}
+\Pi_{1,1} & 1-\Pi_{1,1} & 0  \tag{3.16}\\
+\frac{1-\Pi_{2,2}}{2} & \Pi_{2,2} & \frac{1-\Pi_{2,2}}{2} \\
+0 & 1-\Pi_{1,1} & \Pi_{1,1}
+\end{array}\right]
+\]
+
+\footnotetext{\begin{enumerate}
+  \setcounter{enumi}{11}
+  \item Preferences that are CRRA in a Cobb-Douglas aggregate of consumption and leisure also have this property if the coefficient of risk aversion is greater than unity.
+\end{enumerate}
+}Once mean productivity has been normalized to unity, the productivity process is completely characterized by a total of four independent parameters: two levels and two transition probabilities.
+
+Many papers in the quantitative macroeconomics literature adopt simple AR(1) specifications for wages or earnings. ${ }^{13}$ Such a process may be summarized by the serial correlation coefficient, $\rho$, and the standard deviation of the innovation term, $\sigma$. Various authors have estimated these parameters using data from the PSID. Allowing for the presence of measurement error and the effects of observable characteristics such as education and age indicates a $\rho$ in the range $0 \cdot 88-0 \cdot 96$, and a $\sigma$ in the range $0 \cdot 12-0 \cdot 25 .^{14}$ I therefore impose two restrictions on the Markov process for productivity: (i) that the first order autocorrelation coefficient equals $0 \cdot 9$, and (ii) that the variance for productivity is $0 \cdot 05 /\left(1-0 \cdot 9^{2}\right)$, corresponding to a standard deviation for the innovation term in the continuous representation of 0.224 . These are very close to the point estimates of Flodén and Lindé (2001), who consider a model with a labour supply choice and therefore focus explicitly on a process for wages rather than earnings.
+
+The choices for $\rho$ and $\sigma$ imply two restrictions on the set of four parameters that characterize the process for wages. I adjust the two remaining free parameters to seek to match two properties of the empirical asset holding distribution: the Gini coefficient and the fraction of aggregate wealth held by the two poorest quintiles of the population. Using data from the 1992 Survey of Consumer Finances, Díaz-Giménez et al. (1997) report a wealth Gini of $0 \cdot 78$, and find that the two poorest quintiles of the distribution combined hold $1 \cdot 35 \%$ of total wealth.
+
+The calibration procedure, described in detail in Domeij and Heathcote (2004), delivers parameter values that satisfy all four criteria. Thus uninsurable fluctuations in wages that exhibit realistic volatility and persistence can account for U.S. wealth inequality. The implied fractions of households in the high and low productivity states at each point in time are small: $p_{1}^{*}= p_{3}^{*}=0.053$ in the benchmark economy. ${ }^{15}$ Thus a relatively small fraction of households enjoy relatively high productivity, and since productivity shocks are persistent, end up accumulating a large share of aggregate wealth. This is the "trick" for getting a small fraction of households to hold a large share of total wealth, implying a high value for the Gini coefficient. By contrast, in the benchmark model of Krusell and Smith (1998) inequality is generated by unemployment shocks that are asymmetric in the opposite sense-a relatively small fraction of the population (the unemployed) have very low productivity, while all workers (the vast majority) share the same productivity level. In this case, wealth ends up being relatively evenly distributed among a large majority of the population, implying a Gini index of only $0 \cdot 25$.
+
+Table 3 provides a comparison between the asset holding distribution observed in the data, and the average distribution observed over a long simulation of the various model economies. The only respect in which the models do a relatively poor job is in terms of accounting for the substantial wealth holding of the richest $1 \%$ of households. Table 3 also reports the correlations between wealth, pre-tax labour earnings, and pre-tax income. The correlation between earnings and wealth is of particular interest, since it is those agents with both low wealth and low
+
+\footnotetext{\begin{enumerate}
+  \setcounter{enumi}{12}
+  \item I discuss alternatives to the $\operatorname{AR}(1)$ specification in a technical appendix which is available on the Review of Economic Studies website.
+  \item See, for example, Card (1991), Hubbard, Skinner and Zeldes (1995) and Heathcote, Storesletten and Violante (2003). Heaton and Lucas (1996) allow for permanent but unobservable household-specific effects, and find a much lower $\rho$ of 0.53 , and a $\sigma$ of 0.25 .
+  \item On average, low, medium and high productivity types devote respectively 17, 27 and $44 \%$ of their time endowments to market work in the benchmark economy. One might therefore interpret the low productivity state as the realization of such a low wage that the $5 \cdot 3 \%$ of households in this state choose to be largely unemployed.
+\end{enumerate}
+}
+productivity who are most likely to be borrowing constrained. This correlation is 0.36 in the benchmark incomplete-markets model, vs. 0.23 in the data. ${ }^{16}$
+
+Adding up fixed private capital and the stock of durables owned by consumers, Aiyagari and McGrattan (1998) report a capital-to-annual-output ratio of $2 \cdot 5$. Note that (by chance) the benchmark model reproduces this figure exactly. Given the choices for capital's share, the depreciation rate, and tax rates, this implies an average annual real after-tax return to saving of $3 \cdot 0 \%$, a reasonable compromise for an economy in which stocks and bonds pay the same rate of return. ${ }^{17}$
+
+The tax process. All other model parameters relate to fiscal policy. The tax system in the benchmark model is represented by a single flat-rate tax that applies equally to capital and labour income. ${ }^{18}$ For agents who are not borrowing constrained, it is the marginal tax rate that is important for savings and labour supply decisions. However, for households for whom the constraint is binding, it is the average tax rate that determines the level of consumption, given a choice for labour supply. Since I am interested in the role of borrowing constraints as a propagation mechanism, I calibrate to average rather than marginal tax rates. Because there is a single tax rate in the model, the appropriate empirical average tax rate is the ratio of total government receipts to GDP.
+
+The mean ratio of total (federal plus state and local) annual government current receipts to GDP in the U.S. between 1946 and 1999 was $0.26 .^{19}$ This ratio has grown through time, from 0.23 in 1946 to 0.30 in 1999. Since there is no long run growth in the size of government in the model, I first remove a linear trend from the revenue to GDP series in the data before computing the volatility and autocorrelation of the series. The detrended annual series has a standard deviation of 0.009 and autocorrelation equal to $0.63 .{ }^{20}$ Thus aggregate tax shocks are both much less persistent and much less volatile than idiosyncratic wage shocks. The average ratio for total government debt to GDP over the period 1946-1996 was $0 \cdot 67 .{ }^{21}$ In 1946 the value was 1.36 ; the post-war low of 0.47 was achieved in 1979.
+
+There are six parameter values to be determined: the value for constant government consumption $G$, tax rates $\tau_{l}$ and $\tau_{h}$, bounds on government debt $D_{h}$ and $D_{l}$, and the persistence parameter $\lambda$. These parameter values are chosen simultaneously to approximately satisfy six criteria: (i) the average ratio of tax revenue to GDP in the model is $0 \cdot 26$, (ii) the first order autocorrelation of the ratio of tax revenue to GDP is $0 \cdot 63$, (iii) the standard deviation of the ratio of tax revenue to GDP is 0.009 , (iv) the average ratio of government debt to GDP is 0.67 , (v) high tax and low tax regimes are equally persistent, and the unconditional probability of being in either regime is $0 \cdot 5$, and (vi) debt remains bounded for every possible history for tax rates $h^{t} .{ }^{22}$ In a 10,000 period simulation of the benchmark economy, the average duration of a tax change turns out to be $5 \cdot 0$ years.\\
+16. Figure 1 in the technical appendix contains density functions describing the average (simulation) distribution of asset holdings across the entire population and distributions conditional on productivity.\\
+17. Note that the average equilibrium after-tax interest rate is less than the households' rate of time preference. This reflects precautionary savings in the face of uninsurable risk (see Aiyagari, 1994) and implies an endogenous upper bound on household asset holdings.\\
+18. In reality, the tax that a household pays is a complicated function of its income, and of the source of this income. See Altig and Carlstrom (1999) or Castañeda, Díaz-Giménez and Ríos-Rull (2003) for examples of treatments of non-linear tax schedules.\\
+19. Data on tax revenue and GDP is from the National Income and Product Accounts, Tables 1.1 and 3.1, published by the Bureau of Economic Analysis.\\
+20. The Congressional Budget Office has estimated a series for the effective total federal tax rate. The mean and standard deviation of the "all families" series between 1977 and 1999 are respectively $22.9 \%$ and 0.009 .\\
+21. Data on debt is from the Statistical Abstract of the United States published by the Census Bureau. Data for 1996, for example, are from Table No. 493 in the 2000 edition of the Abstract.\\
+22. Details of a numerical procedure that delivers parameter values with the desired properties are given in the technical appendix.
+
+TABLE 3\\
+Properties of the asset holding distribution
+
+\begin{center}
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|}
+\hline
+\multirow{3}{*}{} & \multirow{3}{*}{Data ${ }^{\dagger}$} & \multicolumn{3}{|l|}{\multirow{2}{*}{\begin{tabular}{l}
+Economy* \\
+Lump-sum taxes \\
+\end{tabular}}} & \multicolumn{3}{|c|}{} & \multirow{3}{*}{\begin{tabular}{l}
+OLG \\
+Fixed labour, fixed prices \\
+\end{tabular}} \\
+\hline
+ &  &  &  &  & \multicolumn{3}{|c|}{Proportional taxes} &  \\
+\hline
+ &  & Fixed labour, fixed prices & Flex labour, fixed prices & Flex labour, flex prices & Incomplete markets & Complete markets & Stochastic ageing &  \\
+\hline
+Wealth 99-100 ${ }^{\ddagger}$ & $29 \cdot 6$ & 11.4 & 11.2 & 11.2 & 11.5 &  & 6.8 &  \\
+\hline
+Wealth 90-100 & $66 \cdot 1$ & $60 \cdot 1$ & 60.3 & 60.3 & $60 \cdot 3$ &  & $40 \cdot 5$ &  \\
+\hline
+Wealth 80-100 & $79 \cdot 5$ & 83.9 & 84.1 & $84 \cdot 1$ & 84.0 &  & $62 \cdot 9$ &  \\
+\hline
+\multicolumn{9}{|c|}{Correlations ${ }^{§}$} \\
+\hline
+Earnings-income & 0.93 & 0.95 & 0.98 & 0.98 & 0.96 &  & 0.98 &  \\
+\hline
+Earnings-wealth & 0.23 & 0.37 & 0.41 & 0.41 & 0.36 &  & $0 \cdot 14$ &  \\
+\hline
+Income-wealth & 0.32 & 0.65 & 0.58 & 0.58 & 0.60 &  & 0.36 &  \\
+\hline
+Capital to GDP ratio & $2 \cdot 50$ & 2.76 & 2.87 & 2.87 & 2.50 & 2.24 & 2.42 & 2.54 \\
+\hline
+Interest rate \% ${ }^{\text {॥ }}$ &  & 3.04 & 2.56 & $2 \cdot 56$ & $2 \cdot 96$ & $4 \cdot 17$ & 3.28 & 4.17 \\
+\hline
+\end{tabular}
+\end{center}
+
+\footnotetext{*The model properties are averages over a 10,000 period simulation.\\
+${ }^{\dagger}$ Empirical wealth distribution statistics are from Díaz-Giménez et al. (1997) and are based on data from the 1992 Survey of Consumer Finance.\\
+${ }^{\ddagger}$ Fractions of total wealth held by the wealth-richest $1 \%, 10 \%$ and $20 \%$ of households.\\
+${ }^{§}$ Income and earnings are pre-tax and pre-transfers in the data and in the models.\\
+${ }^{\mathrm{I}}$ The interest rate is the net after-tax interest rate.
+}\subsection*{3.3. Numerical solution}
+It is known to be difficult to solve for an equilibrium in economies with heterogeneous agents, incomplete markets, and aggregate uncertainty. I therefore adopt the strategy proposed by Krusell and Smith (1998). ${ }^{23}$ In particular, I assume that when solving their problems, rather than using all of the information about the aggregate state of the economy contained in $h^{t}$, households instead only consider the information contained in $Z_{t}=\left(K_{t-1}\left(h^{t-1}\right), B_{t-1}\left(h^{t-1}\right), \tau_{t}\left(h^{t}\right)\right)$. A useful implication of the Greenwood et al. (1988) utility function is that given $Z_{t}$, current prices can be computed using equations (3.9), (3.14) and (3.15). Thus households do not make mistakes in "forecasting" current prices. I then consider a recursive formulation of the household's problem in which households take as given a law of motion for aggregate capital $G: \kappa \times D \times T \rightarrow \kappa$. The solution to the household's problem is a decision rule of the form $a^{\prime}: E \times A \times \kappa \times D \times T \rightarrow A$. Given decision rules, the economy is simulated forward, and a regression is run on the simulated data to update the coefficients in the forecasting rule $G$. This procedure is repeated until convergence, at which point the forecasting rule $G$ that households take as given is such that their behaviour generates a law of motion for capital for which the best predictor function (of the same functional form as $G$ ) is precisely the forecasting rule $G$. ${ }^{24}$
+
+Figure 1 contains the benchmark economy equilibrium decision rules for consumption and net savings, given each possible combination of household-specific productivity and the economy-wide tax rate. ${ }^{25}$ Consumption is an increasing function of wealth, while net savings is decreasing in wealth. Low productivity households are universally dis-savers, while high productivity households are net savers except at very high levels of wealth. For households with high productivity, the optimal consumption and savings rules are close to linear in wealth, while for less productive types, the marginal propensity to consume out of wealth is decreasing in wealth. That this is attributable to the presence of the borrowing constraint is evidenced by the fact that non-linearities are most pronounced at very low levels of wealth, and for households with the lowest value for productivity.
+
+It is important to evaluate the forecasting rule $G$ by examining the magnitude of forecasting errors for capital and the implied errors in forecasting future factor prices. For the models considered in this paper, the differences between actual future prices and forecasted future prices are very small and on the order of those encountered by Krusell and Smith. For example, the cumulative forecasting error for the net pre-tax interest rate (the marginal product of capital minus the depreciation rate) at a 10 -year horizon rarely amounts to more than two tenths of a per cent difference between the predicted value for the interest rate (conditional on the realized sequence for taxes) and the actual value observed in the simulation. As an alternative metric, the absolute difference between the predicted rate and the realized rate over a 10 -year horizon is rarely more than one hundredth of a percentage point. Thus it is hard to imagine that improving forecasting accuracy (by expanding the set of information in $Z_{t}$ ) would lead to large changes in individual decision rules or the aggregate behaviour of the economy.
+
+Why is it that higher moments of the wealth distribution do not seem to be very useful for forecasting future prices? The intuition is similar to that given in Krusell and Smith. First, note that if the saving rule were exactly linear in wealth then redistributing wealth among agents
+
+\footnotetext{\begin{enumerate}
+  \setcounter{enumi}{22}
+  \item Den Haan (1997) proposes a similar algorithm. Other papers to implement the Krusell and Smith approach include Castañeda, Díaz-Giménez and Ríos-Rull (1998) and Storesletten, Telmer and Yaron (2001).
+  \item In the technical appendix on the Review of Economic Studies website I describe in detail the revised household problem, the numerical procedure for solving this problem, implementation of the Krusell and Smith iteration procedure, and measurement of forecasting accuracy.
+  \item In Figure 1 aggregate capital and debt are set to their average equilibrium levels. Mean household wealth in equilibrium is the sum of aggregate capital and aggregate debt. To magnify non-linearities, decision rules are plotted only for low to moderate values for household wealth.
+\end{enumerate}
+}\begin{figure}[h]
+\begin{center}
+  \includegraphics[alt={},max width=\textwidth]{0f40efe7-6ce6-459b-934e-76d00f86b044-16_1680_1331_452_365}
+\captionsetup{labelformat=empty}
+\caption{Figure 1\\
+Decision rules for consumption and savings. Benchmark incomplete-markets model}
+\end{center}
+\end{figure}
+
+with a particular productivity realization would have no effect on aggregate savings. In light of the shape of the savings rules in Figure 1, redistributing wealth between agents with moderate or greater wealth will therefore have little effect on aggregate savings. Recall, however, that at low levels of wealth the marginal propensity to save out of wealth is increasing in wealth. Thus wealth redistributions between very poor households and richer households could impact\\
+total savings. There are several reasons why this is not an important problem in practice. First, the shape of the wealth distribution does not change much through time; for example, from Figure 2 the poorest $40 \%$ of households always account for between $0 \cdot 8 \%$ and $1 \cdot 8 \%$ of aggregate wealth. Second, households with low savings propensities account for a disproportionately small fraction of aggregate economic activity in general and aggregate consumption in particular. Third, other variables in the forecasting rule for capital contain information that partially substitutes for more detailed information about the shape of the wealth distribution. For example, the correlation in a simulation between the Gini coefficient for asset holdings and the level of debt is -0.91 .
+
+\section*{4. RESULTS}
+The quantitative theoretical analysis proceeds as follows.\\
+First, I consider a version of the model described above in which taxes are lump-sum. I also abstract from the potential effects of tax changes on factor prices and hours worked. This is an illustrative starting point (if somewhat unrealistic) since Ricardian equivalence will obtain if asset markets are complete. Thus any real effects from temporary tax changes when markets are incomplete will be directly attributable to the presence of the borrowing constraint coupled with uninsurable idiosyncratic risk.
+
+Second, I endogenize labour supply and compare the response of the heterogeneousagent incomplete-markets economy to lump-sum taxes changes in both a small open economy and a closed economy setting. In the closed economy version, the responses of savings and labour supply to tax shocks affect equilibrium factor prices. By comparing the open and closed economies, I can assess the extent to which equilibrium price adjustment affects households’ savings and labour supply decisions.
+
+Third, I introduce proportional taxation, and once again compare economies with complete and incomplete markets. The incomplete-markets version is the benchmark model described above. Since prices are determined endogenously, tax shocks now affect the returns to working and saving, and therefore have real effects irrespective of the asset market structure.
+
+In the Appendix, I introduce some life-cycle considerations. I extend the incompletemarkets model described in step three to capture the fact that income tends to rise with age. I then build an over-lapping-generations economy to address the quantitative importance of wealth effects in the absence of intergenerational altruism.
+
+Parameters relating to the household productivity process and the process for taxes are recalibrated for each new economy so that each reproduces the targeted features of the U.S. wealth distribution, and so that the ratio of tax revenue to GDP has the same persistence and variance as in the U.S. ${ }^{26}$
+
+\subsection*{4.1. Lump-sum taxes}
+In the first stage of the analysis, I consider a small open economy facing a constant world interest rate $r^{*}$. Taxes are lump-sum and each household supplies $N=0.3$ hours per period; the period utility function is $u(c)=\ln (c)$. The restrictions on parameter values ensuring that debt remains between the specified bounds $D_{l}$ and $D_{h}$ (see equations (3.11) and (3.12)) are adjusted appropriately to account for these differences relative to the benchmark model. To ensure that low-productivity, low-wealth households can realize a positive marginal utility of consumption
+
+\footnotetext{\begin{enumerate}
+  \setcounter{enumi}{25}
+  \item I also experimented with a more persistent tax process, and found this to have a quantitatively minor effect on the results; see the technical appendix for details.
+\end{enumerate}
+}\begin{table}[h]
+\begin{center}
+\captionsetup{labelformat=empty}
+\caption{TABLE 4\\
+Responses to tax cuts: economies with lump-sum taxes, fixed labour, fixed prices}
+\begin{tabular}{lcccccc}
+\hline
+ & \multicolumn{4}{c}{Percentage change on impact*} &  & PCT \\
+\hline
+ & Tax rev. & Hours & GDP & Cons & Inv & $\frac{100 \times\left(C_{t}-C_{t-1}\right)}{\left(T_{t}-T_{t-1}\right)}$ \\
+Incomplete markets & -7.13 & 0.0 & 0.0 & 0.36 & 0.0 & -13.5 \\
+Complete markets & -7.13 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+*Averages over a 10,000 period simulation.
+
+\begin{table}[h]
+\begin{center}
+\captionsetup{labelformat=empty}
+\caption{TABLE 5\\
+Consumption sensitivity to the tax rate for different households: economies with lump-sum taxes, fixed labour, fixed prices}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\multirow[b]{2}{*}{$C_{i, \tau=\tau_{h}}-C_{i, \tau=\tau_{l}}$} & \multirow{2}{*}{Wealth ( $a_{i}$ )} & \multicolumn{3}{|c|}{Productivity ( $e_{i}$ )} \\
+\hline
+ &  & Low & Medium & High \\
+\hline
+\multirow{3}{*}{Incomplete markets} & Zero & -1.00 & -0.37 & -0.03 \\
+\hline
+ & Median (0.06 × Mean) & -0.49 & -0.19 & -0.02 \\
+\hline
+ & Mean & -0.06 & -0.02 & -0.01 \\
+\hline
+Complete markets & Representative agent & \multicolumn{3}{|c|}{0.0} \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+in the presence of lump-sum taxes, I assume that the government makes constant lump-sum transfers $\phi$ to households, and that government consumption is always zero. ${ }^{27}$
+
+The budget constraint when households have access to a single savings instrument becomes
+
+$$
+c_{t}\left(h^{t}, e^{t}\right)+a_{t}\left(h^{t}, e^{t}\right)=\left(1+r^{*}\right) a_{t-1}\left(h^{t-1}, e^{t-1}\right)+w_{t}\left(h^{t}\right) e_{t}\left(e^{t}\right) N+\phi-\tau_{t}\left(h^{t}\right) .
+$$
+
+Government debt now evolves according to
+
+$$
+B_{t}\left(h^{t}\right)+\tau_{t}\left(h^{t}\right)=\left(1+r^{*}\right) B_{t-1}\left(h^{t-1}\right)+\phi .
+$$
+
+The definition of equilibrium for the incomplete-markets version of this economy is similar to that given in Section 3.1 except that the savings-market-clearing condition does not apply, the goods-market-clearing condition contains a net exports term, and equation (3.14) is replaced by
+
+
+\begin{equation*}
+r^{*}=\alpha K_{t-1}\left(h^{t-1}\right)^{\alpha-1} N^{1-\alpha}-\delta . \tag{4.1}
+\end{equation*}
+
+
+The intuition behind equation (4.1) is that capital will flow freely and instantaneously into or out of the economy to exhaust any arbitrage opportunities arising from interest rate differentials. This implies that the capital stock and thus the wage and aggregate output are constant.
+
+I choose a value for $r^{*}$ such that, on average, the net foreign asset position in the economy is zero. Thus the average ratio of aggregate household wealth to income will be similar to that in the closed economy model considered in the next section. Note that in this class of heterogeneousagent incomplete-markets models the net foreign asset position is guaranteed to be stationary, as long as the after-tax interest rate is less than the household's rate of time-preference.
+
+Results with lump-sum taxes. Results for the economies with lump-sum taxes, exogenous hours and exogenous factor prices are presented in Tables 4 and 5.
+
+Consider the aggregate effects of tax changes across a 10,000 period simulation of the economy during which values for the tax rate are drawn according to the specified stochastic\\
+27. This becomes more of an issue in the next section, when labour supply is endogenized.
+
+\begin{table}[h]
+\begin{center}
+\captionsetup{labelformat=empty}
+\caption{TABLE 6\\
+Responses to tax cuts: incomplete-markets economies with lump-sum taxes, endogenous labour}
+\begin{tabular}{lclllcc}
+\hline
+ & \multicolumn{5}{c}{Percentage change on impact} & PCT \\
+\hline
+ & Tax rev. & Hours & GDP & Cons & Inv & $\frac{100 \times\left(C_{t}-C_{t-1}\right)}{\left(T_{t}-T_{t-1}\right)}$ \\
+Open economy & -7.12 & 0.0 & 0.0 & 0.40 & 0.0 & -14.9 \\
+Closed economy & -6.97 & 0.00 & 0.02 & 0.30 & -0.66 & -11.4 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{table}[h]
+\begin{center}
+\captionsetup{labelformat=empty}
+\caption{TABLE 7\\
+Consumption sensitivity to the tax rate: incomplete-markets economies with lump-sum taxes, endogenous labour}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\multirow[b]{2}{*}{$\frac{C_{i, \tau=\tau_{h}}-C_{i, \tau=\tau_{l}}}{T_{i, \tau=\tau_{h}}-T_{i, \tau=\tau_{l}}}$} & \multirow{2}{*}{Wealth ( $a_{i}$ )} & \multicolumn{3}{|c|}{Productivity ( $e_{i}$ )} \\
+\hline
+ &  & Low & Medium & High \\
+\hline
+\multirow{3}{*}{Open economy} & Zero & -1.00 & -0.43 & -0.03 \\
+\hline
+ & Median ( $0 \cdot 06 \times$ Mean) & -0.40 & -0.21 & -0.03 \\
+\hline
+ & Mean & -0.05 & -0.03 & -0.01 \\
+\hline
+\multirow[t]{3}{*}{Closed economy} & Zero & -1.00 & -0.40 & 0.08 \\
+\hline
+ & Median ( $0 \cdot 06 \times$ Mean) & -0.38 & -0.18 & 0.08 \\
+\hline
+ & Mean & -0.02 & 0.03 & $0 \cdot 12$ \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+process. ${ }^{28}$ The focus of the paper is on the responsiveness of aggregate consumption to tax changes. One simple way to measure this sensitivity is as the change in consumption between two consecutive periods characterized by different tax rates, relative to the change in tax revenue between the same two periods. A value of zero for this statistic, which I call the propensity to consume out of income tax (PCT), would indicate that in aggregate households behave in a Ricardian fashion, and adjust private saving rather than consumption in response to tax changes.
+
+With complete markets, lump-sum taxes and infinite horizons, debt and taxes are equivalent sources of finance and the PCT is zero. This reinforces the point that tax changes have no real effects in this framework unless households are potentially borrowing constrained.
+
+When markets are incomplete and households face a borrowing constraint, they do not reduce savings one for one in response to a tax cut. Thus aggregate consumption rises (see Table 4). Looking at all periods in which taxes fall, the mean increase in aggregate consumption per dollar decline in tax revenue is 13.5 cents. The figure for tax increases is very similar.
+
+I also examine behaviour at the household level, since households with different asset holdings and wages exhibit very different responses to tax changes. The figures reported in Table 5 are ratios of the difference in household consumption across the two tax rates relative to the difference in household tax payments. ${ }^{29}$ The consumption of low productivity households with zero wealth varies one for one with the lump-sum tax level, since they do no saving irrespective of the tax rate. As wealth increases, the gap between optimal consumption in the two tax regimes narrows, indicating that households are increasingly willing to use their assets
+
+\footnotetext{\begin{enumerate}
+  \setcounter{enumi}{27}
+  \item An initial joint distribution across individual states was taken from an economy without aggregate uncertainty (see the technical appendix). The full-blown economy was then simulated for 11,000 periods before computing statistics for the last 10,000 periods of the sample.
+  \item All the figures in Tables 5, 7, 9 and 11 are computed given an average (over a 10,000 period simulation) joint distribution over asset holdings and productivity, and an average quantity of government debt.
+\end{enumerate}
+}
+to consumption-smooth through tax shocks. Similarly, high wage households are net savers, and assign low probability to the possibility of transiting to the low wage state in the near future. Thus these households also behave in a Ricardian fashion.
+
+\subsection*{4.2. Endogenizing factor prices}
+I now endogenize labour supply and factor prices. I label the incomplete-markets economy with lump-sum taxes, endogenous hours and exogenous prices the "open economy". In Tables 6 and 7 I compare the open economy model to an otherwise identical economy in which prices are endogenous; this is the "closed economy".
+
+In the open economy version, the assumption of a constant world interest rate pins down a constant capital/labour ratio, as before. This in turn implies a constant wage rate and, given the lump-sum tax version of equation (3.8), constant aggregate hours, capital, and output. In the closed economy version, aggregate capital, hours, output and factor prices are all time-varying.
+
+The aggregate response to tax changes in the open economy model is similar to that in the incomplete-markets model with exogenous labour supply considered in the previous sub-section: the PCT is 14.9 cents per dollar. When prices are endogenized, the value for this statistic drops to 11.4 cents per dollar. The reason for the smaller response is that the increase in aggregate consumption following a tax cut is now financed by a fall in investment rather than a fall in net exports; investment falls by $0.66 \%$ on impact. This translates into higher expected future interest rates. High productivity or high wealth households (who assign low probability to being borrowing constrained in the near future) respond to the increase in the expected return to saving by increasing saving and reducing consumption. Thus high productivity households actually consume more when the tax level is high than when it is low, conditional on a given level of asset holdings (see the bottom panel of Table 7).
+
+\subsection*{4.3. Introducing distortionary taxation}
+I now introduce proportional taxation, and compare an economy with complete markets with the benchmark incomplete-markets model described in detail in Section 3. In the completemarkets economy, markets exist which allow households to fully insure against idiosyncratic productivity risk, and against any distributional effects from aggregate tax shocks. I therefore adopt the representative agent abstraction, and assume that the representative household's labour productivity is constant and equal to one. Since the representative agent is never borrowing constrained, non-lump-sum taxation is the only source of Ricardian non-neutrality in this case.
+
+Aggregate effects. When taxes are proportional to income, tax cuts increase the price of leisure relative to consumption, and thus increase labour supply and pre-tax income. Given the functional form of the utility function, the elasticity of aggregate labour supply (equation (3.9)) with respect to (marginal changes in) the tax rate is equal to
+
+$$
+\eta=\frac{-\varepsilon}{(1+\alpha \varepsilon)} \frac{\tau}{(1-\tau)}
+$$
+
+The implied value for $\eta$ is around $-0 \cdot 13$. Across a 10,000 period simulation the average percentage increase in hours following a tax cut is $0.91 \%$ in the complete-markets economy and $0.97 \%$ in the incomplete-markets economy (see Table 8). ${ }^{30}$\\
+30. Note that tax changes in the model are not marginal, and also that average tax rates differ slightly across market structures (see Table 2). Thus the average labour supply and output responses to tax changes are not identical across market structures.
+
+\begin{table}[h]
+\begin{center}
+\captionsetup{labelformat=empty}
+\caption{TABLE 8\\
+Responses to tax cuts: economies with proportional taxes}
+\begin{tabular}{lcccccc}
+\hline
+ & \multicolumn{5}{c}{Percentage change on impact} &  \\
+\hline
+ & Tax rev. & Hours & GDP & Cons & Inv & $\frac{100 \times\left(C_{t}-C_{t-1}\right)}{\left(T_{t}-T_{t-1}\right)}$ \\
+Incomplete markets & -6.24 & 0.97 & 0.62 & 0.92 & 0.56 & -28.8 \\
+Complete markets & -6.39 & 0.91 & 0.57 & 0.71 & 0.80 & -23.2 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{table}[h]
+\begin{center}
+\captionsetup{labelformat=empty}
+\caption{TABLE 9\\
+Consumption sensitivity to the tax rate: economies with proportional taxes}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\multirow[b]{2}{*}{$C_{i, \tau=\tau_{h}}-C_{i, \tau=\tau_{l}}$} & \multirow[b]{2}{*}{Wealth ( $a_{i}$ )} & \multicolumn{3}{|c|}{Productivity ( $e_{i}$ )} \\
+\hline
+ &  & Low & Medium & High \\
+\hline
+\multirow{3}{*}{Incomplete markets} & Zero & -1.28 & -0.58 & -0.36 \\
+\hline
+ & Median (0.06 × Mean) & -0.51 & -0.40 & -0.36 \\
+\hline
+ & Mean & -0.01 & -0.21 & -0.34 \\
+\hline
+Complete markets & Representative agent &  & -0.25 &  \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+The increase in labour supply and pre-tax income when taxes are cut means that tax cuts generate large increases in household income. Much of this extra income is saved, so that investment rises sharply even as the government issues new debt. However, extra investment reduces the equilibrium return to saving, so it is optimal to use some fraction of additional income to increase consumption. ${ }^{31}$ An additional reason why consumption increases following a tax cut is that consumption and leisure are substitutes in utility. Thus when hours increase, the marginal utility of consumption rises. ${ }^{32}$
+
+On average across a simulation of the complete-markets economy, a switch from the high tax rate to the low rate is associated with a 23 cent increase in consumption for every dollar of tax revenue lost in the complete-markets economy (see Table 9). The PCT rises to 29 cents per dollar when markets are incomplete. This is six times larger than the largest response one can attribute purely to intergenerational redistribution of the tax burden (see the Appendix). Given that output responds similarly in the two economies, an implication of the larger consumption response in the incomplete-markets model is that the investment response must be smaller. Indeed, when markets are incomplete, the average impact increase in consumption is much larger than the rise in investment ( 0.92 vs. $0.56 \%$ ), whereas investment responds most strongly when markets are complete. The reason for the larger consumption response in the incomplete-markets model is, of course, that low-income households on or close to the borrowing constraint view a tax cut as an opportunity to increase consumption.
+
+Figure 2 contains scatter plots of the PCT in the incomplete-markets model for the 1007 periods during the simulation in which the tax rate went up and the 1006 periods in which the tax rate fell. There is little difference between the average response of aggregate consumption to tax decreases vs. tax increases. There is, however, some variation through time: the response to
+
+\footnotetext{\begin{enumerate}
+  \setcounter{enumi}{30}
+  \item It is not immediately obvious that consumption must increase when taxes are cut, since a persistent tax cut signals a high expected after-tax return to saving. In fact, in a version of the complete-markets model with exogenous labour supply, consumption and taxes move together (though in this case consumption responds very little to tax changes).
+  \item In the technical appendix I report results for a version of the complete-markets economy in which preferences are log-separable in consumption and leisure. I find that the response of consumption to tax changes has the same sign and is similar in magnitude to the response under the baseline non-separable preference specification.
+\end{enumerate}
+}\begin{figure}[h]
+\begin{center}
+  \includegraphics[alt={},max width=\textwidth]{0f40efe7-6ce6-459b-934e-76d00f86b044-22_1735_1351_452_356}
+\captionsetup{labelformat=empty}
+\caption{Figure 2\\
+Distribution of propensity to consume out of tax cuts (PCT). Benchmark incomplete-markets model}
+\end{center}
+\end{figure}
+
+tax cuts ranges from $25 \cdot 5$ to $31 \cdot 5$ cents per dollar change in tax revenue. The top-left panel of the figure shows that tax decreases tend to have larger effects on aggregate consumption the smaller is the fraction of total wealth accounted for by the poorest $40 \%$ of households (indicating a large\\
+fraction of borrowing constrained households). The positive relation between the wealth share of the poorest households and the level of government debt (see the two bottom panels) indicates that even poor households behave in a mildly Ricardian fashion, increasing private savings when the government reduces public saving.
+
+There are some important differences between the models considered here and previous quantitative work on distortionary taxation. For example, Auerbach and Kotlikoff (1987) and Trostel (1993) assume that the duration of tax changes is known in advance. Nonetheless, my results appear broadly consistent with their findings. In particular, both Auerbach and Kotlikoff and Trostel find that income tax reductions crowd in capital in the short run. ${ }^{33}$ Auerbach and Kotlikoff find an immediate propensity to consume out of a 5 -year income-tax cut of around 34 cents per dollar decline in tax revenue. ${ }^{34}$
+
+Heterogeneity in the consumption response. I now discuss the sensitivity of different types of household to changes in the proportional tax rate in order to better understand the relative roles of (i) borrowing constraints, (ii) distortions on the labour-supply margin, and (iii) distortions on the savings margin (see Table 9 and the decision rules in Figure 1).
+
+For high productivity households, the borrowing constraint is of little concern, as in the economy with lump-sum taxes. The primary channel through which tax shocks affect the behaviour of these households is by altering their incentive to work. Thus high productivity households work and consume more in the low tax state than in the high tax state, irrespective of their level of asset holdings.
+
+By contrast, for households with low productivity and very low wealth, the borrowing constraint is binding for both tax rates. The difference in consumption across tax regimes is larger than the difference in tax payments because labour supply and pre-tax income are lower when taxes are high. In this sense, endogenous labour supply magnifies the importance of the borrowing constraint. At higher wealth levels, incentives to save become more important, offsetting the positive effect on consumption of higher labour supply and income. Thus low productivity households with above-mean wealth consume less in the low tax state than in the high tax state.
+
+For medium productivity households consumption is "excessively" sensitive to the tax rate at low levels of wealth, but the borrowing constraint is never binding for these households, and thus even at zero wealth, medium productivity households respond to tax changes by adjusting both consumption and savings. ${ }^{35}$
+
+While the combination of missing insurance markets coupled with borrowing constraints implies large responses for some households, these do not translate into particularly large effects at the aggregate level. For example, the aggregate propensity to consume out of a tax cut in the benchmark economy is less than 6 cents larger than in the complete-markets version. Why is the difference between the two market structures smaller than in the environments with lump-sum taxes?
+
+\footnotetext{\begin{enumerate}
+  \setcounter{enumi}{32}
+  \item Comparing the magnitude of the percentage increase in investment with these authors' results is tricky since they abstract from capital depreciation.
+  \item Auerbach and Kotlikoff do not report the consumption response directly. Nonetheless it is possible to construct a consumption series using (i) the value for constant government consumption (Table 5•1), (ii) the implied values for output and investment given information on hours and capital (Table 6.1), and (iii) the appropriate aggregate resource constraint.
+  \item There is literature focusing on insurance effects which operate when missing insurance markets mean that distortionary tax changes affect the intertemporal distribution of idiosyncratic risk (see, for example, Chan (1983), Barsky, Mankiw and Zeldes (1986)). In the model developed here these insurance effects are not quantitatively important since taxes are strictly proportional to income, and there are no transfers.
+\end{enumerate}
+}First, relative to a specification with lump-sum taxes, proportional tax shocks imply relatively small and thus easily smoothed changes in disposable income for low-income households. Thus the quantitative importance of borrowing constraints for changes in taxes (or transfers) depends on the details of how taxes are related to income. Second, the households whose consumption is most tax sensitive are also the households with the lowest levels of equilibrium consumption: the bottom quintile of households ranked by wealth account on average for only $10 \cdot 8 \%$ of aggregate consumption while the top quintile accounts for $44 \cdot 7 \% .^{36}$ Thus the decisions of wealthier households for whom the borrowing constraint is of little concern are disproportionately important at the aggregate level.
+
+\section*{5. CONCLUSIONS}
+In the model economies studied here, income tax changes have real effects both because they distort labour supply and savings decisions, and also because missing insurance markets coupled with a borrowing constraint limit households’ ability to smooth consumption through time. The response of aggregate consumption to simulated tax shocks is typically large, and is consistent in sign and magnitude with many empirical estimates of the effects of historical tax changes in the U.S. A temporary tax increase in the benchmark model economy reduces aggregate consumption by around 29 cents for every additional dollar of tax revenue raised.
+
+Most of the response of aggregate consumption to tax changes in these models is attributable to the fact that flat-rate taxes are distorting. At the same time, the asset market structure is important for both the magnitude and the composition of aggregate responses to tax shocks. Aggregate consumption responds most strongly in models that incorporate both the distortionary effects of proportional taxes and the liquidity effects that arise in an incomplete-markets environment.
+
+Aggregate measures of the effects of tax changes hide wide variation in the response at the household level. I find that the consumption of low-income low-wealth households is the most sensitive to changes in the tax level, and that this sensitivity is primarily attributable to the borrowing constraint. In a simulation of the benchmark model there are typically many wealthpoor households (as in the U.S.). Thus the mean percentage change in household consumption following a tax change is also large. At the same time, richer households account for a disproportionately large fraction of total consumption, and the consumption of these households is less sensitive to changes in the tax rate. This suggests a possible explanation for why empirical work based on micro data has often found larger effects from tax changes than are apparent in aggregate data.
+
+While the paper focuses primarily on consumption, it also sheds some light on the empirical response of investment to tax shocks. Tax changes that affect the user price of capital appear to have very little effect on investment in the short run (see, for example, Chirinko, Fazzari and Meyer, 1999), which has led researchers to introduce adjustment costs or measurement error. In the complete-markets model studied here, investment increases strongly in response to an income tax cut. However, the response is much weaker when asset markets are incomplete and households are potentially borrowing constrained. The reason is simply that although tax cuts do temporarily increase the return to saving, households close to the borrowing constraint prefer to spend tax cut dollars rather than save them, which reduces total national saving and investment.
+
+\footnotetext{\begin{enumerate}
+  \setcounter{enumi}{35}
+  \item Cutler and Katz (1992) report that in the U.S. in 1988 the lowest quintile of the consumption distribution accounted for $7.5 \%$ of spending while the top quintile accounted for $37.2 \%$.
+\end{enumerate}
+}\begin{table}[h]
+\begin{center}
+\captionsetup{labelformat=empty}
+\caption{TABLE 10\\
+Responses to tax cuts: economies with life-cycle features}
+\begin{tabular}{lcccccc}
+\hline
+ & \multicolumn{4}{c}{Percentage change on impact} &  & PCT \\
+\hline
+ & Tax rev. & Hours & GDP & Cons & Inv & $\frac{100 \times\left(C_{t}-C_{t-1}\right)}{\left(T_{t}-T_{t-1}\right)}$ \\
+Stochastic ageing & -6.34 & 0.96 & 0.62 & 0.95 & 0.45 & -30.1 \\
+OLG economy & -7.19 & 0.0 & 0.0 & 0.15 & 0.0 & -4.9 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{table}[h]
+\begin{center}
+\captionsetup{labelformat=empty}
+\caption{TABLE 11\\
+Consumption sensitivity to the tax rate: economy with stochastic ageing}
+\begin{tabular}{lcrcc}
+\hline
+ &  & \multicolumn{3}{c}{Productivity $\left(e_{i}\right)$} \\
+\cline { 3 - 5 }
+Stochastic ageing & Wealth $\left(a_{i}\right)$ & Low & Medium & High \\
+\hline
+$C_{i, \tau=\tau_{h}}-C_{i, \tau=\tau_{l}}$ & Zero & -1.28 & -0.59 & -0.37 \\
+\hline
+$T_{i, \tau=\tau_{h}}-T_{i, \tau=\tau_{l}}$ & Median (0.49 × Mean) & 0.08 & -0.24 & -0.34 \\
+ & Mean & 0.14 & -0.20 & -0.33 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+Once again, the lesson is that the aggregate effects of a particular change in tax policy will depend on how it impacts liquidity-constrained households.
+
+\section*{APPENDIX. LIFE-CYCLE CONSIDERATIONS}
+Here I consider two economies. The "stochastic-ageing economy" is designed to capture the idea that liquidity constraints may be most important for younger individuals who are at the bottom of an upward-sloping lifetime earnings profile. The "over-lapping-generations economy" is designed to isolate the quantitative importance of intergenerational tax redistribution in the absence of intergenerational altruism. I will argue that incorporating either of these two effects has quantitatively minor effects on the results.
+
+\section*{The stochastic-ageing economy}
+In this economy, I model the life cycle in a highly stylized fashion, so that the stochastic-ageing economy reduces to a version of the benchmark model in which the process for household productivity shocks is suitably modified. The innovation is that on top of the labour productivity risk described above, households now also face ageing risk. For a household with low (medium) productivity, ageing amounts to transiting to the medium (high) productivity state. A high productivity household who ages transits to the low productivity state; the household is effectively replaced by a newborn successor who inherits all the financial assets of the parent, but none of the parent's human capital. Details on the construction of the transition probabilities for this economy, described by the matrix $\hat{\Pi}$, are in the technical appendix.
+
+Relative to the benchmark economy, low and medium productivity agents now attach higher probability to a productivity increase. Thus we may expect these households to exhibit lower demand for precautionary savings, and for their consumption to be more tax-sensitive.
+
+The responses of all aggregate variables to tax shocks in the stochastic-ageing economy turn out to be very similar to those in the benchmark model: the PCT is $30 \cdot 1$ cents per dollar compared to $28 \cdot 8$ cents in the benchmark model (see Table 10). A comparison of Tables 9 and 11 reveals that the sensitivity of consumption to the tax rate for households with different characteristics is also similar across the two economies.
+
+Table 3 suggests some clues as to why incorporating positive expected wage growth does not have much effect on the propensity to consume out of tax cuts. First, the equilibrium interest rate is higher in the stochastic-ageing economy than in the benchmark incomplete-markets model; $3 \cdot 3 \mathrm{vs} .3 \cdot 0 \%$. The interest rate is higher because high productivity households do not get to accumulate as much wealth, since they are now subject to death (i.e. low productivity) risk. A higher interest rate makes it less costly to adjust savings in response to temporary tax shocks. The second clue is that the correlation between earnings and wealth is lower in the stochastic-ageing economy ( 0.14 vs .0 .36 in the benchmark model) since relatively wealthy households now transit from the high to the low productivity state. Recall that the households whose consumption is most tax sensitive are those with both low wealth and low earnings, so a weaker correlation between wealth and earnings tends to reduce the quantitative importance of the borrowing constraint.
+
+\section*{The over-lapping-generations economy}
+The natural framework for focusing on the role of intergenerational redistribution of the tax burden is the workhorse over-lapping-generations model developed, among others, by Auerbach and Kotlikoff (1987). To isolate the intergenerational redistribution effect, I consider an environment in which, if households were perfectly altruistic (as in all the economies considered so far), tax changes would have no real effects. Thus I abstract from market incompleteness, distortionary taxation, and the labour supply choice.
+
+The model economy is populated by a continuum of households. At any date $t$ a new cohort is born with mass normalized to one. I denote by $a$ the number of years of experience in the labour force, which I shall also refer to as a household's age. From the time of entering the labour force, the maximum duration of remaining life is $A$. Agents face mortality risk, with the probability of surviving from age $a$ to $a+1$ equal to $s_{a}$. Mortality risk ensures a realistic age distribution. Preferences for households born at date $t$ are given by
+
+$$
+\sum_{a=0}^{A} \beta^{a} \prod_{j=0}^{a-1} s_{j} \sum_{h^{t+a} \in H^{t+a}} v^{t+a}\left(h^{t+a}\right) \ln \left(c_{t+a}^{a}\left(h^{t+a}\right)\right)
+$$
+
+where $c_{t+a}^{a}\left(h^{t+a}\right)$ denotes the consumption in year $t+a$ of a (living) agent with current age $a$ given history $h^{t+a}$. Note that households are not altruistic towards other cohorts.
+
+I assume that households face no idiosyncratic shocks to income. In addition, households can borrow or lend freely, subject only to the constraint that, conditional on surviving to the maximum possible age, they can always repay any outstanding debts while enjoying non-negative consumption. Households are born with zero assets. Intermediaries pool savings each period and redistribute savings plus interest in an actuarially fair way among survivors. The only risk households cannot insure against is the risk that lump-sum tax shocks will increase or reduce their cohort's share of the overall tax burden.
+
+I assume that the economy is small and open, and takes the world interest rate $r^{*}$ as given. To further simplify things, I assume that $1+r^{*}=1 / \beta$, so that in the absence of any tax shocks, each agent's consumption would be constant across the life cycle. ${ }^{37}$ Since taxes are lump-sum and labour supply is exogenous, aggregate capital, labour and the wage rate are all time invariant. I assume that individuals supply $N$ units of labour per year until age $R$, after which they supply zero hours but receive a lump-sum public pension $P$ from the government. The budget constraint for an agent of age $a$ at date $t$ is
+
+
+\begin{equation*}
+c_{t}^{a}\left(h^{t}\right)+s_{a} a_{t}^{a}\left(h^{t}\right) \leq w^{*} N+\left(1+r^{*}\right) a_{t-1}^{a-1}\left(h^{t-1}\right)-\tau_{t}\left(h^{t}\right)+\psi_{a>R} P \tag{A.1}
+\end{equation*}
+
+
+where $\psi_{a>R}$ is an indicator that takes the value one beyond retirement age, and $s_{a}$ captures the survivor's premium associated with the presence of annuity markets.
+
+From the household's perspective there is no economic difference between labour income and pension income, so the particular choices for $N, R$ and $P$ are not crucial. Older households with lower survival probabilities will be the most eager to consume out of tax cuts. I therefore consider two alternative assumptions: (i) all households pay the same lump-sum taxes, or (ii) retired households are tax exempt.
+
+Agents enter the labour force on their 20-th birthday, retire on their 60-th birthday, and live to a maximum age of 109. These assumptions pin down $R$ and $A$. Survival probabilities are taken from the U.S. Decennial Life Tables for 1989-1991 published by the National Center for Health Statistics, and are for the total population. The parameters $\beta, \alpha$ and $\delta$ are set to the same values used in the economies previously studied. The lump-sum pension is set such that on average aggregate wealth is equal to capital plus debt, implying a zero net-foreign-asset position. The implied replacement rate is $36 \%$ of working-age labour income when everyone pays taxes, and 0 when retirees are tax exempt. The process for taxes is calibrated following exactly the same procedure as in the economies previously discussed.
+
+In a 10,000 period simulation of the version of this economy in which everyone pays taxes, the mean aggregate response of consumption to tax cuts is very small; for every dollar lost in revenue, consumption increases on impact by only 5 cents (see Table 11). This number is very similar to those reported by Hubbard and Judd (1986) and Poterba and Summers (1987). The corresponding figure for the version in which retirees are tax exempt is only 4 cents.
+
+How does the average response vary by age? Considering the version in which everyone pays taxes, for every dollar of revenue lost when taxes are cut 21 -year-old households increase consumption by only $0 \cdot 6$ cents, 30 year olds by 0.9 cents, 50 year olds by 2.6 cents, 70 year olds by 7.9 cents, 90 year olds by 24.9 cents and 109 year olds by 73.9 cents. Clearly the wealth effect is working as expected: older households with lower expected lifetimes have a higher propensity to consume out of temporary tax cuts. However, for most households life expectancy is long relative to the duration of tax cuts. Thus most households do not expect a large fraction of a tax cut to be paid for by future generations. This is why so few households optimally consume a big chunk of a tax cut (less than $2 \%$ of the population is over 90 ).
+
+Introducing intergenerational altruism would reduce the response of consumption to tax changes. As in the infinitehorizon economies previously considered, endogenizing the interest rate would also reduce the consumption response.\\
+37. The presence of annuity markets is essential for this implication.
+
+Making taxes proportional to income rather than lump-sum would reduce the consumption response to the extent that older people have lower incomes. Thus I conclude that 4 or 5 cents per dollar is an upper bound for the propensity to consume out of tax cuts driven purely by intergenerational redistribution.
+
+Acknowledgements. I thank the Economics Program of the National Science Foundation for financial support. I thank Andrew Atkeson, Lee Ohanian, Jose-Victor Rios-Rull, two editors and two anonymous referees for helpful comments.
+
+\section*{REFERENCES}
+AIYAGARI, S. (1994), "Uninsured Idiosyncratic Risk and Aggregate Saving", Quarterly Journal of Economics, 109, 659-684.\\
+AIYAGARI, S. and McGRATTAN, E. (1998), "The Optimum Quantity of Debt", Journal of Monetary Economics, 42, 447-469.\\
+ALTIG, D. and CARLSTROM, C. (1999), "Marginal Tax Rates and Income Inequality in a Life-Cycle Model", American Economic Review, 89, 1197-1215.\\
+ALTIG, D. and DAVIS, S. (1989), "Government Debt, Redistributive Fiscal Policies, and the Interaction Between Borrowing Constraints and Intergenerational Altruism", Journal of Monetary Economics, 24, 3-29.\\
+ATTANASIO, O. (1999), "Consumption", in J. Taylor and M. Woodford (eds.) Handbook of Macroeconomics 1B (Amsterdam: Elsevier Science).\\
+AUERBACH, A. and KOTLIKOFF, L. (1987) Dynamic Fiscal Policy (Cambridge University Press).\\
+BARRO, R. (1974), "Are Government Bonds Net Wealth?", Journal of Political Economy, 82, 1095-1117.\\
+BARSKY, R., MANKIW, G. and ZELDES, S. (1986), "Ricardian Consumers with Keynesian Propensities", American Economic Review, 76, 676-690.\\
+BERNHEIM, D. (1987), "Ricardian Equivalence: An Evaluation of Theory and Evidence", NBER Macroeconomics Annual, 263-304.\\
+BEWLEY, T. (undated), "Interest Bearing Money and the Equilibrium Stock of Capital" (manuscript).\\
+BLINDER, A. (1981), "Temporary Income Taxes and Consumer Spending", Journal of Political Economy, 89, 26-53.\\
+BLUNDELL, R. and MACURDY, T. (1999), "Labour Supply: A Review of Alternative Approaches", in O. Ashenfelter and D. Card (eds.) Handbook of Labour Economics 3A (Amsterdam: Elsevier Science).\\
+BLUNDELL, R., MEGHIR, C. and NEVES, P. (1993), "Labour Supply: An Intertemporal Substitution", Journal of Econometrics, 59, 137-160.\\
+BOHN, H. (1998), "The Behavior of U.S. Public Debt and Deficits", Quarterly Journal of Economics, 113, 949-963.\\
+BRAUN, A. (1994), "Tax Disturbances and Real Economic Activity in the Postwar United States", Journal of Monetary Economics, 33, 247-280.\\
+CARD, D. (1991), "Intertemporal Labour Supply: An Assessment" (NBER Working Paper 3602).\\
+CARDIA, E. (1997), "Replicating Ricardian Equivalence Tests with Simulated Series", American Economic Review, 87, 65-79.\\
+CASTAÑEDA, A., DÍAZ-GIMÉNEZ, J. and RÍOS-RULL, J.-V. (1998), "Exploring the Income Distribution Business Cycle Dynamics", Journal of Monetary Economics, 42, 93-130.\\
+CASTAÑEDA, A., DÍAZ-GIMÉNEZ, J. and RÍOS-RULL, J.-V. (2003), "Accounting for Earnings and Wealth Inequality", Journal of Political Economy, 111, 818-857.\\
+CHAN, L. (1983), "Uncertainty and the Neutrality of Government Financing Policy", Journal of Monetary Economics, 11, 351-372.\\
+CHENG, I. and FRENCH, E. (2000), "The Effect of the Run Up in the Stock Market on Labour Supply", Economic Perspectives, Federal Reserve Bank of Chicago, 47-65.\\
+CHIRINKO, R., FAZZARI, S. and MEYER, A. (1999), "How Responsive is Business Capital Formation to its User Cost? An Exploration with Micro Data", Journal of Public Economics, 74, 53-80.\\
+COX, D. and JAPPELLI, T. (1993), "The Effect of Borrowing Constraints on Consumer Liabilities", Journal of Money, Credit and Banking, 25, 197-213.\\
+CUTLER, D. and KATZ, L. (1992), "Rising Inequality? Changes in the Distribution of Income and Consumption in the 1980s", American Economic Review, 82, 546-551.\\
+DANIEL, B. (1993), "Tax Timing and Liquidity Constraints: A Heterogeneous-Agent Model", Journal of Money, Credit and Banking, 25, 176-196.\\
+DEN HAAN, W. (1997), "Solving Dynamic Models with Aggregate Shocks and Heterogeneous Agents", Macroeconomic Dynamics, 1, 355-386.\\
+DÍAZ-GIMÉNEZ, J., QUADRINI, V. and RÍOS-RULL, J.-V. (1997), "Dimensions of Inequality: Facts on the U.S. Distributions of Earnings, Income and Wealth", Quarterly Review, Federal Reserve Bank of Minneapolis.
+
+DOMEIJ, D. and HEATHCOTE, J. (2004), "On the Distributional Effects of Reducing Capital Taxes", International Economic Review, 45, 523-554.\\
+DOTSEY, M. and MAO, C. (1997), "The Effects of Fiscal Policy in a Neoclassical Growth Model" (Working Paper 97-8, Federal Reserve Bank of Richmond).\\
+FELDSTEIN, M. (1988), "The Effects of Fiscal Policies when Incomes are Uncertain: A Contradiction to Ricardian Equivalence", American Economic Review, 78, 14-23.
+
+FLODÉN, M. and LINDÉ, J. (2001), "Idiosyncratic Risk in the U.S. and Sweden: Is there a Role for Government Insurance?", Review of Economic Dynamics, 4, 406-437.\\
+GREENWOOD, J., HERCOWITZ, Z. and HUFFMAN, G. (1988), "Investment, Capacity Utilization, and the Real Business Cycle", American Economic Review, 78, 402-417.\\
+GROSS, D. and SOULELES, N. (2002), "Do Liquidity Constraints and Interest Rates Matter for Consumer Behavior? Evidence from Credit Card Data", Quarterly Journal of Economics, 117, 149-185.\\
+HAYASHI, F. (1985), "The Effect of Liquidity Constraints on Consumption: A Cross-Sectional Analysis", Quarterly Journal of Economics, 100, 183-206.\\
+HEATHCOTE, J., STORESLETTEN, K. and VIOLANTE, G. (2003), "The Macroeconomic Implications of Rising Wage Inequality in the United States" (manuscript).\\
+HEATON, J. and LUCAS, D. (1996), "Evaluating the Effect of Incomplete Markets on Risk Sharing and Asset Pricing", Journal of Political Economy, 104, 443-487.\\
+HECKMAN, J. (1974), "Life Cycle Consumption and Labour Supply: An Explanation of the Relationship Between Income and Consumption Over the Life Cycle", American Economic Review, 64, 188-194.\\
+HUBBARD, G. and JUDD, K. (1986), "Liquidity Constraints, Fiscal Policy, and Consumption", Brookings Papers on Economic Activity, 1, 1-59.\\
+HUBBARD, G., SKINNER, J. and ZELDES, S. (1995), "Precautionary Saving and Social Insurance", Journal of Political Economy, 103, 360-399.\\
+HUGGETT, M. (1993), "The Risk-Free Rate in Heterogeneous-Agent, Incomplete-Insurance Economies", Journal of Economic Dynamics and Control, 17, 953-969.\\
+JAPPELLI, T. (1990), "Who is Credit Constrained in the U.S. Economy?", Quarterly Journal of Economics, 105, 219-234.\\
+KRUSELL, P. and SMITH, A. (1998), "Income and Wealth Heterogeneity in the Macroeconomy", Journal of Political Economy, 106, 867-896.\\
+MACURDY, T. (1981), "An Empirical Model of Labour Supply in a Life-Cycle Setting", Journal of Political Economy, 89, 1059-1085.\\
+MARIMON, R. and ZILIBOTTI, F. (2000), "Employment and Distributional Effects of Restricting Working Time", European Economic Review, 44, 1291-1326.\\
+McGRATTAN, E. (1994), "The Macroeconomic Effects of Distortionary Taxation", Journal of Monetary Economics, 33, 573-601.\\
+MODIGLIANI, F. and STEINDAL, C. (1977), "Is a Tax Rebate an Effective Tool for Stabilization Policy?", Brookings Papers on Economics Activity, 1, 175-209.\\
+NEUMEYER, P. and PERRI, F. (2001), "Business Cycles in Emerging Economics: The Role of Interest Rates" (manuscript).\\
+PARKER, J. (1999), "The Reaction of Household Consumption to Predictable Changes in Social Security Taxes", American Economic Review, 89, 959-973.\\
+POTERBA, J. (1988), "Are Consumers Forward Looking? Evidence from Fiscal Experiments", American Economic Review, 78, 413-418.\\
+POTERBA, J. and SUMMERS, L. (1987), "Finite Lifetimes and the Effects of Budget Deficits on National Saving", Journal of Monetary Economics, 20, 369-391.\\
+SEATER, J. (1993), "Ricardian Equivalence", Journal of Economic Literature, 31, 142-190.\\
+SHAPIRO, M. and SLEMROD, J. (1995), "Consumer Response to the Timing of Income: Evidence from a Change in Tax Withholding", American Economic Review, 85, 274-283.\\
+SHAPIRO, M. and SLEMROD, J. (2003), "Consumer Response to Tax Rebates", American Economic Review, 93, 381-396.\\
+SLEMROD, J. and BAKIJA, J. (2000) Taxing Ourselves: A Citizen's Guide to the Great Debate Over Tax Reform, 2nd edn (MIT Press).\\
+SOULELES, N. (1999), "The Response of Household Consumption to Income Tax Refunds", American Economic Review, 89, 947-958.\\
+SOULELES, N. (2002), "Consumer Response to the Reagan Tax Cuts", Journal of Public Economics, 85, 99-120.\\
+STORESLETTEN, K., TELMER, C. and YARON, A. (2001), "Asset Pricing with Overlapping Generations and Idiosyncratic Risk" (manuscript).\\
+TROSTEL, P. (1993), "The Nonequivalence Between Deficits and Distortionary Taxation", Journal of Monetary Economics, 31, 207-227.\\
+WEICHER, J. (1997), "The Rich and the Poor: Demographics of the U.S. Wealth Distribution", Federal Reserve Bank of St. Louis Review, 79, 25-37.\\
+WILCOX, D. (1989), "Social Security Benefits, Consumption Expenditure, and the Life Cycle Hypothesis", Journal of Political Economy, 97, 288-304.\\
+WOODFORD, M. (1990), "Public Debt as Private Liquidity", American Economic Review, 80, 382-388.\\
+ZELDES, S. (1989), "Consumption and Liquidity Constraints: An Empirical Investigation", Journal of Political Economy, 97, 305-346.
+
+\begin{enumerate}
+  \item 
+\end{enumerate}
+
+\begin{enumerate}
+  \setcounter{enumi}{1}
+  \item 
+  \item 
+\end{enumerate}
+
+\begin{enumerate}
+  \setcounter{enumi}{6}
+  \item 
+\end{enumerate}
+
+\begin{enumerate}
+  \setcounter{enumi}{11}
+  \item 
+\end{enumerate}
+
+\begin{enumerate}
+  \setcounter{enumi}{12}
+  \item 
+  \item 
+  \item 
+\end{enumerate}
+
+\begin{enumerate}
+  \setcounter{enumi}{22}
+  \item 
+  \item 
+  \item 
+\end{enumerate}
+
+\begin{enumerate}
+  \setcounter{enumi}{25}
+  \item 
+\end{enumerate}
+
+\begin{enumerate}
+  \setcounter{enumi}{27}
+  \item 
+  \item 
+\end{enumerate}
+
+\begin{enumerate}
+  \setcounter{enumi}{30}
+  \item 
+  \item 
+\end{enumerate}
+
+\begin{enumerate}
+  \setcounter{enumi}{32}
+  \item 
+  \item 
+  \item 
+\end{enumerate}
+
+\begin{enumerate}
+  \setcounter{enumi}{35}
+  \item 
+\end{enumerate}
+
+
+\end{document}

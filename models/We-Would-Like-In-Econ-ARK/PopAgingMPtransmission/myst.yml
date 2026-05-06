@@ -1,0 +1,14 @@
+version: 1
+project:
+  title: "Population Aging and the Transmission of Monetary Policy to Consumption — Ballpark Entry"
+  bibliography:
+    - self.bib
+    - references.bib
+    - subsequent-literature.bib
+  toc:
+    - file: PopAgingMPtransmission_intro.ipynb
+    - file: PopAgingMPtransmission_prior-literature.ipynb
+    - file: PopAgingMPtransmission_summary.ipynb
+    - file: PopAgingMPtransmission_subsequent-literature.ipynb
+site:
+  title: "Population Aging and the Transmission of Monetary Policy to Consumption — Ballpark Entry"

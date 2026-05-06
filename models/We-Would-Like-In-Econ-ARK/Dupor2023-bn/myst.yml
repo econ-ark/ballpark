@@ -1,0 +1,15 @@
+version: 1
+project:
+  title: "Regional Consumption Responses and the Aggregate Fiscal Multiplier — Ballpark Entry"
+  bibliography:
+    - self.bib
+    - references.bib
+    - subsequent-literature.bib
+  toc:
+    - file: Dupor2023-bn_intro.ipynb
+    - file: Dupor2023-bn_prior-literature.ipynb
+    - file: Dupor2023-bn_summary.ipynb
+    - file: Dupor2023-bn_subsequent-literature.ipynb
+    - file: Dupor2023-bn_bellman-stages.ipynb
+site:
+  title: "Regional Consumption Responses and the Aggregate Fiscal Multiplier — Ballpark Entry"

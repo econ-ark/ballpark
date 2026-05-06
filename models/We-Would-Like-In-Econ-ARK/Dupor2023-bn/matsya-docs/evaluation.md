@@ -1,0 +1,5 @@
+# Matsya's Stage Breakdown evaluation
+
+Here I briefly compare the analysis by matsya in `matsya-docs/household-bellman-problem.md` compared to my decomposition in `Dupor2023-bn_bellman-stages.ipynb`.
+
+Matsya was able to faithfully describe and decompose the model from the paper -- the structural summary is accurate to the income process, budget and borrowing constraints. Furthermore, the AI did correctly simplify the GE model to the PE I will be focused on. However, matsya left the labor-supply consumption decision as a joint decision.  One of the key insights from the `SolvingMicroDSOPs` notes was the ability to deconstruct these joint decisions into sequential decisions, as I did in my own analysis. My next steps would be to work with matsya to split this decision into more stages and perches. 

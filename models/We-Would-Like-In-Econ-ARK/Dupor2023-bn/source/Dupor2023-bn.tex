@@ -1,0 +1,1340 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{caption}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+\usepackage{multirow}
+
+\title{Regional Consumption Responses and the Aggregate Fiscal Multiplier }
+
+\author{BILL DUPOR\\
+Federal Reserve Bank of St. Louis\\
+MARIOS KARABARBOUNIS\\
+Federal Reserve Bank of Richmond\\
+MARIANNA KUDLYAK\\
+Federal Reserve Bank of San Francisco\\
+and\\
+M. SAIF MEHKARI\\
+University of Richmond}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+\captionsetup{singlelinecheck=false}
+First version received August 2019; Editorial decision October 2022; Accepted January 2023 (Eds.)
+
+\begin{abstract}
+We use regional variation in the American Recovery and Reinvestment Act (2009-12) to analyse the effect of government spending on consumer spending. Our consumption data come from householdlevel retail purchases in the Nielsen scanner data and auto purchases from Equifax credit balances. We estimate that a $\$ 1$ increase in county-level government spending increases local non-durable consumer spending by $\$ 0.29$ and local auto spending by $\$ 0.09$. We translate the regional consumption responses to an aggregate fiscal multiplier using a multi-region, new Keynesian model with heterogeneous agents, incomplete markets, and trade linkages. Our model is consistent with the estimated positive local multiplier, a result that distinguishes our incomplete markets model from models with complete markets. At the zero lower bound, the aggregate consumption multiplier is twice as large as the local multiplier because trade linkages propagate the effect of government spending across regions.
+\end{abstract}
+
+Key words: Consumer spending, Fiscal multiplier, Regional variation, Heterogeneous agents\\
+JEL codes: E21, E62, H31, H71
+
+\section*{1. INTRODUCTION}
+If the government purchases $\$ 1$ worth of goods, by how much does private consumption increase or decrease? Although the question of the consumption response to government spending is very old, the literature still lacks consensus. For example, Ramey and Shapiro (1998) find that exogenous increases in defense spending decrease private consumption. On the other hand, Blanchard and Perotti (2002) and Gali et al. (2007) find that exogenous fiscal expansions increase private
+
+The editor in charge of this paper was Dirk Krueger.\\
+consumption. ${ }^{1}$ This disconnect is worrisome since consumer spending is the largest component of national income and its response is a key determinant of the fiscal multiplier.
+
+In this paper, we first estimate the response of consumer spending to fiscal stimulus. In particular, we use regional variation in the spending component of the American Recovery and Reinvestment Act (ARRA) to estimate the local effect of government spending on consumer spending. The local effect is the relative change in regional outcomes in response to a relative change in government spending across regions. ${ }^{2}$
+
+Second, we translate the local fiscal multiplier to an aggregate fiscal multiplier using a multi-region, new Keynesian model with heterogeneous agents and incomplete markets. This is because estimates based on regional variation are not always representative of aggregate effects. Such estimates ignore general equilibrium effects that cannot be separately identified in cross-regional regressions (Nakamura and Steinsson, 2018; Chodorow-Reich, 2019).
+
+The ARRA, implemented between 2009 and 2012, was a very large programme by historical standards. The spending component of the Act allocated roughly $\$ 228$ billion. Our consumer spending data come from two separate sources. First, we collect store-level information on retail purchases from the Nielsen retail scanner data. Second, we construct individual-level spending on vehicles by measuring changes in auto credit balances from the FRB NY Consumer Credit Panel/Equifax.
+
+We estimate that a $\$ 1$ increase in ARRA spending within a county increases local nondurable spending by $\$ 0.29$ and local auto spending by $\$ 0.09$. We address potential endogeneity of government spending in two ways. First, we show that ARRA funding did not significantly target low-income areas. Second, we use a narrative instrumental variable approach. In particular, we identify components of ARRA funding that did not explicitly target local economic recovery.
+
+We translate our estimated local fiscal multiplier to an aggregate fiscal multiplier using a general equilibrium, two region, new Keynesian model. In the model, each region produces a final good, which is purchased by the local consumers as well as the government. The final good is produced using both local and foreign intermediate inputs. Due to home bias, final goods are produced using a larger share of local inputs. Trade linkages-expressed in the degree of home bias-provide one channel for government spending to affect economic activity across regions. The government maintains a fiscal union because it finances spending using federal taxes. The monetary authority targets a common nominal interest rate for all regions (currency union).
+
+Our multi-region model is novel in an important dimension: each region is populated by heterogeneous households who face incomplete asset markets (Huggett, 1993; Aiyagari, 1994). Heterogeneity in our model takes the form of idiosyncratic labour income shocks as well as permanent differences in the discount rate. Households self-insure using a risk-free government bond. Hence, our model combines a multi-region currency union model (e.g. Gali and Monacelli, 2008; Nakamura and Steinsson, 2014) with a heterogeneous agent, new Keynesian model (e.g. McKay et al., 2016; Kaplan et al., 2018).
+
+We calibrate the model using standard parameter values and targets as in typical new Keynesian models with heterogeneous agents. For the strength of trade linkages, we use data on shipments of goods across U.S. regions from the Commodity Flow Survey (CFS). Without
+
+\footnotetext{\begin{enumerate}
+  \item In a review of the literature and empirical methods, Hall (2009) finds a consumption multiplier from somewhat negative to 0.5 . Other recent contributions include Ramey (2011), Auerbach and Gorodnichenko (2012), Ramey (2016), and Ramey and Zubairy (2018).
+  \item Nakamura and Steinsson (2014) refer to this object, in a fiscal policy context, as the open economy relative multiplier.
+\end{enumerate}
+}
+explicitly targeting the response, our model generates a local, non-durable consumption multiplier equal to 0.20 -fairly close to our estimate from the regional data. The aggregate consumption multiplier in our model is equal to 0.41 .
+
+Our model generates positive consumption responses at the local and the aggregate levels, which is generally difficult to deliver in more standard models. ${ }^{3}$ The key necessary element to generate a positive local multiplier is incomplete markets. With complete markets, any change in regional income is offset by transfers due to state-contingent claims. As a result, differences in regional consumer spending are pinned down only by differences in regional prices. And since regions with larger fiscal stimulus injections also experience higher inflation, the local consumption multiplier is negative (see, for example, Nakamura and Steinsson, 2014; Farhi and Werning, 2016; Chodorow-Reich, 2019).
+
+Heterogeneity is not necessary to generate a positive local or aggregate consumption response but it is important to generate substantial consumption responses consistent with the data. We show that a new Keynesian model with a representative agent in each region and incomplete markets across regions generates a positive but small local multiplier equal to 0.09 . The main reason for the larger consumption responses in our benchmark model is the substantial response of high-marginal-propensity to consume (MPC), labour-income-dependent households who experience an increase in their labour earnings. At an annual frequency, the average MPC in our model is 0.37 , which is consistent with the empirical evidence on the magnitude of non-durable consumption responses to unexpected income transfers (Carroll et al., 2017). The combined evidence of our local consumption multiplier and existing estimates of the MPC favour a new Keynesian model with heterogeneous agents over a new Keynesian model with a representative agent.
+
+The positive aggregate multiplier in the model also depends on our assumed passive monetary response to the fiscal stimulus. In our period of analysis, 2008-12, the Federal Reserve was at the zero lower bound (ZLB) of its policy rate and did not raise the rate in response to potential inflation pressures driven by the ARRA. Increased expected inflation in the face of an unchanged nominal rate reduces the real interest rate, leading households to increase consumption. Besides this standard effect of fiscal policy at the ZLB, a lower real interest rate also decreases the government's debt service cost which allows the government to engage in fiscal stimulus with a relatively small increase in taxes. ${ }^{4}$
+
+The aggregate multiplier is twice as large as the local multiplier because trade linkages propagate government spending across regions. As trade linkages become stronger, regional consumption responses comove to a larger degree and the local multiplier-which is identified by the relative cross-regional responses-decreases. We empirically validate this mechanism using trade flows from the CFS. The local multiplier is lower when estimated from regions in close trade relationships than when estimated using regions in distant trade relationships.
+
+We show that one additional reason the aggregate multiplier is higher that the local multiplier is the passive stance of the monetary authority. If in our model the monetary policy actively responds to inflation pressures, the aggregate multiplier turns negative. Nonetheless, the\\
+3. The standard neoclassical model without capital exhibits a negative aggregate consumption multiplier (and thus a less-than-one output multiplier); government spending decreases consumption due to a negative wealth effect induced by higher taxes and also due to a higher real interest rate (Barro and King, 1984; Baxter and King, 1993; Woodford, 2011).\\
+4. The decrease in the government's debt service cost is a redistribution of resources from the private to the public sector, which hurts net savers, namely wealthy, low-MPC households. In contrast, the small adjustment in taxes affects a broader group of consumers including low-income, high-MPC households. Auclert (2019) analyses the redistribution channel from monetary policy to consumer spending.\\
+local multiplier remains positive and unaffected because the monetary policy is common across regions.
+
+Our model maps the empirical evidence on the local multiplier to an estimate for the aggregate multiplier. We show that when the model is also informed by the local multiplier, it delivers a tighter range of estimates for the aggregate multiplier relative to a model that is only informed by the MPC.
+
+Our paper contributes to the extensive literature on the consumption multiplier. One strand of the literature estimates the aggregate consumption multiplier using aggregate vector autoregressions (VARs) (e.g. Ramey and Shapiro, 1998; Blanchard and Perotti, 2002; Perotti, 2005; Barro and Redlick, 2011). A second strand estimates multipliers using dynamic general equilibrium models (for example, Baxter and King, 1993; Christiano et al., 2011; Drautzburg and Uhlig, 2015, to name a few).
+
+Our paper differs from this literature on two points. First, we use cross-regional variation to identify the (local) effect of fiscal stimulus on consumer spending. With disaggregate, geographical data, we use many more observations than typically used in the VAR studies. Moreover, we can identify exogenous variation in a much broader class of government spending than time-series studies which often rely on defense spending variation. Second, we translate the cross-regional variation into an aggregate consumption response using a quantitative model. Typical dynamic equilibrium models do not rely on any cross-regional or cross-sectional evidence.
+
+The closest paper to ours methodologically is Nakamura and Steinsson (2014), who use cross-state evidence to analyse the output effect of defense spending. Our paper analyses the cross-regional response of consumption using detailed micro-level evidence. Additionally, Nakamura and Steinsson (2014) employ a model with complete markets and rely on nonseparable preferences between consumption and leisure to match the empirical evidence of a local output multiplier larger than one. Our model, in contrast, generates a positive local consumption multiplier due to incomplete markets.
+
+We also contribute to the literature that uses regional variation to estimate regional effects of shocks or policies. These include work on the regional effects of house price shocks on consumer spending (Mian et al., 2013) and the effect of unemployment insurance across regions (Hagedorn et al., 2016). Another strand explicitly analyses the effect of fiscal stimulus on employment and income including Wilson (2012), Chodorow-Reich et al. (2012), Conley and Dupor (2013), Leduc and Wilson (2017), Serrato and Wingender (2016), for example. The above literature typically ignores general equilibrium effects. In contrast, we show how local estimates can vary from the aggregate using a general equilibrium model.
+
+Finally, we contribute to the growing literature that incorporates household heterogeneity and incomplete markets into a new Keynesian framework. Oh and Reis (2012) and McKay and Reis (2016) study the effects of government intervention on the U.S. business cycle. Hagedorn et al. (2017), Bhandari et al. (2018), and Auclert et al. (2018) study demand shocks and fiscal policy with heterogeneity and incomplete markets. McKay et al. (2016) and Kaplan et al. (2018) study the effects of monetary policy with heterogeneous agents. We extend this literature by incorporating multiple regions that are linked through trade, fiscal, and monetary policy. We show that, with multiple regions, the transmission of local fiscal policy depends on relative price adjustments and the strength of trade linkages, which are not considered in single-region heterogeneous agents models.
+
+The rest of the paper is structured as follows. Section 2 describes our data. Section 3 describes our empirical specifications and documents the basic empirical patterns regarding the local response of consumer spending to local government spending. Section 4 sets up the model.
+
+Section 5 describes our calibration and our main quantitative experiment. Section 6 analyses our results under different model specifications, and Section 7 concludes.
+
+\section*{2. DATA}
+Our empirical analysis employs regional variation in government spending and consumer spending. We analyse data on government spending from the ARRA (2015). We use the NielsenIQ (2013) dataset to measure retail purchases. We use data on household auto financing from the FRB NY Consumer Credit Panel/Equifax (2017) (hereafter, CCP). The Nielsen and CCP data are available at a store/individual level with detailed geographical information (zip code).
+
+\subsection*{2.1. Consumer spending}
+The Nielsen Retail Scanner data cover 2006 through 2014. ${ }^{5}$ Approximately 40,000 stores from ninety retail chains provide weekly point-of-sale information on units sold, average prices, universal product code (UPC) codes, and product characteristics. In 2010, the total sales in Nielsen stores constituted $42 \%$ of total sales in grocery stores and about $7 \%$ of total retail sales (excluding vehicle purchases). ${ }^{6}$
+
+Purchases in the Nielsen dataset include a combination of non-durable and durable goods. The durable goods included in our data are fast-moving products and typically not very expensive. Examples include cameras and office supplies. We find that around $53 \%$ of annual spending takes place in grocery and discount stores. Hardware, home improvement, and electronics stores account for just $4 \%$ of annual spending.
+
+We measure auto spending using information on household auto finance loans, recorded in detailed data on individual debt for the Federal Reserve Bank of New York consumer credit panel. The CCP is a quarterly panel of administrative, anonymous, individual-level data, including consumer liabilities, some demographic information, credit scores, and home address zip codes. The total number of individuals in the Equifax panel is approximately 10 million. The number of vehicles purchased in our panel (we identify a purchase to have occurred when an individual's auto balance increases between the previous and the current quarter) closely tracks the number of newly (first-time) registered passenger cars across time (see Supplementary Material, Appendix A). Table 1 provides a summary of our consumer spending data.
+
+\subsection*{2.2. Government spending}
+The ARRA had three major components-tax benefits, entitlements, and federal contracts and grants-with roughly a third of the total spending going to each. In this paper, we focus on the contracts and grants, which totalled roughly $\$ 228$ billion. Contracts and grants were spread\\
+5. This paper contains researcher(s)' own analyses calculated (or derived) based in part on data from Nielsen Consumer LLC and marketing databases provided through the NielsenIQ datasets at the Kilts Center for Marketing Data Center at The University of Chicago Booth School of Business. The conclusions drawn from the NielsenIQ data are those of the researcher(s) and do not reflect the views of NielsenIQ. NielsenIQ is not responsible for, had no role in, and was not involved in analysing and preparing the results reported herein. Information about the data and access are available at \href{http://research.chicagobooth.edu/nielsen/}{http://research.chicagobooth.edu/nielsen/}.\\
+6. A second source for consumer spending is the Nielsen HomeScan Consumer Panel Dataset which is a longitudinal panel of approximately 60,000 U.S. households who record information about their retail purchases, including shopping trip dates, the number of units purchased, UPC codes, and the total spending amounts. In Supplementary Material, Appendix A, we show that Retail Scanner data correlate more closely with aggregate time series from the Bureau of Economic Analysis relative to HomeScan data.
+
+\begin{table}[h]
+\begin{center}
+\captionsetup{labelformat=empty}
+\caption{TABLE 1\\
+Data sources for consumer spending}
+\begin{tabular}{llll}
+\hline
+Spending category & \multicolumn{1}{c}{Source} & \# Stores/individuals & Time period \\
+\hline
+Retail spending & Nielsen Retail Scanner & 40,000 stores & $2006-14$ \\
+Auto spending & CCP/Equifax & 10 million individuals & $2001-15$ \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{figure}[h]
+\begin{center}
+  \includegraphics[alt={},max width=\textwidth]{f7456475-25f8-44eb-bcd7-6c03a4b15006-06_969_1276_531_291}
+\captionsetup{labelformat=empty}
+\caption{Figure 1\\
+Government spending by U.S. counties}
+\end{center}
+\end{figure}
+
+Notes: Total amount of government spending during the period 2009-12 by U.S. counties (in millions of dollars).\\
+across many industries, including large amounts to transportation, infrastructure, energy, and (most significantly) education.
+
+To promote transparency, the federal government posted detailed information about each award on its \href{http://Recovery.gov}{Recovery.gov} website, including the total amount awarded, the total amount spent to date, the award date, and funding agency. The website also provided zip code identifiers not only for primary recipients but also for vendors, subcontractors, and other entities for each award. We assign spending to localities based on the ultimate receivers of each part of the award. For example, suppose an award was dispersed through a federal agency, which in turn was given to a state-level agency, which was then apportioned to several private entities. We locate spending using the various zip codes of those private entities. Figure 1 contains a county-level map of ARRA spending through 2012. Table 2 reports, at various percentiles, per-capita spending by county.
+
+\begin{table}[h]
+\begin{center}
+\captionsetup{labelformat=empty}
+\caption{TABLE 2\\
+Cross-sectional distribution of county-level government spending (per capita)}
+\begin{tabular}{llllll}
+\hline
+Percentile & 10th & 25th & 50th & 75th & 90th \\
+\hline
+ & $\$ 172$ & $\$ 259$ & $\$ 420$ & $\$ 739$ & $\$ 1,312$ \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+Instrumental variable. A common challenge for identifying the effect of government stimulus on economic variables is that these programmes take place during times of economic distress. Similarly, in our case, it is possible that the money allocated to local communities explicitly targeted areas that were hit the hardest by the recession. To address this potential endogeneity, we determine components of the Act that were allocated using criteria orthogonal to the state of the local business cycle.
+
+Each agency responsible for dispersing Recovery Act dollars provided explicit criteria by which funds would be allocated. We use these criteria to distinguish between awards that explicitly targeted local economic recovery from awards that did not. For example, the ARRA's Department of Education support for children with disabilities was apportioned according to a county's relative population of children with disabilities rather than the local business cycle. As a second example, money provided through the Federal Highway Administration for road improvement and maintenance was distributed based upon population density and passenger miles travelled at the state level. Many awards that did not explicitly target local economic recovery relate to water quality assistance grants. The Environmental Protection Agency (EPA) instructions for state agencies were to select projects where water quality needs were the greatest, while priority was given to projects "ready to proceed to construction within 12 months" of the Act's passage. ${ }^{7}$
+
+Our instrument is the sum within a county of all funds allocated by these agencies. The total amount of all dollars awarded through 2012 was $\$ 228$ billion, with $20.2 \%$ satisfying our selection criteria and therefore belonging to our instrument.
+
+Although the language used for the dispersion of funds included in our instrument did not explicitly target local economic recovery, it is possible that these awards were inadvertently allocated toward areas most affected by the recession. For example, even if water quality assistance grants were allocated based on environmental and not economic needs, they might have been implicitly directed toward low-income areas. To analyse if the Recovery Act spending correlates with local economic conditions, we use the following county-level regression:
+
+
+\begin{equation*}
+G_{j}=a+D_{s}+\beta \times X_{j}+\varepsilon_{j}, \tag{2.1}
+\end{equation*}
+
+
+where $G_{j}$ denotes the money awarded per household at county $j$ during the period 2009-12. We run the regression when $G_{j}$ is the total money awarded per household (denoted "Total") and separately for the case where $G_{j}$ is the subset of money allocated using our selected criteria (denoted "Instrument"). $D_{s}$ is a state dummy and $X_{j}$ denotes pre-Recovery Act county-level economic characteristics. These include per-capita income in 2007, the unemployment rate in 2007, the change in per-capita income between 2007 and 2009, and the change in the unemployment rate between 2007 and 2009. ${ }^{8}$ We run a separate regression for each local economic characteristic and report the estimates in Table 3.
+
+\footnotetext{\begin{enumerate}
+  \setcounter{enumi}{6}
+  \item For a more detailed analysis of the selection criteria driving our narrative instrumental variable approach, see Dupor and Mehkari (2016) and Dupor and McCrory (2017).
+  \item When we expand the set of control variables to include the 2008 per-capita county income and unemployment, the results are little changed.
+\end{enumerate}
+}\begin{table}[h]
+\begin{center}
+\captionsetup{labelformat=empty}
+\caption{TABLE 3\\
+Recovery Act spending and local economic characteristics}
+\begin{tabular}{|l|l|l|}
+\hline
+Recovery Act spending (2009-12) & Total & Instrument \\
+\hline
+Per-capita county & 51.8 & 11.1 \\
+\hline
+Income 2007 (/\$10,000) & (39.0) & (12.1) \\
+\hline
+Change in per-capita county & -80.5 & 13.2 \\
+\hline
+Income 2007-09 (/\$10,000) & (181.7) & (46.9) \\
+\hline
+County unemployment & -57.1 & 22.1 \\
+\hline
+Rate 2007 (p.p.) & (53.7) & (23.0) \\
+\hline
+Change in county unemployment & -183.2*** & -34.5** \\
+\hline
+Rate 2007-09 (p.p.) & (60.7) & (16.6) \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+Notes: Table shows results from the regression in equation (2.1). "Total" is the total amount of government spending while "instrument" is the fraction of spending allocated based on our selected criteria. We weight by county population and cluster standard errors at the state level. The standard errors are given in parentheses. One, two, and three stars denote significance at the $10 \%, 5 \%$, and $1 \%$ levels, respectively.
+
+Total spending is, for the most part, positively and not negatively correlated with economic characteristics, as economic targeting would imply. For example, counties with $\$ 10,000$ higher per-capita income in 2007 received an additional $\$ 52$ per capita. Our results are consistent with the analysis of Boone et al. (2014), who also find that there was no particular economic targeting in the Recovery Act. In all cases, our instrument mitigates the correlation between spending and pre-Recovery Act local economic conditions. We view this as supporting evidence that our selected criteria for the construction of the instrument are largely uncorrelated with the local business cycle.
+
+We also analyse if government spending is correlated with pre-trends in consumer spending (see details in Supplementary Material, Appendix C). We find that government spending does not correlate with either retail or auto spending during 2007 and 2008 (i.e. prior to the Act). Therefore, consumption pre-trends were broadly similar between the large-dollar and smalldollar recipient counties.
+
+\section*{3. THE LOCAL FISCAL MULTIPLIER}
+\subsection*{3.1. Definitions and basic specification}
+This section describes our empirical specification. We use two categories of consumer spending: retail spending and auto spending, available at the store and the household level, respectively. Let $c_{i, j, t}$ denote total spending of the household/store $i$ located in county $j$ during year $t . N_{j}$ is the number of households/stores in county $j$. We use a balanced panel (no new entry or exit of households/stores) and fix the population at its 2008 level. We construct the average household/store spending by averaging across all households/stores that are located in the county. Thus, $C_{j, t}=\sum_{i \in j} c_{i, j, t} / N_{j}$ is the average spending in county $j$.
+
+We summarize consumption responses by constructing cumulative changes in spending between the period 2008 and 2012 to coincide with the Recovery Act period:
+
+
+\begin{equation*}
+\Delta C_{j}=\sum_{t=2008}^{2012}\left\{C_{j, t}-C_{j, 2008}\right\} . \tag{3.1}
+\end{equation*}
+
+
+Our benchmark econometric model is
+
+
+\begin{equation*}
+\frac{\Delta C_{j}}{C_{j, 2008}}=a+\beta \times \frac{G_{j}}{C_{j, 2008}}+X_{j} \Phi^{\prime}+D_{s}+\varepsilon_{j} \tag{3.2}
+\end{equation*}
+
+
+The left-hand side variable in our regression is the cumulative growth rate of consumer spending relative to 2008: $\Delta C_{j} / C_{j, 2008}$. Our main explanatory variable is per-capita Recovery Act spending, denoted $G_{j}$. We estimate the number of households in each county by dividing county population by the average number of people per household. Our right-hand side variable is government spending normalized by the average consumer spending in year 2008: $G_{j} / C_{j, 2008}$.
+
+Using the same denominator on the left- and the right-hand side preserves the usual definition of the multiplier: $\beta$ is the dollar change in consumer spending if government spending increases by $\$ 1$. We include county-level controls through the vector $X_{j}$. These are population, 2007 and 2008 (per capita) incomes, and the 2007 and 2008 unemployment rates. Finally, we include a state fixed effect, $D_{s}$, in which $s$ is the state of county $j$. We estimate the model using, in turn, least squares and instrumental variables. Our instrument is non-targeted Recovery Act dollars. The exclusion restriction is that non-targeted Recovery Act government spending affects local consumption only through its effect on total ARRA government spending, conditional on state characteristics.
+
+In the first-stage regression (reported in Supplementary Material, Appendix B), we find that one extra dollar in the specific programmes that we include as part of the instrument is associated with $\$ 3.9$ spending in all types of programmes. The adjusted $R^{2}$ is 0.62 suggesting that the instrument has a strong predictive power on overall spending, but is not the only determinant.
+
+In each specification, we weigh each county by its population. Ramey (2019) highlights the importance of using population weights when using cross-regional variation. ${ }^{9}$ Furthermore, we cluster standard errors at the state level and winsorize the dependent and independent variable at the 1\% level.
+
+\subsection*{3.2. The effect of the Recovery Act on consumer spending}
+Figure 2 contains a simple (by county) scatter plot of consumption growth from 2008 to 2012, for retail spending (left panel) and auto spending (right panel), against Recovery Act spending scaled by 2008 consumption spending. In both panels, higher government spending is associated with a higher consumption growth rate. ${ }^{10}$
+
+The Recovery Act's effect on retail spending (Nielsen). In Table 4, we report estimates of our main regression (equation (3.2)) for retail consumer spending. We report separately ordinary least squares (OLS) and instrumental variable (IV) estimates as well as estimates with and without county controls/state fixed effects.
+
+In each specification, the local response of retail consumer spending to fiscal stimulus is positive. Excluding county controls and state fixed effects, the OLS and IV estimates are 0.20 and 0.26 , respectively. Including county controls and state fixed effects decreases both the OLS and IV estimated multipliers to 0.11 .
+
+Broader consumption multipliers using the Consumption Expenditure Survey. A possible concern with using the Nielsen dataset is that it captures a relatively narrow set of consumer\\
+9. Unweighted auto spending estimates increase substantially relative to our weighted estimates since Equifax/CCP provides a wide geographical representation of the U.S. including many small counties. On the other hand, the unweighted retail spending estimates are similar to the weighted estimates. We also use weights that take into account the relatively limited geographical coverage in Nielsen as in Aladangady et al. (2016). See Supplementary Material, Appendix C for details.\\
+10. The range of government spending values in the $x$-axis is wider in the auto spending case because Equifax has a richer geographical representation relative to Nielsen.
+
+\begin{figure}[h]
+\begin{center}
+  \includegraphics[alt={},max width=\textwidth]{f7456475-25f8-44eb-bcd7-6c03a4b15006-10_511_1278_204_287}
+\captionsetup{labelformat=empty}
+\caption{Figure 2\\
+Government spending and percentage change in retail and auto spending (2008-12), by counties\\
+Notes: Binned scatter plots between government spending (Recovery Act through 2012) and the percentage change in consumer spending, between 2008 and 2012, by county. The left panel shows changes in retail spending (Nielsen, Retail Scanner), and the right panel shows changes in auto spending (CCP/Equifax). The regression lines in both panels are estimated using population weights.}
+\end{center}
+\end{figure}
+
+\begin{table}[h]
+\begin{center}
+\captionsetup{labelformat=empty}
+\caption{TABLE 4\\
+Local retail spending multipliers}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\multirow[b]{2}{*}{Spending category} & \multicolumn{4}{|c|}{Retail consumer spending (Nielsen, Retail Scanner)} \\
+\hline
+ & OLS & IV & OLS & IV \\
+\hline
+Government spending & 0.20*** (0.06) & 0.26*** (0.07) & 0.11*** (0.04) & 0.11** (0.05) \\
+\hline
+Partial $F$ stat. & - & 137.1 & - & 112.0 \\
+\hline
+County controls/State F.E. & No & No & Yes & Yes \\
+\hline
+\# of counties & 367 & 367 & 367 & 367 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+Notes: The table shows the estimates of the regression of the growth rate in retail spending on cumulative government spending at the county level during the period 2008-12. The standard errors are given in parentheses and are clustered at the state level. One, two, and three stars denote significance at the $10 \%, 5 \%$, and $1 \%$ levels, respectively.\\
+purchases. To translate our Nielsen estimates into a broader multiplier, we compare Nielsen-type purchases from the interview survey of the Consumption Expenditure Survey (CEX) (food at home, alcohol and beverage, detergents, cleaning products and other household products, small appliances, and personal care products) to more general types of spending. We focus on three consumption bundles. First, similarly to Kaplan et al. (2020), we construct a set of non-durable goods that includes, in addition to our Nielsen-based bundle, spending on apparel, tobacco, and reading. In this CEX-based bundle, spending is on average 1.3 times larger than the Nielsenbased one. Second, we construct an even broader spending group that adds services, such as food away from home, spending on entertainment, telephone services, utilities, gas, and public transportation. Spending on this bundle is on average 3.6 times larger than the Nielsen-based one. Finally, we construct a bundle that also adds durables, such as spending on education, furniture, car maintenance, and health. This bundle is on average 4.5 times larger than the Nielsen-based one. ${ }^{11}$ Table 5 shows a summary of goods included in each of the various bundles.
+
+\footnotetext{\begin{enumerate}
+  \setcounter{enumi}{10}
+  \item The expenditure shares for similar bundles of goods in the diary survey are significantly larger. Nonetheless, according to Bee et al. (2012), the interview survey tracks aggregate spending more closely than the diary survey. The interview is designed to collect relatively larger expenditures and those that occur regularly. The diary is designed to
+\end{enumerate}
+}\begin{table}[h]
+\begin{center}
+\captionsetup{labelformat=empty}
+\caption{TABLE 5\\
+Nielsen and CEX}
+\begin{tabular}{|l|l|l|l|l|l|}
+\hline
+Bundle & Spending categories & Nielsen estimate & Bundle size & Elasticity & Multiplier \\
+\hline
+Nielsen & Food at home, alcohol and beverage, detergents, cleaning/hh products, small appliances, and personal care products & $0.11 \times$ & $1.0=$ & - & 0.11 \\
+\hline
+Non-durables & Nielsen + apparel, tobacco, and reading & $0.11 \times$ & $1.3 \times$ & $0.98=$ & 0.14 \\
+\hline
+Non-durables and services & Non-durables + food away from home, entertainment, telephone services, utilities, gas, and public transportation & $0.11 \times$ & $3.6 \times$ & $0.75=$ & 0.29 \\
+\hline
+Non-durables and services, and durables & Non-durables and services + education, furniture, car maintenance, and health & $0.11 \times$ & $4.5 \times$ & $0.74=$ & 0.36 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+Notes: Bundles of goods are constructed from the CEX for the period 2000-15. We report the size of each bundle compared to Nielsen-type spending as well as the elasticity estimated from regression (3.3). Broader multipliers are computed by multiplying the Nielsen estimate times the bundle size times the elasticity.
+
+We next estimate the elasticity of each broader spending measure to Nielsen-type spending. We estimate the following household-level regression using CEX data between 2000 and 2015:
+
+
+\begin{equation*}
+\log C_{i, t}^{j}=a+\Psi \times \log C_{i, t}^{\text {Nielsen }}+X_{i, t} \Phi^{\prime}+\varepsilon_{i, t}, \tag{3.3}
+\end{equation*}
+
+
+where $i$ denotes household, $t$ denotes time, and $j$ denotes one of the three broader bundles. We include, as household controls, a cubic on age and dummies on race, education, family type, and region, and use the weights provided by the survey.
+
+According to Aguiar and Bils (2015), high-income households in the CEX tend to underreport their spending relative to low-income households. To alleviate potential measurement error concerns, we follow the approach in Aguiar and Bils (2015) and instrument the households' current spending with their lagged spending. Table 5 shows the elasticities estimated by equation (3.3) when $C_{i, t}^{\text {Nielsen }}$ is instrumented by its lagged spending.
+
+We find that a $1 \%$ increase in Nielsen-type categories is associated with a $0.98 \%$ increase in non-durable consumer spending, a $0.75 \%$ increase in combined spending on non-durable goods and services, and a $0.74 \%$ increase on overall spending that also includes durables. The estimated elasticities without the instrument are lower. A $1 \%$ increase in Nielsen-type categories is associated with a $0.90 \%$ increase in non-durable consumer spending, a $0.57 \%$ increase in combined spending on non-durable goods and services, and a $0.54 \%$ increase on overall spending that also includes durables (see Supplementary Material, Appendix D).
+
+Multiplying the elasticity with the expenditure share and combining with our preferred estimate from Table 4 (which includes county controls/state fixed effects and uses the IV), we arrive at a local consumption multiplier equal to 0.14 for non-durable spending, equal to 0.29 for spending on non-durable goods and services, and equal to 0.36 for overall spending that also includes durables.
+
+\footnotetext{capture small, infrequent purchases that may be missed in the interview part. A detailed analysis of estimation results based on different surveys can be found in Supplementary Material, Appendix D.
+}\begin{table}[h]
+\begin{center}
+\captionsetup{labelformat=empty}
+\caption{TABLE 6\\
+Local auto spending multipliers}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\multirow[b]{2}{*}{Spending category} & \multicolumn{4}{|c|}{Auto spending (CCP/Equifax)} \\
+\hline
+ & OLS & IV & OLS & IV \\
+\hline
+Government spending & 0.07*** (0.01) & 0.11*** (0.01) & 0.06*** (0.01) & 0.09*** (0.01) \\
+\hline
+Partial $F$ stat. & - & 248.5 & - & 187.9 \\
+\hline
+County controls/state fixed effects & No & No & Yes & Yes \\
+\hline
+\# of counties & 3,119 & 3,119 & 3,047 & 3,047 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+Notes: The table shows the estimates of the regression of the growth rate in auto spending on cumulative government spending at the county level during the period 2008-12. The standard errors are given in parentheses and are clustered at the state level. One, two, and three stars denote significance at the $10 \%, 5 \%$, and $1 \%$ levels, respectively.
+
+The effect of the Recovery Act on auto spending (FRB NY Equifax data). We estimate a positive response of fiscal stimulus to auto spending (Table 6). ${ }^{12}$ In the specification which includes county controls/state fixed effects and uses the IV, we estimate a multiplier equal to 0.09 . Once more, the IV estimate is slightly higher than the OLS and county controls/state fixed effects reduce the difference between OLS and IV estimates. The CCP provides a much richer geographical representation of the U.S. relative to Nielsen. This explains the differences in the number of counties.
+
+Summing the consumption spending categories. We found a local retail spending multiplier from Nielsen Retail Scanner equal to 0.11 (Table 4). Using CEX data, we translated this estimate into a broader local multiplier equal to 0.14 for non-durable goods, 0.29 for combined spending on non-durable goods and services, and 0.36 for the bundle that also includes durable purchases (Table 5). Finally, we found a local auto spending multiplier from Equifax equal to 0.09 (Table 6). Since our definition of durable purchases did not include auto spending, by adding the local auto multiplier, we arrive at an estimate of the local consumption multiplier for overall spending equal to 0.45 .
+
+Our targeted multiplier in the model is the consumption multiplier derived from estimates of the bundle including non-durable goods and services (equal to 0.29 ). We find this appropriate as our model does not include investment in durable goods.
+
+\subsection*{3.3. Federal and sub-national government spending}
+Our benchmark estimate of the local consumption multiplier relies on county-level variation in (federally funded) Recovery Act grants, within state borders. Existing research considers how federal Recovery Act spending influenced sub-national government spending: If the federally funded state governments cut (boosted) their own funding, this crowding out (in) would influence the estimate of the multiplier.
+
+We further explore the robustness of our approach to this issue and discuss under what conditions our exclusion restriction may be violated. We use data from the Annual Survey of State\\
+12. The response of auto vehicles spending to household tax rebates varies based on different studies. Johnson et al. (2006) do not find a significant impact on auto spending based on the 2001 tax rebates, while Parker et al. (2013) find a significant effect on spending of durables-in particular of vehicles-to the tax rebates of 2008. The 2008 payments were about twice the 2001 payments which may explain the differences between the studies. With respect to non-durable goods, both studies find similar results: a significant increase in non-durable spending.
+
+Government Finances, which contains annual state-level spending on current operations, capital outlays, and intergovernmental expenditures, and compute the state-level analogue of our federal spending variable. We find that for every Recovery Act dollar allocated by all programmes, states increased their total spending (relative to 2008) by a total of 1.5 dollars. ${ }^{13}$
+
+In spite of this crowding-in, our specification with state fixed effects mitigates the upward bias since it controls for the confounding government spending at the state level, as long as counties within the state received the additional state spending in a uniform manner. Since we do not have sub-national government spending per county, we are not able to test this requirement. Yet, one way to deal with this problem is to consider the magnitude of upward bias resulting from a violation of the exclusion restriction. Specifically, we can see how crowding-in affects the multiplier by dividing the increase in consumer spending without state fixed effects (but with country controls) by 1.5 and obtain a multiplier of $0.12-0.15$, which is close to the specification with state fixed effects.
+
+Alternatively, we estimate that for every Recovery Act dollar allocated in our selected programmes that are part of the instrument, states spent (relative to 2008) a total 3.3 dollars. This implies a multiplier around 0.07 , which is again close to our benchmark estimates with state fixed effects.
+
+\subsection*{3.4. The effect of trade linkages on the local consumption multiplier}
+The local consumption multiplier is identified from the relative cross-regional responses to relative cross-regional differences in government spending. Trade linkages are an important channel for government spending to affect economic activity across regions. When regions trade intensively with each other (a case resembling a low preference for local goods), the fiscal stimulus must generate a smaller relative response since government spending is spread through trade flows. In contrast, when counties are in distant trade relationships, the local multiplier must be relatively large since government spending is mostly absorbed by the recipient county. This mechanism is at the heart of our model (presented in the next section) and explains why the local multiplier turns out to be around half the aggregate multiplier.
+
+We test this mechanism using data on shipments of goods across U.S. states from the CFS. The data include information on commodities shipped, their value, and the origin and destination of the shipments. The largest trading partners of a state (based on the share of shipments exported) are often neighbouring states, although it is possible for states to trade intensively with relatively distant regions that maintain large economies. For example, the top two trading partners of Texas are Louisiana and California, of Minnesota are Wisconsin and Illinois, and of Florida are Georgia and Texas.
+
+Our objective is to split counties into high-trade, medium-trade, and low-trade groups. The local multiplier should be relatively higher in low-trade groups, since the stimulus remains largely local, and relatively lower in high-trade groups since the stimulus is shared between the regions. We formulate trade groups sequentially. In the case of high- (low-) trade groups, we start a group from an initial-unmatched-county and assign new counties in the group that have the largest (smallest) trade exposure with the existing counties in the group. ${ }^{14}$ We also consider a middle case where assignment of counties to groups occurs with half probability based
+
+\footnotetext{\begin{enumerate}
+  \setcounter{enumi}{12}
+  \item The crowding-in of state spending in response to the Recovery Act is also documented by Leduc and Wilson (2017) and Chodorow-Reich (2019). Additional details on the regression appear in Supplementary Material, Appendix B.
+  \item Given our base sample of around 365 counties, we pick the number of counties in each group to be nine which gives around forty groups (as many as the number of states in our data).
+\end{enumerate}
+}
+on high-trading partners and half based on low-trading partners (called "middle-trade groups"). We formally describe our algorithm in Supplementary Material, Appendix E.
+
+From the high-trade groups formed, $41 \%$ consist of groups with counties from the same state, $36 \%$ of counties that belong to two separate states, and $21 \%$ that belong to three or more states. The average distance between two counties in a group is 426 miles. On average, the share of exports toward counties in the same group is $6.1 \%$. All low-trade groups consist of counties belonging to three or more states, the average distance between two counties in the group is equal to 1016 miles, and the average share of exports is equal to $2.2 \%$.
+
+We estimate the local consumption multiplier for each case: (i) low-trade groups, (ii) medium-trade groups, and (iii) high-trade groups. We use the following specification (written for the case of low-trade groups, as an example):
+
+
+\begin{equation*}
+\frac{\Delta C_{j}}{C_{j, 2008}}=a+\beta^{\text {low }} \times \frac{G_{j}}{C_{j, 2008}}+X_{j} \Phi^{\prime}+\sum_{1}^{N} D_{j \in \mathcal{G}}+\varepsilon_{j} \tag{3.4}
+\end{equation*}
+
+
+The left-hand side variable is the cumulative growth rate of retail spending at county $j$ relative to 2008, and $G_{j}$ is the total money awarded per household in county $j$ during the period 2009-12. $X_{j}$ includes county-level controls which are population, 2007 and 2008 (per capita) incomes, and the 2007 and 2008 unemployment rates. $D_{j \in \mathcal{G}}$ is a group dummy: it takes the value of one if county $j$ belongs to a group $\mathcal{G}$ and zero otherwise. We use, in turn, least squares and instrumental variable regression. We run the same regressions for medium- and high-trade groups and derive $\beta^{\text {medium }}$ and $\beta^{\text {high }}$, respectively.
+
+The local multiplier, which is estimated from the response of the treated relative to the untreated, reflects the type of the trade group. Our hypothesis is that the relative response of the treated counties in a high-trade group should be smaller compared to the relative response of the treated counties in a low-trade group.
+
+Figure 3 plots the estimated local multipliers (the $\beta$ 's) for the case of high-, medium-, and low-trade groups (ordered from high to low to facilitate comparison with our model). The local consumption multiplier (both OLS and IV) clearly increases as trade openness decreases. According to our IV estimates, the local multiplier can increase by $30 \%$ if the stimulus is directed from high- to low-trade regions. All estimates are statistically different from zero at the $1 \%$ level. ${ }^{15}$ We demonstrate a similar relationship between trade intensity and the local consumption multiplier in our model by computing the local multiplier as we vary the underlying parameter that determines trade intensity.
+
+\section*{4. MODEL}
+This section presents our model. It features multiple regions that engage in intermediate-input trade, heterogeneous households, and incomplete markets.
+
+\subsection*{4.1. Description of the economy}
+The model is dynamic and solved in general equilibrium. In the model description below, we abstract from the time subscript $t$. The economy has $N=2$ regions: one (small) region and the
+
+\footnotetext{\begin{enumerate}
+  \setcounter{enumi}{14}
+  \item The difference in the estimated low-trade and high-trade $\beta$ 's is equal to 0.05 with a standard error equal to 0.07 which yields a $p$-value equal to 0.24 . Detailed estimates used to construct the plot appear in Supplementary Material, Appendix E. As an additional exercise, we form groups based on geographical distance instead of trade flows. We find that as a group's geographical borders expand, the local multiplier increases since trade flows within the group likely become weaker.
+\end{enumerate}
+}\begin{figure}[h]
+\begin{center}
+  \includegraphics[alt={},max width=\textwidth]{f7456475-25f8-44eb-bcd7-6c03a4b15006-15_656_852_213_505}
+\captionsetup{labelformat=empty}
+\caption{Figure 3\\
+Local consumption multiplier and trade linkages\\
+Notes: The figure shows the estimate of the local consumption multiplier based on retail spending data. We run the regression in equation (3.4) for three cases: high-, medium-, and low-trade groups.}
+\end{center}
+\end{figure}
+
+rest of the economy. Nakamura and Steinsson (2014) also assume this geographical representation. To be consistent with our empirical evidence (which is based on county-level responses), we calibrate the size of the small region according to the population size of the average county in the U.S.
+
+Each region $i$ has its own real wage $w_{i}$ and inflation rate $\pi_{i}$. Each region produces a final good $Y_{i}$ using intermediate inputs produced by monopolistically competitive firms. There is a continuum of intermediate good firms in each region, indexed by $(i, j)$. Intermediate good firm $j$ located in region $i$ produces $y_{i, j}$ at price $p_{i, j}$. Regional trade takes place through trade in intermediate inputs. Regional trade flows are calibrated based on data from the CFS that combine shipments of final and intermediate goods. Through the lens of the model, we interpret all trade flows (including tradeable services) as trade in the intermediate sector and assume that the final goods are only locally consumed. ${ }^{16}$
+
+The region $i$ population is denoted $\mu_{i}$ with $\sum_{i} \mu_{i}=1$. Populations do not vary across time. The regions are symmetric, i.e. per-capita variables are identical across regions at the steady state. In each region, there is a continuum of households making consumption, working, and saving decisions. Finally, there is a government buying final goods from each region. To finance expenditures, it taxes households' labour income. Taxation occurs only at the federal level (fiscal union). The government also supplies the nominal bond used by households as a savings instrument. Households in both regions face the same nominal interest rate $R$ (currency union). Therefore, there are two sources of market incompleteness in the model: first, across regions, and second, within regions.
+
+\footnotetext{\begin{enumerate}
+  \setcounter{enumi}{15}
+  \item Our model allows trade in goods but not labour movement between regions. Auerbach et al. (2019) show that local federal spending does not pull in labour from nearby locations. House et al. (2020) also explore fiscal policy in a multi-country dynamic stochastic general equilibrium (DSGE) setup with explicit trade linkages. In their model, each country has a representative household.
+\end{enumerate}
+}Household-level variables are denoted with a small letter. Per-capita regional variables are denoted with capital letters. Aggregate variables are per-capita variables times the population rate. For example, consumption of a household in region $i$ is $c_{i}$, per-capita consumption in region $i$ is $C_{i}$, and aggregate consumption in region $i$ is $\mu_{i} C_{i}$.
+
+\subsection*{4.2. Households}
+Each region is populated by a measure one continuum of households. Households derive utility from consumption (denoted $c$ ) and leisure. The good is fully consumed at the time of the purchase and does not provide any service beyond the current period. Hence, consumption corresponds to non-durable spending. A household is endowed with one unit of productive time, which it splits between work $h$ and leisure. Households' decisions depend on preferences represented by a time separable utility function of the form
+
+
+\begin{equation*}
+U=\mathbf{E}_{0}\left[\sum_{t=0}^{\infty} \beta^{t-1}\left\{\log \left(c_{i, t}\right)+\psi \frac{\left(1-h_{i, t}\right)^{1-\theta}}{1-\theta}\right\}\right], \tag{4.1}
+\end{equation*}
+
+
+where $\psi$ affects the utility from leisure and $\theta$ affects the Frisch elasticity of labour supply. ${ }^{17} \beta$ is the household's idiosyncratic discount factor which does not vary across time (Krueger et al., 2016; Hagedorn et al., 2017). Half of the households in each region are impatient ( $\beta= \bar{\beta}-\epsilon_{\beta}$ ) and half are patient ( $\beta=\bar{\beta}+\epsilon_{\beta}$ ). Discount factor heterogeneity allows the model to be consistent with evidence of non-durable consumption responses to tax rebates.
+
+Households consume only the final good produced in their region. They supply labour in the intermediate good sector of their region and receive real wage payments $w_{i}$. Their effective labour supply is $x h$ where $x$ is an idiosyncratic shock that follows an AR(1) process in logs:
+
+
+\begin{equation*}
+\log x_{t+1}=\rho \log x_{t}+\eta_{t+1} \quad \text { with } \eta_{t+1} \sim \operatorname{iid} N\left(0, \sigma_{\eta}^{2}\right) \tag{4.2}
+\end{equation*}
+
+
+Therefore, households are heterogeneous for two reasons: (i) they have different discount factors and (ii) they receive in every period different shocks to their productivity. The differences in patience and labour earnings result in differences in consumption and asset holdings. The transition matrix that approximates the autoregressive process in equation (4.2) is given by $\Gamma_{x x^{\prime}}$.
+
+In each period $t$, a household residing in region $i$ saves $a_{i, t+1}$ in a regional mutual fund. The mutual fund is discussed in detail below. One period later, the household receives from the mutual fund a real return equal to $r_{i, t+1}$. Following Kaplan et al. (2018), we assume that households receive a $1-\omega$ fraction of real dividends, $D_{i, t}$, directly from the local intermediate firms. This additional income is interpreted as the profit-sharing component of worker compensation such as bonuses, commissions, and stock options. The residual share of dividends $(1-\omega) D_{i, t}$ is distributed proportionately to workers' labour productivity $\delta(x)=x / \bar{x}$ where $\bar{x}$ is the average labour productivity. Finally, households pay income taxes on the sum of wage payments and bonuses, based on the tax schedule $\mathcal{T}($.$) . We denote the regional distribution of households$ across productivity, asset holdings, and discount rates as $\phi_{i}$.
+
+\footnotetext{\begin{enumerate}
+  \setcounter{enumi}{16}
+  \item Given the utility specification, the Frisch elasticity of labour supply depends on both $\theta$ and the hours worked $h$. In Section 6, we analyse a utility function specified in terms of disultility of hours worked where $\theta$ is directly interpreted as the labour supply elasticity.
+\end{enumerate}
+}We write the decision problem of a household that resides in region $i$. For simplicity, we index only regional and not idiosyncratic variables by $i$.
+
+
+\begin{align*}
+V_{t}\left(x_{t}, a_{t}, \beta ; \phi_{i, t}\right)= & \max _{c_{t}, a_{t+1}, h_{t}}\left\{\log \left(c_{t}\right)+\psi \frac{\left(1-h_{t}\right)^{1-\theta}}{1-\theta}\right. \\
+& \left.+\beta \sum_{x_{t+1}} \Gamma_{x_{t}, x_{t+1}} V_{t+1}\left(x_{t+1}, a_{t+1}, \beta ; \phi_{i, t+1}\right)\right\}  \tag{4.3}\\
+\text { s.t. } \quad & c_{t}+a_{t+1}=w_{i, t} x_{t} h_{t}-\mathcal{T}(.)+\left(1+r_{i, t}\right) a_{t}+(1-\omega) \delta\left(x_{t}\right) D_{i, t},  \tag{4.4}\\
+& a_{t+1} \geq 0 . \tag{4.5}
+\end{align*}
+
+
+\subsection*{4.3. Mutual fund}
+There is a mutual fund in each region. The fund collects savings from local households, $A_{i, t+1}= \int_{\phi_{i, t}} a_{i, t+1}$. The fund next purchases government bonds, $B_{i, t+1}^{m}$, and shares, $s_{i, t+1}$, that represent claims on the profits of intermediate firms in region $i$. The price of each share (relative to the price of the final good) is $q_{i, t}$. The mutual fund chooses $B_{i, t+1}^{m}$ and $s_{i, t+1}$ to maximize its real long-run profits:
+
+
+\begin{align*}
+V_{i, t}^{m}= & \left(1+R_{t-1}\right) B_{i, t}^{m}+\left(q_{i, t}+\left(1-\tau_{d}\right) \omega D_{i, t}\right) s_{i, t}-\left(1+\pi_{i, t+1}\right) B_{i, t+1}^{m}-q_{i, t} s_{i, t+1} \\
+& +\frac{1}{1+r_{i, t+1}} V_{i, t+1}^{m} . \tag{4.6}
+\end{align*}
+
+
+The government bond costs $\$ 1$ and pays $(1+R)$ dollars where $R$ is the nominal interest rate. $\pi_{i, t+1}$ is the region-specific inflation rate defined as
+
+
+\begin{equation*}
+\pi_{i, t+1}=\frac{P_{i, t+1}}{P_{i, t}}-1 \tag{4.7}
+\end{equation*}
+
+
+where $P_{i}$ is the price of the final good in region $i$ (defined below). Each period, the mutual fund receives after-tax dividends $\left(1-\tau_{d}\right) \omega D_{i, t}$, where $\omega$ is the fraction of dividends not distributed directly as employment compensation. The mutual fund pays back households using the revenues from holding government bonds and shares (zero profit condition):
+
+
+\begin{equation*}
+\left(1+r_{i, t}\right) A_{i, t}=\left(1+R_{t-1}\right) B_{i, t}^{m}+\left(q_{i, t}+\left(1-\tau_{d}\right) \omega D_{i, t}\right) s_{i, t} \tag{4.8}
+\end{equation*}
+
+
+Solving the mutual fund's problem gives rise to a no-arbitrage condition:
+
+
+\begin{equation*}
+1+r_{i, t+1}=\frac{1+R_{t}}{1+\pi_{i, t+1}}=\frac{q_{i, t+1}+\left(1-\tau_{d}\right) \omega D_{i, t}}{q_{i, t}} \tag{4.9}
+\end{equation*}
+
+
+Combining equations (4.8) and (4.9) gives the total amount of savings in region $i$ :
+
+
+\begin{equation*}
+A_{i, t+1}=\left(1+\pi_{i, t+1}\right) B_{i, t+1}^{m}+q_{i, t} s_{i, t+1} \tag{4.10}
+\end{equation*}
+
+
+\subsection*{4.4. Firms}
+We describe here the problems of the final good firms and the intermediate good firms. Unless stated otherwise, we omit the time subscript $t$.
+
+Final good firms. There is one final good firm in every region $i$ that produces $Y_{i}$. Each final good is sold at $P_{i}$, which is the price aggregator in each region $i . Q_{i^{\prime}, i}$ is the relative price (real exchange rate) between final goods $i^{\prime}$ and $i$ : $Q_{i^{\prime}, i}=P_{i}^{\prime} / P_{i}$. Each final good uses a variety of intermediate inputs. Inputs are purchased not only locally but from other regions as well. Let the demand from region $i$ of input $j$ that is produced in region $i^{\prime}$ be noted $v_{i, i^{\prime}, j}$. It is purchased at price $p_{i^{\prime}, j}$. The production technology is
+
+
+\begin{equation*}
+Y_{i}=\left[\sum_{i^{\prime}=1}^{N} \gamma_{i i^{\prime}}^{1 / \epsilon} \int_{j} v_{i, i^{\prime}, j}^{(\epsilon-1) / \epsilon} \mathrm{d} j\right]^{\epsilon /(\epsilon-1)} \tag{4.11}
+\end{equation*}
+
+
+Parameter $\gamma_{i i^{\prime}}$ denotes the preference of firm $i$ for inputs from region $i^{\prime}$. We assume that $\sum_{i^{\prime}} \gamma_{i i^{\prime}}=1$. Home bias for region 1 is given by $\gamma_{11}=\alpha$ so that $\gamma_{12}=1-\alpha$. If region 1 imports $1-\alpha$, then region 2 imports $\gamma_{21}=\mu_{1} / \mu_{2} \times(1-\alpha)$, and home bias for region 2 is $\gamma_{22}=1-\left(\mu_{1} / \mu_{2}\right)(1-\alpha)$. The parameter $\epsilon$ captures the substitutability between intermediate inputs. Demand of final good firm $i$ for input $j$ located at $i^{\prime}$ is
+
+
+\begin{equation*}
+v_{i, i^{\prime}, j}=\gamma_{i i^{\prime}}\left[\frac{p_{i^{\prime}, j}}{P_{i}}\right]^{-\epsilon} Y_{i} \tag{4.12}
+\end{equation*}
+
+
+The final good firm is making zero profits (perfect competition), which allows us to write the price aggregate as
+
+
+\begin{equation*}
+P_{i}=\left[\sum_{i^{\prime}=1}^{N} \gamma_{i i^{\prime}} \int_{j} p_{i^{\prime}, j}^{1-\epsilon} \mathrm{d} j\right]^{1 /(1-\epsilon)} \tag{4.13}
+\end{equation*}
+
+
+Intermediate good firms. Each region $i$ has a continuum of intermediate goods indexed by $j$. The intermediate good $y_{i, j}$ is produced using only labour. We assume that labour cannot move across regions. Firms use a linear technology
+
+
+\begin{equation*}
+y_{i, j}=L_{i, j} \tag{4.14}
+\end{equation*}
+
+
+where $L_{i, j}$ is labour demanded by firm $j$ in region $i$. The intermediate good firm faces demand both from the local and the foreign final good firm. As mentioned, firm $j$ located in region $i^{\prime}$ faces demand by final good firm $i$ equal to $v_{i, i^{\prime}, j}$. The aggregate demand for region $i$ intermediate good firm $j$ will be
+
+
+\begin{equation*}
+y_{i, j}=\sum_{i^{\prime}} \mu_{i^{\prime}} v_{i^{\prime}, i, j} \tag{4.15}
+\end{equation*}
+
+
+Due to monopolistic competition, the intermediate good firm takes its demand into account when setting its price $p_{i, j}$. The intermediate good firm discounts the future based on the rate of return $r$. We denote $\tilde{\beta}_{i}=1 /\left(1+r_{i, t+1}\right)$. Each firm can adjust its price with probability $\lambda$. Since the intermediate good firm is solving a dynamic problem, we re-introduce the time subscript $t$ into our equations. The reset price $p^{*}$ is found by maximizing the value of firm
+
+
+\begin{equation*}
+\max _{p_{i, j, t}^{*}} \sum_{s=0}^{\infty}(1-\lambda)^{s} \frac{1}{\Pi_{h=1}^{s}\left(1+r_{t+h}\right)}\left\{p_{i, j, t+s}^{*} y_{i, j, t+s}-W_{i, t+s} L_{i, j, t+s}\right\} \tag{4.16}
+\end{equation*}
+
+
+where $W_{i, t}$ is the nominal wage. This leads to the optimal pricing equation
+
+
+\begin{equation*}
+\frac{p_{i, j, t}^{*}}{P_{i, t}}=\frac{\epsilon}{\epsilon-1} \frac{\sum_{i^{\prime}=1}^{N} \mu_{i^{\prime}} \gamma_{i^{\prime} i} Q_{i^{\prime}, i, t}^{\epsilon}\left[w_{i, t} Y_{i^{\prime}, t}+(1-\lambda) \tilde{\beta}_{i}\left(1+\pi_{i^{\prime}, t+1}\right)^{1+\epsilon} \mathcal{X}_{i^{\prime}, i, t+1}\right]}{\sum_{i^{\prime}=1}^{N} \mu_{i^{\prime}} \gamma_{i^{\prime} i} Q_{i^{\prime}, i, t}^{\epsilon}\left[Y_{i^{\prime}, t}+(1-\lambda) \tilde{\beta}_{i}\left(1+\pi_{i^{\prime}, t+1}\right)^{\epsilon} \mathcal{Z}_{i^{\prime}, t+1}\right]} \tag{4.17}
+\end{equation*}
+
+
+with
+
+
+\begin{align*}
+\mathcal{X}_{i^{\prime}, i, t} & =w_{i, t} Y_{i^{\prime}, t}+(1-\lambda) \tilde{\beta}_{i}\left(1+\pi_{i^{\prime}, t+1}\right)^{1+\epsilon} \mathcal{X}_{i^{\prime}, i, t+1}  \tag{4.18}\\
+\mathcal{Z}_{i^{\prime}, i, t} & =Y_{i^{\prime}, t}+(1-\lambda) \tilde{\beta}_{i}\left(1+\pi_{i^{\prime}, t+1}\right)^{\varepsilon} \mathcal{Z}_{i^{\prime}, i, t+1} \tag{4.19}
+\end{align*}
+
+
+Finally, the real profits for intermediate firm $j$ in region $i$ are
+
+
+\begin{equation*}
+d_{i, j, t}=\frac{p_{i, j, t}}{P_{i, t}} y_{i, j, t}-w_{i, t} y_{i, j, t} \tag{4.20}
+\end{equation*}
+
+
+and the per-capita real dividends in region $i$ are $D_{i}=\int_{j} d_{i, j}$.
+
+\subsection*{4.5. Monetary authority}
+Regions are part of a monetary union. We consider a simple Taylor rule where the monetary authority sets the nominal rate based on the aggregate inflation rate $\hat{\pi}$. In particular,
+
+
+\begin{equation*}
+R_{t}=R_{s s}+\zeta \hat{\pi}_{t} \tag{4.21}
+\end{equation*}
+
+
+The aggregate inflation rate $\hat{\pi}=\sum_{i} \mu_{i} \pi_{i, t}$ is a weighted average of the regional inflation rates. Since after 2008, the monetary policy was constrained by the lower bound, we set $\zeta=0$ in our benchmark calibration. This case captures the effect of government spending in an environment where the monetary authority is unresponsive to inflation pressures.
+
+\subsection*{4.6. Government}
+The government buys final goods from every region. Per-capita government spending in region $i$ is denoted $G_{i}$. It finances spending using labour income taxes and dividend taxes. Labour income taxes are the sum of a lump-sum component $T$ and a proportional tax $\tau$ :
+
+$$
+\mathcal{T}_{t}=-T+\tau\left[w_{i t} x_{t} h_{t}+\delta\left(x_{t}\right)(1-\omega) D_{i t}\right]
+$$
+
+The government budget constraint is
+
+
+\begin{equation*}
+\sum_{i} \mu_{i}\left(1+\pi_{i, t+1}\right) B_{i, t+1}^{m}-\left(1+R_{t-1}\right) \sum_{i} \mu_{i} B_{i, t}^{m}=\sum_{i} \mu_{i} G_{i, t}-\sum_{i} \mu_{i} \int_{\phi_{i, t}} \mathcal{T}_{t}-\tau_{d} \omega \sum_{i} \mu_{i} D_{i t}, \tag{4.22}
+\end{equation*}
+
+
+where $B_{i, t}^{m}$ is the bond holdings of the regional mutual fund. In equilibrium, the demand for government bonds by the regional mutual funds is equal to the supply of government bonds by the government: $\sum_{i} \mu_{i} B_{i, t}^{m}=B_{t}^{g}$. Along the transition, the supply of bonds is given by the following fiscal rule: $B_{t}^{g}=B_{s s}^{g}-\sum_{i} \mu_{i}\left(q_{i, t}-q_{i, s s}\right)$. According to this fiscal rule, any decline in equity value is met with an equivalent increase in government debt. As is typical in models with sticky prices, government spending increases the nominal wages, reducing the markup and therefore the firms' dividends and the value of equity. The equity shares are implicitly held\\
+by households (together with government bonds). We neutralize the effect of movements in equity value by making the assumption that the government intervenes and injects liquidity in the economy in the form of an additional supply of government bonds. ${ }^{18}$
+
+\subsection*{4.7. Regional accounts}
+We describe the regional income accounts once more abstracting from time subscript $t$. Regional income is equal to the total value added by all intermediate firms in that region: $\mu_{i} \mathcal{Y}_{i}= \int_{j} \sum_{i^{\prime}} \mu_{i^{\prime}} v_{i^{\prime}, i, j} \mathrm{~d} j$. Per-capita income for every region $i$ is equal to $\mathcal{Y}_{i}=w_{i} L_{i}+D_{i}$. Per-capita final $\operatorname{good} Y_{i}$ is equal to per-capita consumption $C_{i}$ plus per-capita government spending $G_{i}$.
+
+\subsection*{4.8. Characterizing the equilibrium}
+We derive expressions that clarify some of our equilibrium conditions. As mentioned, the total demand for intermediate firm $(i, j)$ in period $t$ is
+
+$$
+y_{i, j, t}=\sum_{i^{\prime}} \mu_{i^{\prime}} v_{i^{\prime}, i, j, t}=\sum_{i^{\prime}} \mu_{i^{\prime}} \gamma_{i^{\prime} i}\left[\frac{p_{i, j, t}}{P_{i^{\prime}, t}}\right]^{-\epsilon} Y_{i^{\prime}, t}
+$$
+
+Aggregating over $j$, we derive the total demand for intermediate inputs of region $i$ in period $t$
+
+
+\begin{align*}
+\int_{j} y_{i, j, t}=\mu_{i} \mathcal{Y}_{i, t} & =\sum_{i^{\prime}} \mu_{i^{\prime}} \gamma_{i^{\prime} i}\left[\frac{\int_{j} p_{i, j, t}}{P_{i^{\prime}, t}}\right]^{-\epsilon} Y_{i^{\prime}, t}  \tag{4.23}\\
+& =\left[\lambda\left(\frac{p_{i, j, t}^{*}}{P_{i, t}}\right)^{-\epsilon}+(1-\lambda)\left(1+\pi_{i, t}\right)^{\epsilon}\right] \cdot \sum_{i^{\prime}} \mu_{i^{\prime}} \gamma_{i^{\prime} i} Q_{i^{\prime}, i, t}^{\epsilon} Y_{i^{\prime}, t} \tag{4.24}
+\end{align*}
+
+
+Since trade linkages are a function of home bias in region 1 (denoted $\alpha$ ), we can derive the following expressions for per-capita income:
+
+$$
+\begin{aligned}
+& \mathcal{Y}_{1, t}=\left[\lambda\left(\frac{p_{1, j, t}^{*}}{P_{1, t}}\right)^{-\epsilon}+(1-\lambda)\left(1+\pi_{1, t}\right)^{\epsilon}\right]\left[\alpha Y_{1, t}+(1-\alpha) Q_{2,1, t}^{\epsilon} Y_{2, t}\right] \\
+& \mathcal{Y}_{2, t}=\left[\lambda\left(\frac{p_{2, j, t}^{*}}{P_{2, t}}\right)^{-\epsilon}+(1-\lambda)\left(1+\pi_{2, t}\right)^{\epsilon}\right]\left[\frac{\mu_{1}}{\mu_{2}}(1-\alpha) Q_{1,2, t}^{\epsilon} Y_{1, t}+\left(1-\frac{\mu_{1}}{\mu_{2}}(1-\alpha)\right) Y_{2, t}\right] .
+\end{aligned}
+$$
+
+The above expressions are the key equations linking the trade flows between regions. Per-capita income in region $i$ is a weighted sum of regional final goods $Y_{i^{\prime}, t} \forall i^{\prime}$. If the demand for final $\operatorname{good} Y_{i^{\prime}, t}$ increases, then $\mathcal{Y}_{i, t}$ increases depending on the strength of trade linkages $\alpha$, the relative populations $\mu_{i}$, and the relative price of final good $Q_{i^{\prime}, i, t}^{\epsilon}$.
+
+\subsection*{4.9. Definition of the equilibrium}
+We describe the equilibrium over the transition and leave the description of the steady-state equilibrium for Supplementary Material, Appendix F. For an exogenous sequence of regional\\
+18. In Kaplan et al. (2018), the equity is part of illiquid assets. As a result, they can neutralize the effects of a countercyclical movement in equity value by assuming a profit distribution rule that guarantees an illiquid income flow that is independent of the markup. We cannot rely on a similar assumption as our model features a single asset.\\
+government spending $\left\{G_{i, t}\right\}_{i=1}^{2}$, the equilibrium over the transition is a time sequence of equilibrium variables. In particular, we are looking to solve for $\left\{C_{i, t}\right\}_{i=1}^{2},\left\{L_{i, t}\right\}_{i=1}^{2},\left\{A_{i, t+1}\right\}_{i=1}^{2}$, $\left\{B_{i, t+1}^{m}\right\}_{i=1}^{2},\left\{Y_{i, t}\right\}_{i=1}^{2},\left\{\mathcal{Y}_{i, t}\right\}_{i=1}^{2},\left\{w_{i, t}\right\}_{i=1}^{2},\left\{\pi_{i, t}\right\}_{i=1}^{2},\left\{q_{i, t}\right\}_{i=1}^{2},\left\{p_{i, j, t}^{*} / P_{i, t}\right\}_{i=1}^{2}, Q_{12, t},\left\{D_{i, t}\right\}_{i=1}^{2}, R_{t}$, $\hat{\pi}_{t}, \tau_{t}$ and $\left\{\phi_{i, t}\right\}_{i=1}^{2}$, for $t=\left\{t_{0}, \infty\right\}$ where $t_{0}$ is the time of the policy change.
+
+\begin{enumerate}
+  \item Goods market equilibrium: The demand for goods by households in region $i, C_{i, t}$, is derived by the household's problem and together with local government spending, $G_{i, t}$, give the total demand for final good $i: Y_{i, t}=C_{i, t}+G_{i, t} \forall i$. The inflation rates that clear the goods market $\left\{\pi_{i, t}\right\}_{i=1}^{2}$ are derived using the following equations:
+\end{enumerate}
+
+$$
+\begin{aligned}
+\frac{p_{i, j, t}^{*}}{P_{i, t}} & =\frac{\epsilon}{\epsilon-1} \frac{\sum_{i^{\prime}=1}^{N} \mu_{i^{\prime}} \gamma_{i^{\prime} i} Q_{i^{\prime}, i, t}^{\epsilon}\left[w_{i, t} Y_{i^{\prime}, t}+(1-\lambda) \tilde{\beta}_{i}\left(1+\pi_{i^{\prime}, t+1}\right)^{1+\epsilon} \mathcal{X}_{i^{\prime}, i, t+1}\right]}{\sum_{i^{\prime}=1}^{N} \mu_{i^{\prime}} \gamma_{i^{\prime} i} Q_{i^{\prime}, i, t}^{\epsilon}\left[Y_{i^{\prime}, t}+(1-\lambda) \tilde{\beta}_{i}\left(1+\pi_{i^{\prime}, t+1}\right)^{\epsilon} \mathcal{Z}_{i^{\prime}, t+1}\right]} \\
+1 & =\sum_{i^{\prime}} \gamma_{i i^{\prime}} Q_{i^{\prime}, i, t}^{1-\epsilon}\left[\lambda\left(\frac{p_{i^{\prime}, j, t}^{*}}{P_{i^{\prime}, t}}\right)^{1-\epsilon}+(1-\lambda)\left(1+\pi_{i^{\prime}, t}\right)^{\epsilon-1}\right] \forall i
+\end{aligned}
+$$
+
+\begin{enumerate}
+  \setcounter{enumi}{1}
+  \item Regional income in region $i, \mu_{i} \mathcal{Y}_{i, t}$, is a weighted sum of regional final goods:
+\end{enumerate}
+
+$$
+\mu_{i} \mathcal{Y}_{i, t}=\left[\lambda\left(\frac{p_{i, j, t}^{*}}{P_{i, t}}\right)^{-\epsilon}+(1-\lambda)\left(1+\pi_{i, t}\right)^{\epsilon}\right] \cdot \sum_{i^{\prime}} \mu_{i^{\prime}} \gamma_{i^{\prime} i} Q_{i^{\prime}, i, t}^{\epsilon} Y_{i^{\prime}, t} \forall i
+$$
+
+\begin{enumerate}
+  \setcounter{enumi}{2}
+  \item Labour market equilibrium: The labour supply satisfies the household's problem and the aggregate labour supply in region $i$ is $\mu_{i} \int_{\phi_{i, t}} x_{t} h_{t}$. Since we have a linear technology, the aggregate labour demand $\mu_{i} L_{i, t}$ equals aggregate income $\mu_{i} \mathcal{Y}_{i, t}$. The wage rate $w_{i, t}$ that clears the labour market in region $i$ is found using the following labour market condition:
+\end{enumerate}
+
+$$
+\mu_{i} L_{i, t}=\mu_{i} \int_{\phi_{i, t}} x_{t} h_{t}
+$$
+
+\begin{enumerate}
+  \setcounter{enumi}{3}
+  \item Real exchange rate $Q_{1,2, t}=P_{1, t} / P_{2, t}$ satisfies the following equation:
+\end{enumerate}
+
+$$
+\frac{\left(1+\pi_{1, t}\right)}{\left(1+\pi_{2, t}\right)}=\frac{P_{2, t-1}}{P_{1, t-1}} \frac{P_{1, t}}{P_{2, t}}=Q_{2,1, t-1} Q_{1,2, t}
+$$
+
+\begin{enumerate}
+  \setcounter{enumi}{4}
+  \item Dividends are given by
+\end{enumerate}
+
+$$
+D_{i, t}=\left[\lambda\left(\frac{p_{i, j, t}^{*}}{P_{i, t}}\right)^{1-\epsilon}+(1-\lambda)\left(1+\pi_{i, t}\right)^{\epsilon-1}\right] \cdot \sum_{i^{\prime}} \mu_{i^{\prime}} \gamma_{i^{\prime} i} Q_{i^{\prime}, i, t}^{\epsilon} Y_{i^{\prime}, t}-w_{i, t} L_{i, t} \forall i
+$$
+
+\begin{enumerate}
+  \setcounter{enumi}{5}
+  \item Household savings equal the demand for government bonds and equity shares by the mutual funds
+\end{enumerate}
+
+$$
+\sum_{i} \mu_{i} A_{i, t+1}=\sum_{i} \mu_{i}\left(1+\pi_{i, t+1}\right) B_{i, t+1}^{m}+\sum_{i} \mu_{i} q_{i, t},
+$$
+
+where the total number of shares is normalized to one and the value of equity, $q_{i, t}$, is given by arbitrage equation (4.9).\\
+7. The demand for government bonds by the mutual funds equals the supply of bonds by the government: $\sum_{i} \mu_{i} B_{i, t}^{m}=B_{t}^{g}$. The supply of bonds along the transition is given by the fiscal rule: $B_{t}^{g}=B_{s s}^{g}-\sum_{i} \mu_{i}\left(q_{i, t}-q_{i, s s}\right)$.\\
+8. The tax rate $\tau$ is found by balancing the government budget constraint:
+
+$$
+\sum_{i} \mu_{i}\left(1+\pi_{i, t+1}\right) B_{i, t+1}^{m}-\left(1+R_{t-1}\right) \sum_{i} \mu_{i} B_{i, t}^{m}=\sum_{i} \mu_{i} G_{i, t}-\sum_{i} \mu_{i} \int_{\phi_{i, t}} \mathcal{T}_{t}-\tau_{d} \omega \sum_{i} \mu_{i} D_{i t} .
+$$
+
+\begin{enumerate}
+  \setcounter{enumi}{8}
+  \item The monetary policy does not respond to inflation: $R_{t}=R_{s s}$.
+  \item The national inflation rate is given by: $\hat{\pi}_{t}=\sum_{i=1}^{2} \mu_{i} \pi_{i, t}$.
+  \item The regional measures $\phi_{i, t}$ evolve based on the policy functions and the transition matrices described in the model.
+\end{enumerate}
+
+For the steady-state equilibrium, we assume inflation is zero, and prices are symmetric within and across regions: $p_{i, j} / P_{i}=1 \forall i$ and $Q_{i i^{\prime}}=1 \forall i, i^{\prime}$.
+
+\subsection*{4.10. Existence and uniqueness of equilibrium}
+We impose two restrictions when computing our equilibrium. ${ }^{19}$ First, in our equilibrium, we restrict attention to transition paths for which at a sufficiently long time after the fiscal stimulus is over, the inflation rate in both regions is equal to its steady-state value, i.e. $\pi_{i, t^{*}}=0$, for all regions, and the relative price is equal to its steady-state value, i.e. $Q_{12, t^{*}}=1$, where $t^{*}$ is sufficiently large. As such, equilibrium paths converge over time to the initial steady state. Since the monetary policy (i.e. the nominal interest rate) does not respond to inflation, it is possible that there are multiple equilibrium paths that lead to the original steady state.
+
+As a result, we additionally impose restrictions to the state space. Specifically, we focus on the minimum state variable (MSV) equilibrium which arises when the optimal choices depend on a minimal set of state variables. ${ }^{20}$ Our set of state variables is selected such that it is not possible to delete a single state variable (or a group of state variables) from agents' policy functions and continue to obtain a solution that satisfies the model's equilibrium conditions (McCallum, 1983). We could have selected extraneous state variables (e.g. sunspot shocks) whose inclusion could potentially give another solution satisfying the equilibrium conditions but would not be necessary to obtain one. Focusing on the class of MSV equilibria, the MSV solution is the unique equilibrium in linear settings (McCallum, 1983). We do not know with certainty if uniqueness generalizes to nonlinear dynamic systems as in our model. ${ }^{21}$
+
+\section*{5. QUANTITATIVE ANALYSIS}
+We use the model to translate the local fiscal multiplier to an aggregate fiscal multiplier. First, we describe our calibration and steady-state results. Then we consider the main quantitative experiment: temporary regional government spending shocks.\\
+19. The computational algorithm to solve for the transitional dynamics is presented in Supplementary Material, Appendix I.\\
+20. One motivation for restricting attention to MSV equilibria appears in Angeletos and Lian (2021). They show that an infinitesimally small memory loss on behalf of future agents renders all but one equilibrium, the MSV equilibrium, explosive. Note, however, that Angeletos and Lian (2021) study linear models.\\
+21. Hagedorn (2017) and Hagedorn et al. (2017) offer an alternative possibility to avoid multiple equilibria. In their framework, uniqueness of equilibrium is guaranteed by a combination of incomplete markets (and thus, precautionary savings) and nominal bond targeting. This result does not apply to our case where we make the more standard assumption that the government targets real debt.
+
+\begin{table}[h]
+\begin{center}
+\captionsetup{labelformat=empty}
+\caption{TABLE 7\\
+Benchmark parameters}
+\begin{tabular}{|l|l|l|l|}
+\hline
+Parameter & Notation & Value & Target/source \\
+\hline
+Mean discount factor & $\bar{\beta}$ & 0.985 & Annual real rate $=4 \%$ \\
+\hline
+Dispersion in discount factor & $\epsilon_{\beta}$ & 0.005 & \%Households with $a / y<1 \%$ \\
+\hline
+Labour supply elasticity & $1 / \theta$ & 1.0 & Beraja et al. (2019) \\
+\hline
+Disutility of labour & $\psi$ & 5.8 & Hours worked $=42 \%$ \\
+\hline
+Persistence of $x$ & $\rho$ & 0.955 & Persistence of log-wages $=0.92$ \\
+\hline
+Variance of innovation to $x$ & $\sigma_{\eta}^{2}$ & 1.5\% & Variance of log-wages $=0.04$ \\
+\hline
+Per-capita gov. spending & G & 0.10 & $G / Y=20 \%$ \\
+\hline
+Dividend allocation & $\omega$ & 0.32 & NIPA tables \\
+\hline
+Elasticity of substitution & $\epsilon$ & 6 & Christiano et al. (2011) \\
+\hline
+Price reset probability & $\lambda$ & 0.15 & McKay et al. (2016) \\
+\hline
+Taylor rule coefficient & $\zeta$ & 0.0 & - \\
+\hline
+Stock of liquid assets & $B^{g}$ & $1.2 \times$ annual income & SCFs \\
+\hline
+Dividend tax & $\tau_{d}$ & 0.25 & Gourio and Miao (2010) \\
+\hline
+Lump-sum transfer & $T$ & 0.03 & $T / Y=6 \%$ \\
+\hline
+Size of region 1 & $\mu_{1}$ & 3.1\% & Relative county population \\
+\hline
+Home bias & $\alpha$ & 0.58 & CFS \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\subsection*{5.1. Calibration}
+Table 7 summarizes our parameter choices. The model period is a quarter. The average discount factor $\bar{\beta}$ is set to match an annual steady-state real interest rate equal to $4 \%$. The utility from leisure parameter $\psi$ is set so that on average households work $42 \%$ of their time endowment. ${ }^{22}$ Parameter $\theta$ that governs the Frisch elasticity of labour supply is set to 1 based on Beraja et al. (2019). This value reflects a combined labour supply response at the intensive and extensive margin.
+
+The productivity process is calibrated based on the estimates of Floden and Linde (2001). Using our model, we simulate labour income paths and then annualize the simulated data to match a persistence of $\rho=0.92$ and $\sigma_{\eta}^{2}=0.04$. We set steady-state government spending $G$ to match a government spending to income ratio equal to $20 \%$. The lump-sum transfer $T$ is equal to $6 \%$ of annual income (Kaplan et al., 2018). We set the elasticity of substitution $\epsilon=6$ based on Christiano et al. (2011). The probability of changing price $\lambda=0.15$ is based on McKay et al. (2016). ${ }^{23}$
+
+As Kaplan and Violante (2014) have shown, households use primarily liquid assets to adjust their consumption. Moreover, Carroll et al. (2017) have shown that a model that matches the degree of inequality in liquid financial assets generates marginal propensities to consume closer to the empirical estimates. Hence, we calibrate the debt-to-income ratio to match the empirical ratio of liquid assets to income and the discount factor dispersion, represented by the parameter $\epsilon_{\beta}$, to match the fraction of households whose liquid assets are less than $1 \%$ of their annual income. We use data from the survey of consumer finances (SCFs) for period 1998-2007. We define liquid assets following Kaplan and Violante (2014). In particular, liquid financial assets are cash, checking accounts, savings accounts, money market accounts, and stocks net of credit card debt. There are no data in the SCF on households' cash holdings. As a result, we increase\\
+22. In the panel study of income dynamics, prime-age, full-time employed males work around $2,200 \mathrm{~h}$ per year. We normalize this value by a time endowment of $5,200 \mathrm{~h}$ per year.\\
+23. This is on the lower end of the empirical estimates, but it is supported by the absence of inflation pressures during and in the aftermath of the Recovery Act episode.\\
+liquid asset holdings by a factor of 1.04 (see the appendix in Kaplan and Violante, 2014). In 2009 prices, the average (median) household owns $\$ 94,443(\$ 3,149)$ in liquid assets. Average (median) household income is $\$ 78,500(\$ 46,564)$. As a result, we target an annual debt-toincome ratio of 1.20 . We also find that the fraction of households whose liquid assets are less than $1 \%$ of their annual income is $29 \%$.
+
+Based on the national income accounts, we find that for the period 2007-08, the undistributed corporate profits were, on average, $\$ 394$ billion, while dividend income was $\$ 809$ billion. Thus, undistributed corporate profits as a share of total dividends (both undistributed and distributed as income) is around $32 \%$. Therefore, we use a value of $\omega=0.32$, which is slightly lower than the value of 0.33 used by Kaplan et al. (2018). The dividend tax equals 0.25 based on Gourio and Miao (2010).
+
+There are two regions in the model: one small region and the rest of the economy. Consistent with our empirical exercise, we interpret region 1 as a county. According to our analysis (presented in Supplementary Material, Appendix E), regional spillovers stabilize for geographical regions larger than 1,000 miles, which roughly corresponds to the size of a U.S. Census region. ${ }^{24}$ Thus, we set $\mu_{1}=0.031$ which represents the average size of a county relative to the Census region (weighted by county-level income in 2010).
+
+The second regional parameter to calibrate is the preference of the final good firm for home versus foreign inputs, $\alpha$. We calibrate home bias using direct evidence on shipments of goods from the CFS for 2012. As mentioned, the data include information on commodities shipped, their value, weight, and the origin and destination of the shipments across U.S. states. For every state, we compute the total value of shipments that originated and shipped inside the state, as well as the total value of shipments that originated in the state but were exported to other states. We find that on average $42 \%$ of shipments of goods stay within state borders.
+
+Next, we note that a large fraction of spending is on services. According to the 2010 National Income and Product Accounts (NIPA) tables, services absorb $68 \%$ of total spending. Services are traditionally considered non-tradable, but a substantial fraction can be delivered over a distance (e.g. financial or legal services). Gervais and Jensen (2019) document that the U.S. was exporting around $30 \%$ of its services in 2007. To account for both goods and services, we estimate home bias as $(1-0.68) \times 0.42+ 0.68 \times 0.70=0.61$.
+
+To calibrate a county-level home bias, we use the state-level home bias and the relative populations of these two geographical areas. Let $\mathcal{M}$ denote the size of the state that includes the county ( $\mu \leq \mathcal{M}$ ). Let $\mathcal{S}$ denote the home bias of the state, which we found to be 0.61 and is at least as large as the home bias of the county, so that $\alpha \leq \mathcal{S}$. If demand increases by $\$ 1$ in a random county that is part of the state, then the county keeps $\alpha$ and exports $1-\alpha$. The exports will be absorbed by the other counties of the same state with probability $(\mu /(1-\mu))((\mathcal{M}-\mu) / \mu)$. The first term $\mu /(1-\mu)$ is the probability a random county anywhere in the whole economy absorbs the exports, while $(\mathcal{M}-\mu) / \mu$ is the relative size of the state area, excluding the original county that received the dollar. As a result, we can write the state-level home bias using the formula
+
+$$
+\mathcal{S}=\alpha+(1-\alpha) * \frac{\mu}{1-\mu} \frac{\mathcal{M}-\mu}{\mu}
+$$
+
+Based on population measures, we calculate the relative size of the state as $\mathcal{M}=0.10$. This implies a county-level home bias equal to $\alpha=0.58$.\\
+24. The U.S. Census Bureau considers four regions: the Northeast, the Midwest, the South, and the West.
+
+\begin{table}[h]
+\begin{center}
+\captionsetup{labelformat=empty}
+\caption{TABLE 8\\
+Statistics over liquid assets and MPC}
+\begin{tabular}{|l|l|l|}
+\hline
+Statistic & SCF (1998-2007) & Model \\
+\hline
+Households with $a / y<1 \%$ & 0.29 & 0.30 \\
+\hline
+Liquid assets/income & 1.20 & 1.20 \\
+\hline
+Liquid assets Gini & 0.93 & 0.75 \\
+\hline
+Median MPC &  & 0.11 \\
+\hline
+Average MPC &  & 0.37 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+Notes: The table presents summary statistics regarding wealth and the MPC. All statistics are reported at an annual frequency.
+
+\subsection*{5.2. Steady-state results}
+In Table 8, we compare the model to data with respect to the liquid asset distribution. We also report the median and the average MPC. Our model is calibrated to capture the average liquid asset-to-income ratio as well as the fraction of households with asset-to-income ratios less than $1 \%$. The wealth Gini is 0.75 in our model, which is lower than the empirical value of 0.93 but somewhat higher than in typical Aiyagari models. Table 8 also reports the median and the average MPC. We transform the quarterly into an annual MPC using the formula $1-(1-\text { quarterly MPC })^{4}$. The annual average MPC in our model is 0.37 , which corresponds to a quarterly MPC of 0.11 .
+
+There has been ample recent evidence on the magnitude of consumption responses to unexpected income transfers. Most studies find annual estimates of MPC between 0.2 and 0.6 (Carroll et al., 2017). Our MPC estimate is within this range. Sahm et al. (2010) analyse survey responses and find that roughly one-third of the 2008 economic stimulus rebate income was spent and that the spending was concentrated in the few months after the receipt. ${ }^{25}$ Also analysing the tax rebates of the 2008 economic stimulus, Parker et al. (2013) find that during the first three months following payment, households spend between 12 and 30 cents of every dollar received on nondurable goods. Once durable spending is taken into account, the authors find a MPC of between 50 and 90 cents per dollar. Our quarterly MPC estimate is at the lower bound of their estimates regarding non-durable spending. Jappelli and Pistaferri (2014) use a survey that asks how much people would consume or save were they unexpectedly to receive a transfer equal to their monthly income. They find substantial heterogeneity, with the average MPC being around $48 \%$. Similar to the evidence provided by Jappelli and Pistaferri (2014), in our model, households with the lowest net worth exhibit the highest MPCs.
+
+\subsection*{5.3. The government spending shock and transition dynamics}
+We analyse the effect of a government spending shock on consumer spending. Figure 4 shows average county-level Recovery Act spending between 2009 and 2012. ${ }^{26}$ We approximate the process using an AR(2) for the government spending shock: $G_{t}=\left(1-\rho_{1}-\rho_{2}\right) G_{s s}+\rho_{1} G_{t-1}+ \rho_{2} G_{t-2}$. Parameters $\rho_{1}, \rho_{2}$ are chosen to match the county-level spending in the data. We pick\\
+25. Their estimate of one-third is likely biased downward as the propensity to consume is bounded at one when they translate the "mostly spend" responses to an MPC. Sahm et al. (2012) document that the way the stimulus is delivered (reduction in tax withholdings versus one-time payments) matters for how much households spend.\\
+26. We do not have data for projects in 2009, so we use numbers from Uhlig (2010). However, this does not affect our calculations since these projects show up in cumulative spending of the following years, provided they did not finish before the first quarter of 2010.
+
+\begin{figure}[h]
+\begin{center}
+  \includegraphics[alt={},max width=\textwidth]{f7456475-25f8-44eb-bcd7-6c03a4b15006-26_720_852_215_501}
+\captionsetup{labelformat=empty}
+\caption{Figure 4\\
+Recovery Act spending: data versus model\\
+Notes: Average county-level Recovery Act spending (in millions of dollars), by quarter (left axis). Model simulation of government spending shock for region 1 (right axis).}
+\end{center}
+\end{figure}
+
+the impact shock in region 1 so that the peak of the simulated path is $1 \%$ higher than the steady state. We calibrate the shock for region 2 to be $36 \%$ lower than the shock in region 1 since percapita spending at the 25 th percentile of the distribution of ARRA funds was around $36 \%$ lower than at the 75th percentile. The shock is assumed to be a one-time unexpected innovation, and households can perfectly foresee the future evolution of prices and quantities.
+
+We plot the impulse response functions for macroeconomic aggregates in Figure 5. All quantities are expressed in per capita terms. The increase in government spending $G_{1}$ increases the demand for final good $Y_{1}$. As a result, local inflation $\pi_{1}$ increases (upper right panel). To accommodate the extra demand, intermediate good firms in region 1 demand more labour, which increases the local real wage $w_{1}$ (middle left panel). The percentage increase in labour income turns out to be higher than the percentage increase in total income so that dividends decrease (middle right panel).
+
+Per-capita government spending in region 2 is less than per-capita government spending in region 1 . However, due to trade linkages, a fraction of the stimulus spreads to region 2 in the form of higher demand for intermediate inputs. As a result, inflation in both regions responds almost equally. ${ }^{27}$ Wages $w_{2}$ also increase in region 2 , both due to the local fiscal stimulus and the increased demand for local inputs coming from region 1.
+
+Higher inflation in region 1 relative to region 2 implies an initial small appreciation of the real exchange rate $Q_{i^{\prime} i}=P_{i}^{\prime} / P_{i}$. The appreciation induces an expenditure switching effect. The final good firm in region 1 substitutes local with cheaper foreign intermediate inputs. This tends to make the comovement of economic aggregates between the regions even higher. More- over, federal taxes adjust to keep the budget balanced. However, due to higher inflation, which decreases some of the government's debt service cost, the need to adjust taxes is relatively small.
+
+\footnotetext{\begin{enumerate}
+  \setcounter{enumi}{26}
+  \item Both the aggregate and the relative response of inflation are small due to the relatively high degree of price stickiness. We discuss the empirical validity of our calibration in Section 5.4.
+\end{enumerate}
+}\begin{figure}[h]
+\begin{center}
+  \includegraphics[alt={},max width=\textwidth]{f7456475-25f8-44eb-bcd7-6c03a4b15006-27_1535_1270_213_295}
+\captionsetup{labelformat=empty}
+\caption{Figure 5\\
+Impulse responses to a government spending shock\\
+Notes: Impulse response functions for a temporary government spending shock. All units are in per-capita terms and are expressed as percentage deviations from their steady state. For the inflation rate, we report the deviation from the steady state in levels.}
+\end{center}
+\end{figure}
+
+This redistribution of resources from the private to the public sector hurts net savers, namely, wealthy, low-MPC households. In contrast, the small adjustment in taxes affects a broader group of consumers including low-income, high-MPC households.
+
+Both regions increase consumer spending as a response to fiscal stimulus (lower left panel). Region 1 consumes more than region 2 not only on impact but throughout the transition. This happens because region 1 saves some of its higher income during the fiscal stimulus, while region 2 deaccumulates asset holdings (lower right panel).
+
+\begin{table}[h]
+\begin{center}
+\captionsetup{labelformat=empty}
+\caption{TABLE 9\\
+Consumption multipliers: data versus model}
+\begin{tabular}{|l|l|l|l|}
+\hline
+Horizon & $t=8$ & $t=16$ & $t=32$ \\
+\hline
+\multicolumn{4}{|l|}{Data} \\
+\hline
+Local & - & 0.29 & - \\
+\hline
+\multicolumn{4}{|l|}{Model} \\
+\hline
+Local & 0.15 & 0.20 & 0.26 \\
+\hline
+Aggregate & 0.41 & 0.41 & 0.47 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+Notes: The empirical target of 0.29 is the consumption multiplier for spending on non-durable goods and services (Table 5).
+
+\begin{figure}[h]
+\begin{center}
+\captionsetup{labelformat=empty}
+\caption{TABLE 10\\
+Change in consumption: decomposition}
+  \includegraphics[alt={},max width=\textwidth]{f7456475-25f8-44eb-bcd7-6c03a4b15006-28_658_1330_714_261}
+\end{center}
+\end{figure}
+
+Notes: Consumption change and multipliers due to wage, dividends, inflation, and taxes. Each case sets a variable to its equilibrium path and all others to their steady-state value. The table reports four-year consumption multipliers. Equilibrium paths are shown only for region 1.
+
+We compute local and aggregate consumption multipliers using the model-generated impulse responses. The local consumption multiplier is computed from the model-generated regional data using the same specification as in our empirical analysis (see equation (3.2)). The aggregate multiplier is computed as $\sum_{i} \mu_{i} \Delta C_{i, t} / \sum_{i} \mu_{i} \Delta G_{i, t}$, where $\Delta C_{i, t}$ and $\Delta G_{i, t}$ denote the cumulative change of consumption and government spending, respectively, in region $i$ and in year $t$, relative to the steady state.
+
+Table 9 presents our main two findings. First, the model generates a positive local multiplier reasonably close to the empirical target. Second, we find an aggregate fiscal multiplier equal to 0.41.
+
+Table 10 decomposes the change in consumer spending due to wages, dividends, inflation, and taxes. In particular, we set a variable equal to its equilibrium path and assume that the other variables remain constant at their steady-state values. This generates the marginal effect of a variable on total consumer spending. The left panel plots the consumer spending path for every case as well as when all effects are considered (Benchmark). The table reports the fouryear consumption multiplier in each case as well as the total effect. The total effect does not necessarily equal the sum of the individual effects due to interaction effects. We consider only region 1 , but the effects for region 2 are qualitatively similar.
+
+As mentioned, wages increase along the transition path as a response to higher demand for labour. Higher labour income affects mainly low wealth, labour-income-dependent households who have high MPCs and increase substantially their spending. If only wages had changed, the local multiplier would be 0.28 while the aggregate would be 0.48 . On the other hand, the decrease in dividends hurts mainly low-MPC households who are less responsive. If only dividends had changed, the local multiplier would be -0.05 while the aggregate would be -0.06 . The combined effect of the two yields an aggregate multiplier of 0.42 .
+
+If only inflation had changed, the local multiplier would be -0.02 and the aggregate multiplier -0.08 . The contribution of inflation to consumer spending is quantitatively small relative to the contribution of wages. ${ }^{28}$
+
+If only tax rates had changed, the local multiplier would be zero since taxes occur at the federal level. The aggregate multiplier is equal to 0.05 . In the first years of the fiscal stimulus, tax rates actually decrease slightly. The reason is that higher inflation decreases the debt service cost of the government.
+
+Our heterogeneous agents, incomplete markets model generates positive consumption responses both at the local and the aggregate levels. In Section 6.1, we show that an incomplete markets, representative agent, new Keynesian (RA-NK) model also generates positive local and aggregate multipliers, albeit much smaller than our Benchmark. In contrast, in models with complete markets, the local consumption multiplier is negative (see, for example, Nakamura and Steinsson, 2014; Farhi and Werning, 2016; Chodorow-Reich, 2019). In addition, we show in Section 5.6 that the positive aggregate consumption multiplier is related to the weak response of monetary policy to fiscal stimulus.
+
+\subsection*{5.4. Empirical evidence on labour income and inflation}
+The model generates a strong positive local effect of government spending on labour income and a moderate effect on inflation. It is informative to evaluate empirically the effect of the fiscal stimulus on these two variables. We collect information on county-level labour income from the Quarterly Census of Employment and Wages (QCEW). We collect information for inflation from the Bureau of Labour Statistics (BLS). We have information on price indices for the period 2008-14 for 382 Metropolitan Statistical Areas.
+
+The Recovery Act had a positive effect on county-level labour income (left panel; Figure 6 and Table 11). In contrast, there is no effect of government spending on inflation (right panel; Figure 6 and Table 11). Our model is consistent with these patterns. The local effect of government spending on inflation is nearly zero as both regions increase inflation by almost the same amount (Figure 5). This result arises due to our relatively high degree of price stickiness. Moreover, the local multiplier associated with labour income is positive, consistent with the empirical evidence.
+
+\subsection*{5.5. The role of trade linkages}
+Figure 7 shows the local and the aggregate consumption multiplier as we vary the degree of home bias $\alpha$ and keep all other parameters same as in the benchmark model. Consumption multipliers are reported at a four-year horizon. In our calibration, we set home bias equal to 0.58 using
+
+\footnotetext{\begin{enumerate}
+  \setcounter{enumi}{27}
+  \item We are not the first to stress the relative stronger effect of wages and the relative weaker effect of inflation on consumer spending. See, for example, the analysis in Kaplan et al. (2018).
+\end{enumerate}
+}\begin{figure}[h]
+\begin{center}
+  \includegraphics[alt={},max width=\textwidth]{f7456475-25f8-44eb-bcd7-6c03a4b15006-30_493_1266_215_291}
+\captionsetup{labelformat=empty}
+\caption{Figure 6\\
+Government spending (2009-12) and percentage change in labour income and inflation (2008-12), by counties Notes: Scatter plots between government spending (Recovery Act, 2009-12) and percentage change in labour income (left panel) and inflation (right panel), between 2008 and 12, by counties. Information on labour income and inflation is collected from the QCEW and the BLS, respectively.}
+\end{center}
+\end{figure}
+
+\begin{table}[h]
+\begin{center}
+\captionsetup{labelformat=empty}
+\caption{TABLE 11\\
+Responses of labour income and inflation to government spending (2008-12)}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\multirow[b]{2}{*}{Variable data source} & \multicolumn{2}{|c|}{QCEW} & \multicolumn{2}{|c|}{BLS} \\
+\hline
+ & OLS & IV & OLS & IV \\
+\hline
+Government spending & 1.33*** (0.34) & 0.81* (0.41) & -0.000 (0.001) & -0.0002 (0.002) \\
+\hline
+ &  &  &  &  \\
+\hline
+Partial $F$ stat. & - & 78.6 & - & 166.5 \\
+\hline
+County controls/state fixed effects & Yes & Yes & Yes & Yes \\
+\hline
+\# of counties & 2,916 & 2,916 & 1,116 & 1,116 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+Notes: The first two columns show estimates of a regression of percentage change in labour income on cumulative government spending at the county level during the period 2008-12. The last two columns show estimates of a regression of percentage point change in inflation on log-cumulative government spending at the county level during the period 2008-12. We show results for our OLS and IV specification and the standard errors in parentheses. One, two, and three stars denote significance at the $10 \%, 5 \%$, and $1 \%$ levels, respectively.\\
+information on shipments of goods from the CFS (vertical line). This corresponds to a local consumption multiplier equal to 0.20 and an aggregate consumption multiplier equal to 0.41 .
+
+The local consumption multiplier is zero when $\alpha=\mu_{1}$. When home bias increases, trade flows between the two regions decline and region 1 keeps more of the local fiscal stimulus. As a result, consumption in region 1 increases more relative to consumption in region 2 . Thus, our model is consistent with the empirical evidence presented in Section 3.4: lower home bias (stronger trade linkages) decreases the local consumption multiplier. The aggregate consumption multiplier is largely unaffected by the strength of trade linkages. Since the two regions are (percapita) symmetric, the final division of government spending does not matter for the aggregate consumption response. ${ }^{29}$\\
+29. When $\alpha$ is closer to one, the increase in government spending increases substantially demand for goods and inflation in region 1 and generates expected deflation going forward. Deflation increases the real interest rate, inducing consumers to save, and therefore depresses consumption. This explains why the local consumption multiplier decreases when home bias approaches one.
+
+\begin{figure}[h]
+\begin{center}
+  \includegraphics[alt={},max width=\textwidth]{f7456475-25f8-44eb-bcd7-6c03a4b15006-31_710_856_208_503}
+\captionsetup{labelformat=empty}
+\caption{Figure 7\\
+Consumption multipliers and trade linkages (model)\\
+Notes: We vary parameter $\alpha$ which captures the degree of home bias for region 1 . The benchmark calibration is $\alpha=0.58$ (vertical line). We show the local and the aggregate consumption multiplier for a four-year horizon.}
+\end{center}
+\end{figure}
+
+\subsection*{5.6. The role of monetary policy}
+We analyse how monetary policy affects the response of consumption to fiscal stimulus. The nominal interest rate is given by a Taylor rule: $R_{t}=R_{s s}+\zeta \hat{\pi}_{t}$. For our benchmark parametrization, we have $\zeta=0$, which corresponds to a monetary policy that is unresponsive to inflationary pressures, a case resembling the ZLB episode. Figure 8 shows the local and aggregate four-year consumption multiplier when we vary the Taylor rule coefficient $\zeta$ and keep all other parameters as in the benchmark parametrization.
+
+The aggregate multiplier decreases gradually as we increase the responsiveness of the monetary authority to aggregate inflation. Consumer spending drops for two reasons. First, the increase in the nominal rate increases the real interest rate, depressing consumer spending. This is true for both regions as there is a currency union. Second, the increase in the nominal rate increases the government debt service cost. As a result, to balance the budget, the government increases taxes. The combined effect of higher real interest rates and higher taxes decreases consumer spending.
+
+In contrast, the local consumption multiplier is largely unaffected by the responsiveness of monetary policy. This exercise confirms the intuition of the literature claiming that first, monetary authority is critical for the value of the aggregate fiscal multiplier (Christiano et al., 2011), and second, monetary policy does not affect the local multiplier so that local estimates are an upper bound for the multiplier during times of conventional monetary policy (see, for example, Chodorow-Reich, 2019).
+
+\subsection*{5.7. Using the local multiplier to inform the aggregate multiplier}
+Our model maps the empirical evidence on the local multiplier to an estimate for the aggregate multiplier. In this section, we show that when the model is also informed by the local multiplier,
+
+\begin{figure}[h]
+\begin{center}
+  \includegraphics[alt={},max width=\textwidth]{f7456475-25f8-44eb-bcd7-6c03a4b15006-32_686_850_215_501}
+\captionsetup{labelformat=empty}
+\caption{Figure 8\\
+Consumption multipliers and monetary policy\\
+Notes: The Taylor rule is given by $R_{t}=R_{s s}+\zeta \hat{\pi}_{t}$. In Benchmark, we have $\zeta=0$. We vary parameter $\zeta$ and report the four-year local and aggregate consumption multiplier.}
+\end{center}
+\end{figure}
+
+it delivers a tighter range of estimates for the aggregate multiplier relative to a model that is only informed by the MPC.
+
+Specifically, for selected model parameters, we change the parameter value to a plausible alternative (one parameter at a time) and report the average MPC, the local multiplier, and the aggregate multiplier. Figure 9 shows the model's multipliers and the MPC for three different values of each of the following parameters-the dispersion of the discount factor, dividend tax, elasticity of substitution, dividend allocation, lump-sum transfer, and duration of the government spending shock.
+
+First, the figure shows that the local and the aggregate multiplier vary in a systematic way. For the most part, larger values of the local multiplier are associated with larger values of the aggregate multiplier. Hence, the local multiplier is a useful predictor of the aggregate multiplier.
+
+Second, and more importantly, the local multiplier is a useful statistic even if we take into account the value of the MPC. To demonstrate this, Figure 10 shows the model's MPC, local, and aggregate multipliers from Figure 9 in one scatterplot. Each dot represents a combination of the MPC and the local multiplier (with the MPC on the $x$-axis and the local multiplier on the $y$-axis), with the value of the aggregate multiplier listed next to the dot. The values of the MPC between 0.35 and 0.45 are considered within the range of reasonable empirical estimates. As can be seen from the figure, for this range, the aggregate multiplier varies substantially, from 0.29 to 0.56 . This demonstrates that the MPC is not the only factor influencing the aggregate multiplier. To pin down the value of the aggregate multiplier, we can use the local multiplier. Even conditional on MPC, the local and the aggregate multiplier vary in a systematic (positive) way. A value of the local multiplier equal to or above 0.20 -which is in line with our empirical estimates-narrows the range of the aggregate multiplier to $0.41-0.56$. Thus, the local multiplier is informative about the aggregate multiplier beyond the estimates of the MPC.
+
+\begin{figure}[h]
+\begin{center}
+  \includegraphics[alt={},max width=\textwidth]{f7456475-25f8-44eb-bcd7-6c03a4b15006-33_654_1277_211_291}
+\captionsetup{labelformat=empty}
+\caption{Figure 9\\
+Sensitivity analysis: MPC, local, and aggregate multiplier}
+\end{center}
+\end{figure}
+
+Notes: We vary a parameter away from its benchmark value and explore how the MPCs and the multipliers respond. The vertical dashed line shows the benchmark value for the parameter. For the duration of government spending case, government spending equals the initial benchmark amount for a given number of quarters and then is set to zero. We do not recalibrate the other parameters to hit the benchmark targets.
+
+\begin{figure}[h]
+\begin{center}
+  \includegraphics[alt={},max width=\textwidth]{f7456475-25f8-44eb-bcd7-6c03a4b15006-33_739_1059_1242_400}
+\captionsetup{labelformat=empty}
+\caption{Figure 10\\
+MPC, local, and aggregate multiplier under different specifications}
+\end{center}
+\end{figure}
+
+Notes: The figure shows a scatter of the MPC and the local multiplier under different specifications: (a) discount factor dispersion, (b) dividend tax, (c) elasticity of substitution, (d) dividend allocation, (e) lump-sum transfer, and (f) duration of government spending. We denote the high parameter values of each specification with a prime. Next to each specification we report the value of the aggregate multiplier.
+
+\section*{6. ALTERNATIVE MODELS AND SPECIFICATIONS}
+We test how sensitive our main results are to alternative models and specifications. First, we consider an economy with no within-region heterogeneity. This is equivalent to a RA-NK model with two regions. Second, we analyse alternative fiscal regimes such as taxation at the local instead of the federal level as well as deficit-financed spending. Third, we consider a utility specification that depends on disutility of hours. Fourth, we analyse the implications of a Benabou-type tax schedule. Fifth, we analyse an economy with higher wealth than the benchmark economy. Sixth, we consider a liquidity trap experiment. Finally, we compute a "normal times" fiscal multiplier. In all of our experiments, upon modifying the model along one of these dimensions, we recalibrate the model to match the benchmark targets.
+
+\subsection*{6.1. Heterogeneous agents new Keynesian versus RA-NK model}
+Our benchmark model combines a regional framework with a heterogeneous agents model. A natural question is what would the local and aggregate multiplier be without heterogeneity within a region? To address this question, we shut down idiosyncratic shocks and discount factor heterogeneity. We assume that there is a single, representative household which receives the average productivity shock (normalized to one) and that this shock persists in all time periods. Hence, in this model, the within-region distribution of labour income, assets, and discount rates, $\phi_{i}$, is degenerate. In addition, dividends are collected directly by the household. We call this economy a RA-NK. Note, however, that regions are still different across the transition because they receive different amounts of government spending.
+
+For a steady-state equilibrium with positive asset holdings to exist, we have to assume that $\beta(1+R)=1$. We write the problem of the representative household in region $i$ :
+
+
+\begin{align*}
+V_{i, t}\left(a_{t}\right)= & \max _{c_{t}, a_{t+1}, h_{t}}\left\{\frac{c_{t}^{1-\sigma}}{1-\sigma}+\psi \frac{\left(1-h_{t}\right)^{1-\theta}}{1-\theta}+\beta V_{i, t+1}\left(a_{t+1}\right)\right\}  \tag{6.1}\\
+\text { s.t. } & c_{t}+\left(1+\pi_{i, t+1}\right) a_{t+1}=w_{i, t} h_{t}-\mathcal{T}+\left(1+R_{t-1}+\chi\right) a_{t}+\left(1-\tau_{d}\right) D_{i, t}  \tag{6.2}\\
+& a_{t+1} \geq 0 \tag{6.3}
+\end{align*}
+
+
+A new aspect of this budget constraint is that we have introduced the term $\chi$. Here, $\chi$ is a function given by
+
+$$
+\chi=\Delta\left(a_{t+1}-a_{s s}\right)
+$$
+
+Similar types of debt rules are common in small open economy models and help induce stationarity. A negative $\Delta$ means that the savings interest rate is lower when agents save more than the steady-state asset holdings and vice versa. ${ }^{30}$ Moreover, the assumption of a borrowing constraint is irrelevant as the representative household never holds a negative net worth. Table 12 compares the steady state between our Benchmark and the RA-NK economy. The RA-NK model features a substantially lower MPC compared to our Benchmark. The average MPC (at an annual frequency) is 0.05 , while in our benchmark economy it is 0.37 .
+
+Figure 11 plots the consumption impulse response functions in our Benchmark (left panel) and the RA-NK model (right panel). In the RA-NK model, consumer spending responds less to government spending as the average MPC is lower. Both the local and the aggregate fiscal
+
+\footnotetext{\begin{enumerate}
+  \setcounter{enumi}{29}
+  \item We set $\Delta=-0.5 \%$ to match the percentage change of asset holdings relative to the steady state between RA-NK and Benchmark.
+\end{enumerate}
+}\begin{table}[h]
+\begin{center}
+\captionsetup{labelformat=empty}
+\caption{TABLE 12\\
+Steady state: Benchmark versus RA-NK}
+\begin{tabular}{|l|l|l|}
+\hline
+ & Benchmark & RA-NK \\
+\hline
+Liquid assets/income & 1.20 & 1.20 \\
+\hline
+Liquid assets Gini & 0.75 & 0.00 \\
+\hline
+Median MPC & 0.11 & 0.05 \\
+\hline
+Average MPC & 0.37 & 0.05 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+Notes: Selected steady-state statistics in the benchmark model and an economy with a representative agent in each region (RA-NK). The MPC is reported at an annual frequency.
+
+\begin{figure}[h]
+\begin{center}
+  \includegraphics[alt={},max width=\textwidth]{f7456475-25f8-44eb-bcd7-6c03a4b15006-35_504_1275_595_293}
+\captionsetup{labelformat=empty}
+\caption{Figure 11\\
+Consumption responses to a government spending shock: Benchmark versus RA-NK\\
+Notes: Impulse response functions for consumption in the Benchmark case and RA-NK model. In RA-NK, there is no heterogeneity within regions. All units are expressed in percentage deviations from their steady state.}
+\end{center}
+\end{figure}
+
+\begin{table}[h]
+\begin{center}
+\captionsetup{labelformat=empty}
+\caption{TABLE 13\\
+Consumption decomposition: RA-NK versus Benchmark}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\multirow[b]{2}{*}{Consumption multiplier} & \multicolumn{2}{|c|}{RA-NK} & \multicolumn{2}{|c|}{Benchmark} \\
+\hline
+ & Local & Aggregate & Local & Aggregate \\
+\hline
+Due to wages & 0.13 & 0.17 & 0.28 & 0.48 \\
+\hline
+Due to dividends & -0.03 & -0.04 & -0.05 & -0.06 \\
+\hline
+Due to inflation & -0.01 & -0.04 & -0.02 & -0.08 \\
+\hline
+Due to taxes & 0.00 & -0.01 & 0.00 & 0.05 \\
+\hline
+Total & 0.09 & 0.06 & 0.20 & 0.41 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+Notes: Multiplier decomposition due to wages, dividends, inflation, and taxes in the benchmark model and an economy with a representative agent in each region (RA-NK).\\
+multiplier are lower relative to our Benchmark. In particular, in the RA-NK model, the local multiplier is equal to 0.09 , and the aggregate is equal to 0.06 .
+
+The difference across model specifications is related to the response of consumer spending due to the change in wages (Table 13). If only wages had changed in our Benchmark, the local multiplier would be 0.28 , and the aggregate multiplier would be 0.48 , whereas in the RA-NK, the effect decreases to 0.13 and 0.17 , respectively. Consumer spending decreases more in our Benchmark due to dividends compared to the RA-NK, but the difference is not enough to counteract the large differential response in consumption due to wages. Inflation affects consumer spending in both economies in broadly the same way. Finally, consumer spending increases due to taxes in the Benchmark while it slightly decreases in the RA-NK. However, overall, the effect of taxes seems relatively small.
+
+In sum, the large difference between the Benchmark and the RA-NK multipliers come from the differential response of consumer spending to increases in labour income. In our Benchmark, the average MPC is 0.37 while in the RA-NK it is 0.05 . With a higher average MPC, the increase in labour income generates a substantial consumption response. This results in larger consumption multipliers both at the local and the aggregate levels.
+
+An intermediate case between the Benchmark and the RA-NK model is a model with idiosyncratic income shocks but no discount factor heterogeneity. In this model, the average annual MPC is 0.30 . The resulting local consumption multiplier is 0.13 , and the aggregate consumption multiplier is 0.19 . Thus, our empirical evidence on the local consumption multiplier favours a new Keynesian model with rich heterogeneity (in both labour productivities and discount factors) over a model with only income risk. This is especially true compared to a model with a representative agent.
+
+\subsection*{6.2. Alternative specifications}
+Alternative fiscal rules. In the Benchmark model, taxation occurs at the federal level. Here, we assume that regions pay taxes proportional to the stimulus injected in the region. In particular, since region 2 receives $36 \%$ of the spending allocated in region 1 , it pays almost three times less the taxes set in region 1. Higher initial inflation decreases the government debt service cost and decreases the tax rate for the first few years following the shock. As a result, region 1 benefits more when taxes are local than when taxes are federal and the local multiplier increases to 0.26 . The aggregate multiplier is not affected and is equal to 0.41 . Next, we allow for the government to finance all of the spending using deficit financing. In particular, the government issues (and rolls over) debt up to year $T$ and starts imposing taxes for $t>T$ in order to bring the debt equal to its steady-state value. We consider $T=\{1,4,10\}$. The local multiplier is $0.20,0.12$, and 0.16 while the aggregate consumption multiplier is $0.35,0.41$, and 0.74 , respectively. The aggregate multiplier is higher when spending is tax financed than when it is deficit financed for a short horizon (less than four years). As mentioned, higher initial inflation decreases the government debt service cost and decreases the tax rate for the first couple of years. As a result, allowing tax to adjust generates higher multipliers. Since this effect lasts only for the first couple of years, deficit financing for ten years ahead generates larger consumption multipliers.
+
+Preferences with disutility of labour. In the benchmark utility specification, the labour supply elasticity depends jointly on parameter $\theta$ and the hours of work. We also solve the model when we specify the utility function as disutility in hours: $U=\log (c)-\psi\left(h^{1+1 / \theta} /(1+1 / \theta)\right)$. We set $\theta$ and $\psi$ to match the same labour supply elasticity and average hours as in the benchmark model. The local multiplier in this case is 0.19 and the aggregate is 0.38 .
+
+Benabou tax function. Our benchmark tax function consists of a transfer and a linear tax in household earnings. As an alternative, we use a Benabou-type of parametric tax function:
+
+$$
+\mathcal{T}_{t}=[w x h+\delta(1-\omega) D]-\left(1-\tau_{0}\right)[w x h+\delta(1-\omega) D]^{1-\tau_{1}}
+$$
+
+We set $\tau_{0}$ to match the same government-output ratio as in the benchmark model and $\tau_{1}=$ 0.036 based on Guner et al. (2014). With this specification, the local multiplier is 0.17 , and the aggregate multiplier is 0.30 .
+
+High-wealth economy. In our benchmark calibration, we abstract from other illiquid forms of wealth (for example, houses). As a robustness exercise, we consider an alternative steady-state\\
+economy that features a much higher wealth-output ratio relative to the benchmark model. We assume that only the patient households hold this additional wealth. We do so by calibrating the discount factor parameters (mean and dispersion) jointly to achieve (i) a wealth-output ratio three times higher the benchmark target and (ii) that the impatient households hold the same amount of assets as in the benchmark model. Adding very wealthy individuals decreases the annual MPC from 0.37 to 0.34 . The wealthy households already have a very low MPC, so making them even wealthier does not significantly affect the average.
+
+Great recession. We simulate an episode that resembles the Great Recession. First, we introduce a discount factor shock which decreases consumer demand to a magnitude similar to the decline documented in the Great Recession. In addition, the monetary authority sets the nominal rate based on the aggregate inflation rate $\hat{\pi}$ using the rule $R_{t}=\max \left\{\underline{\mathrm{R}}, R_{s s}+\zeta \hat{\pi}_{t}\right\}$. The nominal rate is constrained by the effective lower bound $R$. The decline in consumer demand generates deflation and hence, pushes the nominal rate to the effective lower bound. The monetary authority resumes an active response to inflation once the effective lower bound no longer binds, gradually raising the rate back to its steady-state level (in contrast, in the benchmark model the nominal interest rate is fully pegged). ${ }^{31}$
+
+We compute the aggregate multiplier as follows. First, in the model with the shocks described above, we compute the aggregate consumption path. Second, we compute the aggregate consumption path in a model with only discount factor shocks. The aggregate multiplier is computed by the difference in these paths normalized by the aggregate government spending. We find that the aggregate multiplier in this experiment is 0.35 versus 0.41 in our benchmark case. Thus, moving from a fully fixed nominal rate (as in our benchmark) to one that combines an effective lower bound period with a resumption of an active response to inflation reduces our multiplier only slightly. The reason is that the bulk of the government spending occurs, both in the data and the model, while the economy is constrained by the lower bound. If the stimulus had taken place during a time of unconstrained monetary policy, the aggregate multiplier would be much smaller than the benchmark (see Section 5.6).
+
+Normal times multiplier. We compute a "normal times" fiscal multiplier by adjusting the model in two dimensions. First, we switch from an interest rate peg (as in the Benchmark) to a conventional Taylor rule of the form $R_{t}=\left(1-\rho_{R}\right) R_{s s}+\rho_{R}\left[R_{t-1}+\phi_{\pi} \hat{\pi}+\phi_{y} \hat{y}\right]$ where $\rho_{R}=0.8, \phi_{y}=0.2$, and $\phi_{\pi}=1.5$. Second, we calibrate the government spending process based on U.S. historical data. Specifically, we use a simple AR(1) with a persistence parameter of 0.85 as in Nakamura and Steinsson (2014). The normal times two- and four-year output multipliers are 0.46 and 0.25 , respectively, which are consistent with the values reported by Ramey and Zubairy (2018) (equal to 0.26 and 0.21 , respectively).
+
+\section*{7. CONCLUSION}
+The response of private consumer spending to a fiscal stimulus injection is at the heart of the income multiplier debate. We estimate a positive response of consumer spending to the Recovery
+
+\footnotetext{\begin{enumerate}
+  \setcounter{enumi}{30}
+  \item We calibrate the effective lower bound so that interest rates are temporarily unresponsive for about three years. Empirically, interest rates remained at the lower bound for longer but such a feature would require a counterfactually large and persistent decline in consumer demand. The effective lower bound in our model is set at one percentage point lower than the normal level of the interest rate (annualized). One justification is that interest rates in a broader class of savings and borrowing instruments (e.g. government debt, credit card debt) declined but did not go to zero.
+\end{enumerate}
+}Act (2009-12) using regional variation. Localities that received $\$ 1$ more in government spending spent $\$ 0.29$ on non-durable spending and $\$ 0.09$ in auto purchases.
+
+We estimate the aggregate response of consumer spending to fiscal stimulus using a quantitative equilibrium model. Our model is novel in that it embeds a regional framework into a heterogeneous agents, incomplete markets, new Keynesian model. The model generates a positive local non-durable consumption multiplier consistent with the data. This is a new finding and distinguishes our incomplete markets model from the existing literature that employed regional models with complete markets. The model predicts an aggregate non-durable consumption multiplier equal to 0.41 . This falls in the upper bound of estimates found in the literature (Hall, 2009).
+
+Acknowledgments. We thank Dirk Krueger and five anonymous referees for extremely valuable advice. We also thank our discussants Karel Mertens and Claudia Sahm, as well as Gabriel Chodorow-Reich, Olivier Coibion, Erik Hurst, Greg Kaplan, Pete Klenow, David Lagakos, Alisdair McKay, Emi Nakamura, Valerie Ramey, Morten Ravn, Jon Steinsson, Gianluca Violante, and seminar participants at USCD, Wisconsin-Madison, UCL, Federal Reserve Bank of Minneapolis, Columbia GSB, NBER conference on Micro Data for Macro Models, and Barcelona Summer Forum 2018. The views expressed here are those of the authors and do not necessarily represent the views of the Federal Reserve Bank of St. Louis, the Federal Reserve Bank of Richmond, the Federal Reserve Bank of San Francisco, or the Federal Reserve System.
+
+\section*{Supplementary Data}
+Supplementary data are available at Review of Economic Studies online.
+
+\section*{Data Availability Statement}
+The non-confidential data and codes underlying this article are available in Zenodo, at \href{https://doi.org/}{https://doi.org/} 10.5281/zenodo.7483326. The confidential data underlying this article were provided by the Kilts Center for Marketing Data Center at The University of Chicago Booth School of Business (the Nielsen Dataset) and the New York Fed (Consumer Credit Panel-Equifax) under license.
+
+\section*{REFERENCES}
+AGUIAR, M. and BILS, M. (2015), "Has Consumption Inequality Mirrored Income Inequality?", American Economic Review, 105, 2725-2756.\\
+AIYAGARI, S. R. (1994), "Uninsured Idiosyncratic Risk and Aggregate Saving", Quarterly Journal of Economics, 109, 659-684.\\
+ALADANGADY, A., ARON-DINE, S., DUNN, W., FEIVESON, L., LENGERMANN, P. and SAHM, C. (2016), "The Effect of Hurricane Matthew on Consumer Spending", FEDS Notes (Washington: Board of Governors of the Federal Reserve System).\\
+ANGELETOS, M. and LIAN, C. (2021), "Determinacy Without the Taylor Principle" (Working Paper).\\
+ARRA (2015), "American Recovery and Reinvetsment Act, Recovery Accountability and Transparency Board, 2009-2013, Contract, Grant and Loan Recipient Reports", United States Government (Accessed January 2015).\\
+AUCLERT, A. (2019), "Monetary Policy and the Redistribution Channel", American Economic Review, 109, 2333-2367.\\
+AUCLERT, A., ROGNLIE, M. and LUDWIG, S. (2018), "The Intertemporal Keynesian Cross" (Working Paper, Northwestern University).\\
+AUERBACH, A. and GORODNICHENKO, Y. (2012), "Measuring the Output Responses to Fiscal Policy", American Economic Journal: Economic Policy, 4, 1-27.\\
+AUERBACH, A., GORODNICHENKO, Y. and MURPHY, D. (2019), "Local Fiscal Multipliers and Fiscal Spillovers in the United States" (NBER Working Paper No. 25457).\\
+BARRO, R. J. and KING, R. G. (1984), "Time-Separable Preferences and Intertemporal-Substitution Models of Business Cycles", Quarterly Journal of Economics, 99, 817-839.\\
+BARRO, R. J. and REDLICK, C. J. (2011), "Macroeconomic Effects from Government Purchases and Taxes", Quarterly Journal of Economics, 126, 51-102.\\
+BAXTER, M. and KING, R. G. (1993), "Fiscal Policy in General Equilibrium", American Economic Review, 83, 315-334.\\
+BEE, A., MEYER, B. and JAMES, S. (2012), "The Validity of Consumption Data: Are the Consumer Expenditure Interview and Diary Surveys Informative?" (NBER Working Paper No. 18308).\\
+BERAJA, M., HURST, E. and OSPINA, J. (2019), "The Aggregate Implications of Regional Business Cycles", Econometrica, 87, 1789-1833.
+
+BHANDARI, A., EVANS, D., GOLOSOV, M. and SARGENT, T. J. (2018), "Inequality, Business Cycles, and MonetaryFiscal Policy" (Working Paper).\\
+BLANCHARD, O. and PEROTTI, R. (2002), "An Empirical Characterization of the Dynamic Effects of Changes in Government Spending and Taxes on Output", Quarterly Journal of Economics, 117, 1329-1368.\\
+BOONE, C., DUBE, A. and KAPLAN, E. (2014), "The Political Economy of Discretionary Spending: Evidence from the American Recovery and Reinvestment Act", Brookings Papers on Economic Activity, 375-428.\\
+CARROLL, C., SLACALEK, J., TOKUOKA, K. and WHITE, M. N. (2017), "The Distribution of Wealth and the Marginal Propensity to Consume", Quantitative Economics, 8, 977-1020.\\
+CHODOROW-REICH, G. (2019), "Geographic Cross-Sectional Fiscal Spending Multipliers: What Have We Learned?", American Economic Journal: Economic Policy, 11, 1-34.\\
+CHODOROW-REICH, G., FEIVESON, L., LISCOW, Z. and WOOLSTON, W. G. (2012), "Does State Fiscal Relief During Recessions Increase Employment? Evidence from the American Recovery and Reinvestment Act", American Economic Journal: Economic Policy, 4, 118-145.\\
+CHRISTIANO, L., EICHENBAUM, M. and REBELO, S. (2011), "When Is the Government Spending Multiplier Large?", Journal of Political Economy, 119, 78-121.\\
+CONLEY, T. G. and DUPOR, B. (2013), "The American Recovery and Reinvestment Act: Solely a Government Jobs Program?", Journal of Monetary Economics, 60, 535-549.\\
+DRAUTZBURG, T. and UHLIG, H. (2015), "Fiscal Stimulus and Distortionary Taxation", Review of Economic Dynamics, 18, 894-920.\\
+DUPOR, B. and MCCRORY, P. B. (2017), "A Cup Runneth Over: Fiscal Policy Spillovers from the 2009 Recovery Act", Economic Journal, 128, 1476-1508.\\
+DUPOR, B. and MEHKARI, M. S. (2016), "The 2009 Recovery Act: Stimulus at the Extensive and Intensive Labor Margins", European Economic Review, 85, 208-228.\\
+Equifax (2017), "Consumer Credit Panel", Center for Microeconomic Data, Federal Reserve Bank of New York, \href{https://www.newyorkfed.org/microeconomics/faq}{https://www.newyorkfed.org/microeconomics/faq} (Accessed June 2017).\\
+FARHI, E. and WERNING, I. (2016), "Fiscal Multipliers: Liquidity Traps and Currency Unions", in Taylor, J. B. and Uhlig, H. (eds) Handbook of Macroeconomics (Vol. 2), (North Holland/Elsevier) 2417-2492.\\
+FLODEN, M. and LINDE, J. (2001), "Idiosyncratic Risk in the United States and Sweden: Is There a Role for Government Insurance?", Review of Economic Dynamics, 4, 406-437.\\
+GALI, J., LOPEZ-SALIDO, D. and VALLES, J. (2007), "Understanding the Effects of Government Spending on Consumption", Journal of the European Economic Association, 5, 227-270.\\
+GALI, J. and MONACELLI, T. (2008), "Optimal Monetary and Fiscal Policy in a Currency Union", Journal of International Economics, 76, 116-132.\\
+GERVAIS, A. and JENSEN, B. (2019), "The Tradability of Services: Geographic Concentration and Trade Costs", Journal of International Economics, 118, 331-350.\\
+GOURIO, F. and MIAO, J. (2010), "Firm Heterogeneity and the Long-Run Effects of Dividend Tax Reform", American Economic Journal: Macroeconomics, 2, 131-168.\\
+GUNER, N., KAYGUSUZ, R. and VENTURA, G. (2014), "Income Taxation of U.S. Households: Facts and Parametric Estimates", Review of Economic Dynamics, 17, 559-581.\\
+HAGEDORN, M. (2017), "A Demand Theory of the Price Level" (Working Paper, University of Oslo).\\
+HAGEDORN, M., KARAHAN, F., MANOVSKII, I. and MITMAN, K. (2016), "Unemployment Benefits and Unemployment in the Great Recession: The Role of Macro Effects" (NBER Working Paper No. 19499).\\
+HAGEDORN, M., MANOVSKII, I. and MITMAN, K. (2017), "The Fiscal Multiplier" (Working Paper).\\
+HALL, R. E. (2009), "By How Much Does GDP Rise If the Government Buys More Output?", Brookings Papers on Economic Activity, 40, 183-249.\\
+HOUSE, C. L., PROEBSTING, C. and TESAR, L. (2020), "Austerity in the Aftermath of the Great Recession", Journal of Monetary Economics, 115, 37-63.\\
+HUGGETT, M. (1993), "The Risk-Free Rate in Heterogeneous-Agent Incomplete-Insurance Economies", Journal of Economic Dynamics and Control, 17, 953-969.\\
+JAPPELLI, T. and PISTAFERRI, L. (2014), "Fiscal Policy and MPC Heterogeneity", American Economic Journal: Macroeconomics, 6, 107-136.\\
+JOHNSON, D. S., PARKER, J. A. and SOULELES, N. S. (2006), "Household Expenditure and the Income Tax Rebates of 2001", American Economic Review, 96, 1589-1610.\\
+KAPLAN, G., MITMAN, K. and VIOLANTE, G. L. (2020), "Non-durable Consumption and Housing Net Worth in the Great Recession: Evidence from Easily Accessible Data", Journal of Public Economics, 189, 104-176.\\
+KAPLAN, G., MOLL, B. and VIOLANTE, G. L. (2018), "Monetary Policy According to HANK", American Economic Review, 108, 697-743.\\
+KAPLAN, G. and VIOLANTE, G. L. (2014), "A Model of the Consumption Responses to Fiscal Stimulus Payments", Econometrica, 82, 1199-1239.\\
+KRUEGER, D., MITMAN, K. and PERRI, F. (2016), "Macroeconomics and Household Heterogeneity", in Taylor, J. B. and Uhlig, H. (eds) Handbook of Macroeconomics (Vol. 2), (North Holland/Elsevier) 843-921.\\
+LEDUC, S. and WILSON, D. (2017), "Are State Governments Roadblocks to Federal Stimulus? Evidence on the Flypaper Effect of Highway Grants in the 2009 Recovery Act", American Economic Journal: Economic Policy, 9, 253-292.
+
+MCCALLUM, B. T. (1983), "On Non-uniqueness in Rational Expectations Models: An Attempt at Perspective", Journal of Monetary Economics, 11, 139-168.\\
+MCKAY, A., NAKAMURA, E. and STEINSSON, J. (2016), "The Power of Forward Guidance Revisited", American Economic Review, 106, 3133-3158.\\
+MCKAY, A. and REIS, R. (2016), "The Role of Automatic Stabilizers in the U.S. Business Cycles", Econometrica, 84, 141-194.\\
+MIAN, A., SUFI, A. and RAO, K. (2013), "Household Balance Sheets, Consumption, and the Economic Slump", Quarterly Journal of Economics, 128, 1687-1726.\\
+NAKAMURA, E. and STEINSSON, J. (2014), "Fiscal Stimulus in a Monetary Union: Evidence from U.S. Regions", American Economic Review, 104, 753-792.\\
+NAKAMURA, E. and STEINSSON, J. (2018), "Identification in Macroeconomics", Journal of Economic Perspectives, 32, 59-86.\\
+NielsenIQ (2013), "Retail Scanner Datasets 2008-2013", Kilts Center for Marketing Data Center at The University of Chicago Booth School of Business, \href{https://www.chicagobooth.edu/research/kilts/datasets/nielsenIQ-nielsen}{https://www.chicagobooth.edu/research/kilts/datasets/nielsenIQ-nielsen} (Accessed June 2017).\\
+OH, H. and REIS, R. (2012), "Targeted Transfers and the Fiscal Response to the Great Recession", Journal of Monetary Economics, 59, S50-S64.\\
+PARKER, J. A., SOULELES, N. S., JOHNSON, D. S. and MCCLELLAND, R. (2013), "Consumer Spending and the Economic Stimulus Payments of 2008", American Economic Review, 103, 2530-2553.\\
+PEROTTI, R. (2005), "Estimating the Effects of Fiscal Policy in OECD Countries" (CEPR Discussion Paper No. 4842).\\
+RAMEY, V. A. (2011), "Identifying Government Spending Shocks: It's All in the Timing", Quarterly Journal of Economics, 126, 1-50.\\
+RAMEY, V. A. (2016), "Macroeconomic Shocks and Their Propagation", in Taylor, J. B. and Uhlig, H. (eds) Handbook of Macroeconomics (vol. 2), (North Holland/Elsevier) 71-162.\\
+RAMEY, V. A. (2019), "Ten Years After the Financial Crisis: What Have We Learned from the Renaissance in Fiscal Research?", Journal of Economic Perspectives, 33, 89-114.\\
+RAMEY, V. A. and SHAPIRO, M. D. (1998), "Costly Capital Reallocation and the Effects of Government Spending", Carnegie-Rochester Conference Series on Public Policy, 48, 145-194.\\
+RAMEY, V. A. and ZUBAIRY, S. (2018), "Government Spending Multipliers in Good Times and in Bad: Evidence from U.S. Historical Data", Journal of Political Economy, 126, 850-901.
+
+SAHM, C. R., SHAPIRO, M. D. and SLEMROD, J. B. (2010), "Household Response to the 2008 Tax Rebate: Survey Evidence and Aggregate Implications", Tax Policy and the Economy, 24, 69-110.\\
+SAHM, C. R., SHAPIRO, M. D. and SLEMROD, J. B. (2012), "Check in the Mail or More in the Paycheck: Does the Effectiveness of Fiscal Stimulus Depend on How It Is Delivered?", American Economic Journal: Economic Policy, 4, 216-250.\\
+SERRATO, J. C. S. and WINGENDER, P. (2016), "Estimating Local Fiscal Multipliers" (NBER Working Paper No. 22425).
+
+UHLIG, H. (2010), "Some Fiscal Calculus", American Economic Review, 100, 30-34.\\
+WILSON, D. J. (2012), "Fiscal Spending Jobs Multipliers: Evidence from the 2009 American Recovery and Reinvestment Act", American Economic Journal: Economic Policy, 4, 251-282.\\
+WOODFORD, M. (2011), "Simple Analytics of the Government Expenditure Multiplier", American Economic Journal: Macroeconomics, 3, 1-35.
+
+\begin{enumerate}
+  \item 
+  \item 
+\end{enumerate}
+
+\begin{enumerate}
+  \setcounter{enumi}{6}
+  \item 
+  \item 
+\end{enumerate}
+
+\begin{enumerate}
+  \setcounter{enumi}{10}
+  \item 
+\end{enumerate}
+
+\begin{enumerate}
+  \setcounter{enumi}{12}
+  \item 
+  \item 
+\end{enumerate}
+
+\begin{enumerate}
+  \setcounter{enumi}{14}
+  \item 
+\end{enumerate}
+
+\begin{enumerate}
+  \setcounter{enumi}{15}
+  \item 
+\end{enumerate}
+
+\begin{enumerate}
+  \setcounter{enumi}{16}
+  \item 
+\end{enumerate}
+
+\begin{enumerate}
+  \setcounter{enumi}{26}
+  \item 
+\end{enumerate}
+
+\begin{enumerate}
+  \setcounter{enumi}{27}
+  \item 
+\end{enumerate}
+
+\begin{enumerate}
+  \setcounter{enumi}{29}
+  \item 
+\end{enumerate}
+
+\begin{enumerate}
+  \setcounter{enumi}{30}
+  \item 
+\end{enumerate}
+
+
+\end{document}
