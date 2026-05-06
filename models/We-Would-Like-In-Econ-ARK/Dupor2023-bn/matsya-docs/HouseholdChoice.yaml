@@ -1,0 +1,86 @@
+name: HouseholdChoice
+
+symbols:
+  spaces:
+    Xa:    '@def R+'
+    Xm:    '@def R+'
+    Xh:    '@def [0,1]'
+    Pi:    '@def DiscreteMarkov'
+
+  prestate:
+    a:      '@in Xa'
+    x_pre:  '@in Pi'
+
+  states:
+    m:      '@in Xm'
+    x:      '@in Pi'
+
+  poststates:
+    a_prime: '@in Xa'
+    x_pass:  '@in Pi'
+
+  controls:
+    c:      '@in R+'
+    h:      '@in Xh'
+
+  exogenous:
+    x_shock: '@dist DiscreteMarkov(Pi_matrix)'
+
+  values:
+    V[<]:   '@in R'
+    V:      '@in R'
+    V[>]:   '@in R'
+    dV[<]:  '@in R'
+    dV:     '@in R'
+    dV[>]:  '@in R'
+
+  parameters:
+    beta:   '@in R+'
+    psi:    '@in R+'
+    theta:  '@in R+'
+    tau:    '@in [0,1]'
+    w:      '@in R+'
+    r:      '@in R+'
+    x_bar:  '@in R+'
+    omega:  '@in [0,1]'
+    D:      '@in R+'
+    T:      '@in R+'
+
+  settings:
+    n_a:    '@in Z+'
+    n_m:    '@in Z+'
+
+equations:
+  arvl_to_dcsn_transition: |
+    x = x_shock
+    m = (1 + r) * a + (1 - tau) * (x / x_bar) * (1 - omega) * D + T
+
+  dcsn_to_cntn_transition: |
+    a_prime = m + (1 - tau) * w * x * h - c
+    x_pass = x
+
+  cntn_to_dcsn_mover:
+    Bellman: |
+      V = max_{c, h}{log(c) + psi * (1 - h)^(1 - theta) / (1 - theta) + beta * V[>]}
+    MarginalBellman: |
+      dV = (1 + r) * (1 / c)
+
+  dcsn_to_arvl_mover:
+    Bellman: |
+      V[<] = E_{x_shock}(V)
+    ShadowBellman: |
+      dV[<] = E_{x_shock}(dV)
+
+calibration:
+  beta:   0.96
+  psi:    1.0
+  theta:  2.0
+  tau:    0.30
+  w:      1.0
+  r:      0.04
+  x_bar:  1.0
+  omega:  0.0
+  D:      0.0
+  T:      0.10
+  n_a:    200
+  n_m:    200

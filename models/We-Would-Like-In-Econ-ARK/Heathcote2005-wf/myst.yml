@@ -1,0 +1,14 @@
+version: 1
+project:
+  title: "Fiscal Policy with Heterogeneous Agents and Incomplete Markets — Ballpark Entry"
+  bibliography:
+    - self.bib
+    - references.bib
+    - subsequent-literature.bib
+  toc:
+    - file: Heathcote2005-wf_intro.ipynb
+    - file: Heathcote2005-wf_prior-literature.ipynb
+    - file: Heathcote2005-wf_summary.ipynb
+    - file: Heathcote2005-wf_subsequent-literature.ipynb
+site:
+  title: "Fiscal Policy with Heterogeneous Agents and Incomplete Markets — Ballpark Entry"
