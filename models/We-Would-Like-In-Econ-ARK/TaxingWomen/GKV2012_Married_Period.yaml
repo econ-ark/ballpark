@@ -1,0 +1,303 @@
+# ============================================================
+# GKV (2012) "Taxing Women" — Married Household Period
+# Fully deterministic conditional on permanent types (z, x, q, b)
+# Two stages: ParticipationAndLabor (branching) → ConsSavings (EGM)
+#
+# Produced by Matsya (session: topics2026-TaxingWomen)
+# Source: Guner, Kaygusuz, and Ventura (2012), JME 59, 111-128
+# ============================================================
+
+name: GKV2012_Married_Period
+stages:
+  - ParticipationAndLabor
+  - ConsSavings_work
+  - ConsSavings_home
+
+# ============================================================
+# Stage 1: ParticipationAndLabor (branching)
+# ============================================================
+---
+name: ParticipationAndLabor
+kind: branching
+branch_control: agent
+
+symbols:
+  spaces:
+    Xa: '@def R+'
+    Xh: '@def R+'
+    Xw: '@def R+'
+    Xl: '@def [0,1]'
+
+  prestate:
+    a: '@in Xa'
+    h: '@in Xh'
+
+  states:
+    a_d: '@in Xa'
+    h_d: '@in Xh'
+
+  poststates:
+    work:
+      w_work: '@in Xw'
+      h_work: '@in Xh'
+    home:
+      w_home: '@in Xw'
+      h_home: '@in Xh'
+
+  controls:
+    d: '@in {work, home}'
+    l_m: '@in Xl'
+    l_f: '@in Xl'
+
+  values:
+    V[<]: '@in R'
+    V: '@in R'
+    V[>]:
+      work: V_work
+      home: V_home
+    V_work: '@in R'
+    V_home: '@in R'
+
+  values_marginal:
+    dV[<]: '@in R'
+    dV: '@in R'
+    dV[>]:
+      work: dV_work
+      home: dV_home
+    dV_work: '@in R'
+    dV_home: '@in R'
+
+  parameters:
+    beta: '@in R+'          # 0.972 per 5-year period
+    gamma: '@in R+'         # 0.4 (Frisch elasticity)
+    phi: '@in R+'           # 8.03 (labor disutility weight)
+    kappa: '@in R+'         # 0.132 (time cost of young children)
+    delta: '@in R+'         # 0.02 (human capital depreciation)
+    tau_k: '@in R+'         # 0.097 (capital income tax)
+    tau_p: '@in R+'         # 0.086 (payroll tax)
+    r: '@in R+'             # interest rate
+    w_wage: '@in R+'        # aggregate wage
+    q: '@in R+'             # participation cost (permanent)
+    z: '@in R+'             # husband's permanent type
+    x: '@in R+'             # wife's permanent type
+    b: '@in Z+'             # childbearing status
+    j: '@in Z+'             # current age
+    varpi_m: '@in R+'       # husband's age-efficiency varpi_m(z, j)
+    a_j_x: '@in R+'        # wife's HC growth parameter a_j^x
+    zeta_1: '@in R'         # tax function intercept
+    zeta_2: '@in R+'        # tax function slope
+    I_bar: '@in R+'         # mean income (tax normalization)
+    d_s: '@in R+'           # child care price d(s) for current child age
+    kappa_y: '@in {0,1}'    # young-children indicator
+
+equations:
+  arvl_to_dcsn_transition: |
+    # Identity — no shocks
+    a_d = a
+    h_d = h
+
+  dcsn_to_cntn_transition:
+    work: |
+      # Earnings and income
+      y_m = w_wage * varpi_m * l_m
+      y_f = w_wage * h_d * l_f
+      I = y_m + y_f + r * a_d
+
+      # Tax liabilities: T(I) = (zeta_1 + zeta_2 * log(I/I_bar)) * I
+      y_tilde = I / I_bar
+      tax = (zeta_1 + zeta_2 * log(y_tilde)) * I
+
+      # Child care cost (incurred when wife works)
+      cc = w_wage * d_s
+
+      # Total resources
+      w_work = a_d * (1 + r * (1 - tau_k)) + (y_m + y_f) * (1 - tau_p) - tax - cc
+
+      # Human capital: wife works → growth
+      h_work = h_d * exp(a_j_x)
+
+    home: |
+      # Earnings and income (wife does not work)
+      y_m = w_wage * varpi_m * l_m
+      I = y_m + r * a_d
+
+      # Tax liabilities
+      y_tilde = I / I_bar
+      tax = (zeta_1 + zeta_2 * log(y_tilde)) * I
+
+      # Total resources (no child care cost)
+      w_home = a_d * (1 + r * (1 - tau_k)) + y_m * (1 - tau_p) - tax
+
+      # Human capital: wife stays home → depreciation
+      h_home = h_d * exp(-delta)
+
+  cntn_to_dcsn_mover:
+    Bellman: |
+      # Labor disutility in each branch
+      disutil_work = phi * l_m^(1 + 1/gamma) / (1 + 1/gamma)
+                   + phi * (l_f + kappa_y * kappa)^(1 + 1/gamma) / (1 + 1/gamma)
+                   + q
+      disutil_home = phi * l_m^(1 + 1/gamma) / (1 + 1/gamma)
+                   + phi * (kappa_y * kappa)^(1 + 1/gamma) / (1 + 1/gamma)
+
+      # Discrete-continuous max: outer max over branches, inner max over hours
+      V = max_{d}{-disutil_work + V[>][work], -disutil_home + V[>][home]}
+
+  dcsn_to_arvl_mover:
+    Bellman: |
+      # No pre-decision shocks — identity
+      V[<] = V
+    ShadowBellman: |
+      # Marginal values pass through (no expectation)
+      dV[<] = dV
+
+
+# ============================================================
+# Stage 2: ConsSavings (work branch) — EGM-amenable
+# ============================================================
+---
+name: ConsSavings_work
+
+symbols:
+  spaces:
+    Xw: '@def R+'
+    Xh: '@def R+'
+    Xa: '@def R+'
+
+  prestate:
+    w_work: '@in Xw'
+    h_work: '@in Xh'
+
+  states:
+    m: '@in Xw'
+    h_next: '@in Xh'
+
+  poststates:
+    a_prime: '@in Xa'
+    h_out: '@in Xh'
+
+  controls:
+    c: '@in R+'
+
+  values:
+    V[<]: '@in R'
+    V: '@in R'
+    V[>]: '@in R'
+
+  values_marginal:
+    dV[<]: '@in R'
+    dV: '@in R'
+    dV[>]: '@in R'
+
+  parameters:
+    beta: '@in R+'
+
+equations:
+  arvl_to_dcsn_transition: |
+    m = w_work
+    h_next = h_work
+
+  dcsn_to_cntn_transition: |
+    a_prime = m - c
+    h_out = h_next
+
+  cntn_to_dcsn_mover:
+    Bellman: |
+      V = max_{c}{log(c) + beta * V[>]}
+    InvEuler: |
+      c[>] = (beta * dV[>])^(-1)
+    MarginalBellman: |
+      dV = 1 / c
+    cntn_to_dcsn_transition: |
+      m[>] = a_prime + c[>]
+
+  dcsn_to_arvl_mover:
+    Bellman: |
+      V[<] = V
+    ShadowBellman: |
+      dV[<] = dV
+
+
+# ============================================================
+# Stage 2: ConsSavings (home branch) — EGM-amenable
+# Structurally identical to work branch, different wiring
+# ============================================================
+---
+name: ConsSavings_home
+
+symbols:
+  spaces:
+    Xw: '@def R+'
+    Xh: '@def R+'
+    Xa: '@def R+'
+
+  prestate:
+    w_home: '@in Xw'
+    h_home: '@in Xh'
+
+  states:
+    m: '@in Xw'
+    h_next: '@in Xh'
+
+  poststates:
+    a_prime: '@in Xa'
+    h_out: '@in Xh'
+
+  controls:
+    c: '@in R+'
+
+  values:
+    V[<]: '@in R'
+    V: '@in R'
+    V[>]: '@in R'
+
+  values_marginal:
+    dV[<]: '@in R'
+    dV: '@in R'
+    dV[>]: '@in R'
+
+  parameters:
+    beta: '@in R+'
+
+equations:
+  arvl_to_dcsn_transition: |
+    m = w_home
+    h_next = h_home
+
+  dcsn_to_cntn_transition: |
+    a_prime = m - c
+    h_out = h_next
+
+  cntn_to_dcsn_mover:
+    Bellman: |
+      V = max_{c}{log(c) + beta * V[>]}
+    InvEuler: |
+      c[>] = (beta * dV[>])^(-1)
+    MarginalBellman: |
+      dV = 1 / c
+    cntn_to_dcsn_transition: |
+      m[>] = a_prime + c[>]
+
+  dcsn_to_arvl_mover:
+    Bellman: |
+      V[<] = V
+    ShadowBellman: |
+      dV[<] = dV
+
+
+# ============================================================
+# Period Wiring
+# ============================================================
+# Backward solve order: ConsSavings_{work,home} → ParticipationAndLabor
+#
+# Connectors (namespace matching):
+#   ParticipationAndLabor.poststates.work.{w_work, h_work}
+#     → ConsSavings_work.prestate.{w_work, h_work}
+#
+#   ParticipationAndLabor.poststates.home.{w_home, h_home}
+#     → ConsSavings_home.prestate.{w_home, h_home}
+#
+# Inter-period twist:
+#   ConsSavings_{work,home}.poststates.{a_prime, h_out}
+#     → next period ParticipationAndLabor.prestate.{a, h}
+#   via: a = a_prime, h = h_out
