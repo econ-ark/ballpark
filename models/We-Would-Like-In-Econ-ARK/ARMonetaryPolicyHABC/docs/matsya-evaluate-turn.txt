@@ -1,0 +1,173 @@
+Querying session 'topics2026-armonetarypolicyhabc'...
+======================================================================
+Query: Evaluate this two-stage household dolo-plus decomposition for a money-in-utility model with liquid money m, illiquid savings a, and 3-state Markov productivity e. Is it a canonical encoding? Flag any non-canonical perches, movers, or symbol declarations.
+
+STAGE 1 (Decision):
+- prestate: (q, e); q in R+, e in {e_l, e_m, e_h}
+- controls: (c, m_d, l, a_next); budget c + m_d + a_next = q + w*e*l + mu
+- arvl_to_dcsn_transition: identity (q=q, e=e), degenerate
+- poststates: (a, m, e); savings identities a = a_next, m = m_d
+- cntn_to_dcsn_mover (Bellman): V = max_{c, m_d, l, a_next}{u(c,m_d,l) + beta*V[>]}
+- dcsn_to_arvl_mover: V[<] = V (identity, degenerate)
+
+STAGE 2 (Shock realization):
+- prestate: (a, m, e); from Stage 1 continuation
+- exogenous: e_next ~ MarkovChain(P_e | e)
+- arvl_to_dcsn_transition: q_next = R*a + (1+r_m)*m; e_next = e_next
+- poststates: (q, e) = (q_next, e_next), degenerate identity
+- cntn_to_dcsn_mover: V = V[>] (pass-through)
+- dcsn_to_arvl_mover: V[<] = E_{e_next}(V) (Markov expectation)
+
+Questions:
+(1) Is splitting the chosen money m_d (control) from carried money m (poststate) canonical, or redundant?
+(2) Is the stage-2 identity decision→continuation canonical, or should stage 2 collapse into a single expectation mover on top of stage 1?
+(3) Is declaring P_e as '@in StochasticMatrix' the right type annotation for a row-stochastic Markov matrix parameter?
+Answer each as CANONICAL / PROVISIONAL / UNRESOLVED with one-line justification.
+======================================================================
+
+
+
+# Conformance Review: Algan-Ragot Two-Stage Decomposition
+
+## Overall Assessment
+
+The decomposition is **structurally sound** and follows the canonical two-stage pattern established by the `cons_stage` + `noport_stage` composition in the consumption-portfolio examples. Below I address each flagged item, then note additional issues.
+
+---
+
+## Question (1): Splitting `m_d` (control) from `m` (poststate)
+
+**CANONICAL.**
+
+This follows the same pattern as `c` (control) vs `a` (poststate) in the canonical consumption-savings examples. The `dcsn_to_cntn_transition` maps control-perch names to continuation-perch names:
+
+```yaml
+dcsn_to_cntn_transition: |
+  a = a_next
+  m = m_d
+  e = e
+```
+
+The control `m_d` lives at the decision perch; the poststate `m` lives at the continuation perch. These are distinct objects at distinct perches — the transition equation `m = m_d` is the bridge. This is exactly analogous to `a = w - c` in `cons_stage.md`, where `c` is a control and `a` is a poststate. The naming convention (`m_d` for decision-perch money) is reasonable and avoids the name collision that would arise if both were called `m`.
+
+**Source:** `cons-port-stages/cons_stage.md` — `dcsn_to_cntn_transition: a = w - c` (CANONICAL).
+
+---
+
+## Question (2): Stage 2 identity decision→continuation — canonical or collapsible?
+
+**CANONICAL.**
+
+The `noport_stage` pattern from the consumption-portfolio examples is the direct precedent. It has exactly this structure: a shock-realization stage with no decision, where:
+
+- The arrival-to-decision transition realizes the shock and forms new states
+- The decision-to-continuation transition is the identity
+- The backward mover is a pass-through (`V = V[>]`)
+- The forward mover computes the expectation (`V[<] = E(V)`)
+
+From the retrieved context, the `noport_stage` exists as a **separate stage** — it is not collapsed into the predecessor's mover. This is a deliberate design choice in the modular Bellman framework: each stage has its own three-perch structure, even when one perch is degenerate. The modularity enables:
+
+1. **Recomposition** — the shock stage can be wired to different decision stages
+2. **Forward operator separation** — population dynamics through the shock stage are distinct from the decision stage
+3. **Clean mover typing** — the expectation operator lives in `dcsn_to_arvl_mover` of Stage 2, not awkwardly grafted onto Stage 1's continuation
+
+**Could** you collapse it into Stage 1 by putting the Markov expectation inside Stage 1's `dcsn_to_arvl_mover`? Yes — that would give a single-stage representation like `consumption_savings_iid.md`, where the IID shock expectation lives in the `dcsn_to_arvl_opr`. But for a **Markov** shock that conditions on the current state $e$ (which is part of the decision perch), the two-stage decomposition is cleaner and is the pattern the canonical multi-stage examples follow.
+
+**Source:** `cons-port-stages/noport_stage.md` pattern; `spec_0.1l-branching.md` discussion of within-stage vs cross-stage operators (CANONICAL).
+
+---
+
+## Question (3): `P_e: '@in StochasticMatrix'` for the Markov transition matrix
+
+**UNRESOLVED.**
+
+The canonical examples do not declare Markov transition matrices as standalone parameters with a type annotation like `@in StochasticMatrix`. Instead, the Markov structure is encoded in the **exogenous shock declaration**:
+
+```yaml
+exogenous:
+  e_next:
+    - '@in Xe'
+    - '@dist MarkovChain(Pi, e_vals)'
+```
+
+where `Pi` and `e_vals` appear as **parameters** with simple domain annotations (`@in R+` or similar), and the `@dist MarkovChain(...)` constructor on the exogenous variable carries the semantic content that `Pi` is row-stochastic.
+
+There is no canonical `@in StochasticMatrix` space constructor in the retrieved spec or examples. The closest pattern is from `housing_owner.md`:
+
+```yaml
+exogenous:
+  y:
+    - '@in XY'
+    - '@dist MarkovChain(Pi, z_vals)'
+parameters: [r, phi, H_min, H_max, n_H, n_y]
+```
+
+where `Pi` is listed as a bare parameter name without an explicit type annotation.
+
+**Recommendation:** Declare `Pi` as a parameter and let the `@dist MarkovChain(Pi)` annotation on the exogenous variable carry the stochastic-matrix semantics. Do not invent `@in StochasticMatrix` — it has no precedent in the canonical examples.
+
+---
+
+## Additional Flags
+
+### Flag A: Passthrough of `e` through the poststate
+
+The poststate triple `(a, m, e)` carries `e` through Stage 1's continuation perch so that Stage 2 can condition the Markov draw on it. This is **canonical** — the same pattern appears in the consumption-portfolio `cons_stage` where income state passes through to `noport_stage`. However, note that `e` is not *chosen* — it is a state variable threaded through. The transition `e = e` in `dcsn_to_cntn_transition` is the identity passthrough. This is correct.
+
+### Flag B: Missing `values_marginal` declarations
+
+If you ever want to add EGM sub-equations (`InvEuler`, `MarginalBellman`), you will need:
+
+```yaml
+values_marginal:
+  dV[<]: '@in R'
+  dV: '@in R'
+  dV[>]: '@in R'
+```
+
+For a VFI-only draft (Bellman sub-equation only), omitting this group is **canonical** — the system prompt rule "OMIT EMPTY GROUPS" applies.
+
+### Flag C: Budget constraint placement
+
+The budget constraint `c + m_d + a_next = q + w*e*l + mu` mixes a control (`l`) on the RHS. This is mathematically correct but means the `dcsn_to_cntn_transition` cannot be written as a simple subtraction. In the YAML, this constraint should appear in `dcsn_to_cntn_transition` as an implicit relationship, or one control should be eliminated. The canonical examples handle this by solving out one control (e.g., `a = w - c` eliminates `a` as a free control). Here you would need to either:
+
+1. Eliminate one control via the budget constraint (e.g., `a_next = q + w*e*l + mu - c - m_d`) and declare only three free controls, or
+2. Keep all four controls and treat the budget constraint as an equality constraint inside the `max` operator
+
+Option 1 is more canonical — it matches the `a = w - c` pattern. **PROVISIONAL** — the spec does not explicitly address multi-control budget constraints with endogenous income.
+
+### Flag D: Stage 2 exogenous declaration location
+
+The Markov shock `e_next` should be declared in Stage 2's `exogenous` block (which you have), **not** in Stage 1. This is correct as written. The shock is realized at Stage 2's arrival-to-decision transition, consistent with the post-decision timing.
+
+---
+
+## Summary Table
+
+| Item | Verdict | Key Justification |
+|------|---------|-------------------|
+| (1) `m_d` / `m` split | **CANONICAL** | Same pattern as `c` / `a` in `cons_stage` |
+| (2) Stage 2 identity dcsn→cntn | **CANONICAL** | Matches `noport_stage` pattern |
+| (3) `@in StochasticMatrix` | **UNRESOLVED** | No precedent; use `@dist MarkovChain(Pi)` on exogenous instead |
+| (A) `e` passthrough | **CANONICAL** | Standard state threading |
+| (B) No `values_marginal` | **CANONICAL** | Correct for VFI-only; omit empty groups |
+| (C) Multi-control budget | **PROVISIONAL** | Recommend eliminating one control via constraint |
+| (D) Shock in Stage 2 | **CANONICAL** | Correct post-decision timing |
+
+======================================================================
+Sources (15 chunks):
+  [0.642] project/repos/bellman-ddsl/docs/examples/cons-port-stages/solving-conjugates.md
+  [0.641] project/repos/bellman-ddsl/docs/development/dolo-plus-impl/spec_0.1l-branching.md
+  [0.639] project/repos/bellman-ddsl/docs/examples/retirement_choice.md
+  [0.637] project/repos/bellman-ddsl/docs/development/dolo-plus-impl/spec_0.1l-branching.md
+  [0.633] project/repos/bellman-ddsl/docs/examples/housing_renting/refine_stage.py
+  [0.630] project/repos/bellman-ddsl/AI/context/external/FUES/examples/housing_renting/config_HR/test_0.3/stages/RNTC.yml
+  [0.630] project/repos/bellman-ddsl/AI/context/external/FUES/examples/housing_renting/config_HR/test_0.1/stages/RNTC.yml
+  [0.630] project/repos/bellman-ddsl/AI/context/external/FUES/examples/housing_renting/config_HR/STD_RES_SETTINGS_4_TAXES/stages/RNTC.yml
+  [0.630] project/repos/bellman-ddsl/AI/context/external/FUES/examples/housing_renting/config_HR/test_0.4/stages/RNTC.yml
+  [0.629] project/repos/bellman-ddsl/docs/examples/housing_renting/converged_output/tenure_choice.md
+  [0.628] project/repos/bellman-ddsl/docs/development/dolo-plus-impl/spec_0.1l-branching.md
+  [0.623] project/repos/bellman-ddsl/docs/theory/MDP-foundations/diagramv4.md
+  [0.619] project/repos/bellman-ddsl/docs/examples/housing_owner.md
+  [0.615] project/repos/bellman-ddsl/docs/examples/housing_renting/refine_stage.py
+  [0.613] project/repos/bellman-ddsl/docs/examples/housing_renting/refine_stage.py
