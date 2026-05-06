@@ -1,0 +1,115 @@
+# GKN (2012) Household Problem — Dolo-Plus YAML
+# Gornemann, Kuester, Nakajima: Monetary Policy with Heterogeneous Agents
+# Generated via Matsya session topics2026-mon-policy
+
+name: gkn_household
+model_type: adc-stage
+
+symbols:
+  spaces:
+    E: '@def {0, 1}'
+    S: '@def {1, ..., n_s}'
+    Xa: '@def R+'
+    Xm: '@def R+'
+    XAgg: '@def R^n_X'
+
+  prestate:
+    e_old: '@in E'
+    s_old: '@in S'
+    a: '@in Xa'
+    X: '@in XAgg'
+
+  states:
+    e: '@in E'
+    s: '@in S'
+    m: '@in Xm'
+    X_prime: '@in XAgg'
+
+  poststates:
+    e_post: '@in E'
+    s_post: '@in S'
+    a_prime: '@in Xa'
+    X_post: '@in XAgg'
+
+equations:
+  arvl_to_dcsn_transition: |
+    # workaround: P_e should be evaluated at X_tilde_prime (the pre-transition
+    # aggregate state of the next period), not X. The paper (Section 2.3, Figure 1)
+    # is explicit: f = f(X_tilde'). The YAML uses X_tilde_prime to reflect this,
+    # but dolo-plus has no canonical idiom for distinguishing pre- vs post-transition
+    # aggregate states. See verification.md for details.
+    X_tilde_prime = G_tilde(X)
+    e ~ P_e(e_old, X_tilde_prime)
+    s ~ P_s(s_old)
+    # unresolved: H is a Krusell-Smith log-linear forecasting rule approximating the
+    # full law of motion for X. The paper does not give a closed-form H; details are
+    # in Appendix B. The infinite-dimensional distribution mu is summarized by a
+    # finite set of moments with log-linear forecasting rules estimated from
+    # simulated data.
+    X_prime = H(X, Z_prime, D_prime)
+    y = e * w(X_prime) * s * (1 - tau(X_prime)) + (1 - e) * b_unemp * s
+    m = (p_a(X_prime) + d_a(X_prime)) * a + y
+
+  dcsn_to_cntn_transition: |
+    a_prime = m - c
+    e_post = e
+    s_post = s
+    X_post = X_prime
+
+  cntn_to_dcsn_mover:
+    Bellman: |
+      V = max_{c}{c^(1 - sigma) / (1 - sigma) + beta * V[>]}
+    InvEuler: |
+      c[>] = (beta * dV[>])^(-1/sigma)
+    MarginalBellman: |
+      dV = c^(-sigma)
+    cntn_to_dcsn_transition: |
+      m[>] = a_prime + c[>]
+
+  dcsn_to_arvl_mover:
+    Bellman: |
+      V[<] = E_{e, s, Z_prime, D_prime}(V)
+    ShadowBellman: |
+      dV[<] = E_{e, s, Z_prime, D_prime}{(p_a(X_prime) + d_a(X_prime)) * dV}
+
+  # Employment transition probabilities (Section 2.3 of the paper)
+  # workaround: These are evaluated at X_tilde' (pre-transition state of next
+  # period), not at X' (post-transition). See arvl_to_dcsn_transition above.
+  # Employed:   P(e'=1 | e=1) = 1 - lambda + lambda * f(X_tilde')
+  #             P(e'=0 | e=1) = lambda * (1 - f(X_tilde'))
+  # Unemployed: P(e'=1 | e=0) = f(X_tilde')
+  #             P(e'=0 | e=0) = 1 - f(X_tilde')
+
+calibration:
+  parameters:
+    sigma: 1.5
+    beta: 0.966
+    lambda: 0.10
+    b_unemp: 0.446
+    alpha: 0.60
+    gamma_match: 0.645
+    w_bar: 0.637
+    eps_w: 0.45
+    rho_D: 0.70
+    sigma_D: 6.25e-4
+    rho_Z: 0.95
+    sigma_Z: 0.006
+    rho_Pi: 1.20
+    Pi_bar: 1.005
+    n_s: 4
+    s_grid: [0.123, 0.421, 1.435, 34.65]
+    P_s:
+      - [0.9719, 0.0275, 0.0000, 0.0006]
+      - [0.0275, 0.9444, 0.0275, 0.0006]
+      - [0.0000, 0.0275, 0.9719, 0.0006]
+      - [0.0183, 0.0183, 0.0183, 0.9450]
+
+  settings:
+    # placeholder: grid settings are reasonable defaults, not from the paper
+    # (which does not report grid sizes in the main text).
+    n_a: 200
+    a_min: 0.0
+    a_max: 500.0
+    n_X: 3
+    tol: 1.0e-6
+    max_iter: 1000
