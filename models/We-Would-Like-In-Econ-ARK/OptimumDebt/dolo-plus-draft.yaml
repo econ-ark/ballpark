@@ -1,0 +1,119 @@
+# ─────────────────────────────────────────────────────────────────────
+# Aiyagari & McGrattan (1998) — Model A: Inelastic Labor, Lump-Sum Tax
+# Household consumption-savings stage (single stage, Markov productivity)
+#
+# Growth-normalized variables (tilde notation in the paper).
+# Prices (r, w_tilde) and fiscal policy (tau) are parameters
+# pinned down outside this stage by general equilibrium.
+#
+# Generated via Matsya (session: emma-ballpark-topics2026).
+# ─────────────────────────────────────────────────────────────────────
+
+name: cons_am
+
+symbols:
+
+  spaces:
+    Xa:   '@def R+'
+    Xm:   '@def R+'
+    E:    '@def {e_1, ..., e_N}'
+
+  prestate:
+    a_tilde:  '@in Xa'
+
+  states:
+    m_tilde:  '@in Xm'
+
+  poststates:
+    a_prime:  '@in Xa'
+
+  controls:
+    c_tilde:  '@in R+'
+
+  exogenous:
+    # unresolved: paper Sec. II leaves Pi symbolic in the recursive form;
+    # Sec. IV (p. 458) calibrates a Tauchen discretization of an AR(1).
+    # A concrete Pi is a next-task item (see AGENTS.md).
+    e:  '@dist MarkovChain(Pi)'
+
+  values:
+    V[<]:   '@in R'
+    V:      '@in R'
+    V[>]:   '@in R'
+
+  values_marginal:
+    dV[<]:  '@in R'
+    dV:     '@in R'
+    dV[>]:  '@in R'
+
+  parameters:
+    beta_tilde: '@in R+'       # β(1+g)^(1-ν)
+    nu:         '@in R+'       # CRRA coefficient
+    r:          '@in R'        # Net interest rate (from GE)
+    w_tilde:    '@in R+'       # Normalized wage (from GE)
+    tau:        '@in R'        # Lump-sum tax (from govt budget)
+    g:          '@in R+'       # Rate of technical progress
+
+  settings:
+    N_a:  '@in Z+'
+    N_e:  '@in Z+'
+
+equations:
+
+  arvl_to_dcsn_transition: |
+    m_tilde = (1 + r) * a_tilde + w_tilde * e - tau
+
+  dcsn_to_cntn_transition: |
+    # workaround: paper's budget (Aiyagari & McGrattan 1998, Sec. II eq. 1)
+    # has (1+g)*a_prime on the LHS. We keep the factor explicit here rather
+    # than absorb it into an effective discount factor so the YAML is 1-to-1
+    # with the paper. Equivalent absorption is acceptable but must itself
+    # be flagged with `# workaround:` rather than silently dropped.
+    a_prime = (m_tilde - c_tilde) / (1 + g)
+
+  cntn_to_dcsn_mover:
+
+    Bellman: |
+      V = max_{c_tilde}{c_tilde^(1 - nu) / (1 - nu) + beta_tilde * V[>]}
+
+    InvEuler: |
+      # workaround: with budget c + (1+g)*a_prime = m, d(a_prime)/d(c) =
+      # -1/(1+g), so the canonical Euler picks up a 1/(1+g) factor. Do not
+      # silently revert to c = (beta_tilde * dV[>])^(-1/nu); that form is
+      # correct only if (1+g) is absorbed into an effective discount factor
+      # (which would require its own `# workaround:` flag).
+      c_tilde[>] = (beta_tilde * dV[>] / (1 + g))^(-1/nu)
+
+    MarginalBellman: |
+      dV = c_tilde^(-nu)
+
+    cntn_to_dcsn_transition: |
+      # EGM reverse transition: recover the endogenous m-grid point
+      # consistent with the paper's budget c + (1+g)*a_prime = m.
+      m_tilde[>] = (1 + g) * a_prime + c_tilde[>]
+
+  dcsn_to_arvl_mover:
+
+    Bellman: |
+      V[<] = E_{e}(V)
+
+    ShadowBellman: |
+      dV[<] = (1 + r) * E_{e}(dV)
+
+calibration:
+  beta_tilde: 0.96 * (1 + 0.02)^(1 - 2.0)   # β(1+g)^(1-ν)
+  nu: 2.0
+  r: 0.03
+  w_tilde: 1.0
+  tau: 0.0
+  g: 0.02
+  N_a: 200
+  N_e: 7
+
+# unresolved: Model B (elastic labor, proportional taxes — paper's benchmark)
+# is intentionally NOT encoded in this YAML. This ballpark item formalizes
+# Model A only at the executable layer. See bellman-excerpt.md §10 for the
+# full Model B perch decomposition (kept for completeness), index.md for the
+# scope statement, and AGENTS.md "Common next tasks" for the Model B stage
+# specification (controls (c_tilde, l), labor-income budget, intratemporal
+# FOC c_tilde/l = eta * w_bar * e / (1 - eta)).
