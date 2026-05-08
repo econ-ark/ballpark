@@ -207,6 +207,13 @@ where $H(\tilde{a}, e)$ is the steady-state joint distribution of assets and pro
 
 ## 10. Model B — Elastic Labor Supply, Proportional Taxes (Benchmark)
 
+> **Scope notice.** Model B is documented in this section for completeness.
+> It is **not encoded** in `dolo-plus-draft.yaml` and is **not covered** by
+> `verification.md`. This ballpark item formalizes Model A only at the
+> executable layer; see `index.md` and `AGENTS.md` for the scope decision.
+> Encoding Model B as a second dolo-plus stage is tracked as an out-of-scope
+> follow-up in `AGENTS.md` "Common next tasks."
+
 Model B is the paper's benchmark specification. It keeps the same three-perch structure as Model A but adds leisure $l \in [0,1]$ as a second control and switches from lump-sum to proportional taxes (with a lump-sum transfer $\chi$).
 
 ### 10.1 Objective (growth-normalized)
