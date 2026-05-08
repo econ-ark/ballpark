@@ -31,6 +31,9 @@ symbols:
     c_tilde:  '@in R+'
 
   exogenous:
+    # unresolved: paper Sec. II leaves Pi symbolic in the recursive form;
+    # Sec. IV (p. 458) calibrates a Tauchen discretization of an AR(1).
+    # A concrete Pi is a next-task item (see AGENTS.md).
     e:  '@dist MarkovChain(Pi)'
 
   values:
@@ -61,11 +64,11 @@ equations:
     m_tilde = (1 + r) * a_tilde + w_tilde * e - tau
 
   dcsn_to_cntn_transition: |
-    # Paper's budget has (1+g)*a_prime on the LHS; restoring the factor
-    # to keep the YAML 1-to-1 with equation (1) in Aiyagari & McGrattan
-    # (1998), Sec. II. If future code prefers to absorb (1+g) into a
-    # rescaled poststate, flag it as `# workaround:` rather than drop
-    # the factor silently.
+    # workaround: paper's budget (Aiyagari & McGrattan 1998, Sec. II eq. 1)
+    # has (1+g)*a_prime on the LHS. We keep the factor explicit here rather
+    # than absorb it into an effective discount factor so the YAML is 1-to-1
+    # with the paper. Equivalent absorption is acceptable but must itself
+    # be flagged with `# workaround:` rather than silently dropped.
     a_prime = (m_tilde - c_tilde) / (1 + g)
 
   cntn_to_dcsn_mover:
@@ -74,10 +77,11 @@ equations:
       V = max_{c_tilde}{c_tilde^(1 - nu) / (1 - nu) + beta_tilde * V[>]}
 
     InvEuler: |
-      # With budget c + (1+g)*a_prime = m, the FOC picks up a 1/(1+g)
-      # factor from d(a_prime)/d(c) = -1/(1+g). The standard Euler
-      # c = (beta_tilde * dV[>])^(-1/nu) would be correct only if the
-      # (1+g) factor were absorbed into an effective discount factor.
+      # workaround: with budget c + (1+g)*a_prime = m, d(a_prime)/d(c) =
+      # -1/(1+g), so the canonical Euler picks up a 1/(1+g) factor. Do not
+      # silently revert to c = (beta_tilde * dV[>])^(-1/nu); that form is
+      # correct only if (1+g) is absorbed into an effective discount factor
+      # (which would require its own `# workaround:` flag).
       c_tilde[>] = (beta_tilde * dV[>] / (1 + g))^(-1/nu)
 
     MarginalBellman: |
@@ -105,3 +109,11 @@ calibration:
   g: 0.02
   N_a: 200
   N_e: 7
+
+# unresolved: Model B (elastic labor, proportional taxes — paper's benchmark)
+# is intentionally NOT encoded in this YAML. This ballpark item formalizes
+# Model A only at the executable layer. See bellman-excerpt.md §10 for the
+# full Model B perch decomposition (kept for completeness), index.md for the
+# scope statement, and AGENTS.md "Common next tasks" for the Model B stage
+# specification (controls (c_tilde, l), labor-income budget, intratemporal
+# FOC c_tilde/l = eta * w_bar * e / (1 - eta)).
