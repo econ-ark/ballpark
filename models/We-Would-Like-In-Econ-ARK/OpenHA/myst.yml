@@ -7,7 +7,7 @@ project:
     - references.bib
     - subsequent-literature.bib
   toc:
-    - file: index.md
+    - file: OpenHA.md
 
 site:
   title: "Exchange rates and monetary policy with heterogeneous agents: Sizing up the real income channel — Ballpark Entry"

@@ -25,12 +25,16 @@ project:
     - models/We-Would-Like-In-Econ-ARK/Benhabib_et_al_2019/self.bib
     - models/We-Would-Like-In-Econ-ARK/Benhabib_et_al_2019/references.bib
     - models/We-Would-Like-In-Econ-ARK/Benhabib_et_al_2019/subsequent-literature.bib
+    - models/We-Would-Like-In-Econ-ARK/OpenHA/self.bib
+    - models/We-Would-Like-In-Econ-ARK/OpenHA/references.bib
+    - models/We-Would-Like-In-Econ-ARK/OpenHA/subsequent-literature.bib
   toc:
     - file: README.md
     - file: CONTRIBUTING.md
     - title: "Models"
       children:
         - file: models/We-Would-Like-In-Econ-ARK/Benhabib_et_al_2019/Benhabib_et_al_2019.md
+        - file: models/We-Would-Like-In-Econ-ARK/OpenHA/OpenHA.md
     # Add new entries here under the appropriate group. NOTE: the
     # entry's main markdown file should be named `<citekey>.md`
     # (matching the directory name), NOT `index.md`. mystmd derives

@@ -8,6 +8,8 @@
 
 **Scope.** The document covers the **benchmark (Sections 2–4) model** of the paper: baseline heterogeneous-agent New Keynesian small-open-economy model with flexible prices, sticky wages, perfect exchange-rate pass-through, constant-real-rate monetary rule, and static CES demand. Extensions developed in Section 5 of the paper (delayed substitution, sticky domestic and import prices, non-homothetic preferences, unequal incidence, inertial Taylor rule) are summarised in section 9.5 below but are **not** included in the baseline stage decomposition.
 
+**Scope of the companion YAML — household block only.** The companion `dolo-plus-draft.yaml` in this directory **encodes the household block only** (the three-stage period of section 8 below: `shocks` → `cons` → `disc`). The aggregate / general-equilibrium closure (CPI, real exchange rate, real UIP, RoW demand, sticky-wages Phillips curve, monetary rule, NFA, current account) is fully specified equation-by-equation in sections 3–4 below and consolidated as a 16-equation system in section 7, but is **deliberately not encoded in YAML in this PR** — see [Open items](#13-open-items-canonical-scope-record) for the rationale and the explicit plan for a follow-up `aggregate-draft.yaml`. CONTRIBUTING.md's "Formalized" tier explicitly allows a one-stage / one-block YAML, so the household-only YAML is sufficient for promotion. The `index.md` / `OpenHA.md` frontmatter and `AGENTS.md` "Formalization status" section both record the same scope choice, and this `bellman-excerpt.md` "Open items" section (§13) is the **canonical** record of that scope decision.
+
 ---
 
 ## 1. Symbols and notation
@@ -665,3 +667,45 @@ Matsya's turn-6 perch table used a **single-stage** decomposition $(\prec, \circ
 4. **Assumption 1 ($\mathbf{M}\ge 0$) is invoked in the sign results of section 6.** The Dolo Plus description should declare $\mathbf{M}\ge 0$ as a maintained assumption rather than re-deriving it.
 5. **The RoW-monetary normalisation $P^{\ast}_t=1, C^{\ast}_t=C^{\ast}$ is a modelling choice, not a numerical one.** It should appear in the Dolo Plus preamble as an assumption on the block structure, not as a Phillips-curve equation.
 6. **Terminal conditions.** $\mathrm{nfa}_\infty=0$ and $Q_\infty=Q_{ss}$ enforce equilibrium selection. These are horizon-end constraints in a stationary infinite-horizon problem.
+
+---
+
+## 13. Open items (canonical scope record)
+
+This section is the **canonical** record of every part of the paper that is *specified* in this excerpt but *not yet encoded* in the companion `dolo-plus-draft.yaml`, plus every workaround / non-canonical-syntax choice made in the YAML. It is the source of truth: `index.md` / `OpenHA.md` frontmatter, `AGENTS.md` "Formalization status", and the YAML's preamble all defer here for the rationale and the follow-up plan. Inline `# unresolved:` comments at the point of divergence in the YAML cite the relevant item below by number.
+
+### 13.1 Aggregate block: out-of-scope for this YAML, deliberately
+
+**Status.** The household three-stage period of §8 is encoded in `dolo-plus-draft.yaml`. The aggregate / GE closure of §§3–4 — equations E.1–E.16 in the consolidated system of §7 — is **not** encoded.
+
+**Why this is the right scope choice for this PR.**
+
+- CONTRIBUTING.md's "Formalized" tier explicitly allows a one-stage / one-block YAML; the entry's promotional checklist is satisfied by a paper-grounded household-block YAML alone.
+- The household block is the part of OpenHA that maps cleanly onto HARK's existing incomplete-markets consumption block (the iMPC matrix $\mathbf{M}$ of §5, which is exactly the sequence-space-Jacobian object HARK already exposes). It is the *natural unit* for an Econ-ARK / HARK cross-check, and the natural starting point for any REMARK replication.
+- The aggregate block requires non-trivial dolo-plus modelling choices (how to encode the wage Phillips curve as a stage equation; whether the real-UIP arbitrage is a between-period or within-period equation; how to wire the household-block iMPC matrix into the aggregate-block GE solver) that are independent of the household-block work and are best resolved in a separate follow-up PR with their own Matsya iteration.
+
+**What the follow-up PR should contain.**
+
+- A new `aggregate-draft.yaml` in this directory implementing the 16 equations consolidated in §7 above. The natural composition is (a) one block grouping E.3–E.7 (price/exchange-rate identities), (b) one block grouping E.8–E.10 + E.13 (firm/dividend/production), (c) one block for E.9 (wage Phillips curve), (d) one block for E.11–E.12 (monetary rules), (e) one block for E.2 (goods-market clearing), (f) one block for E.14–E.16 (NFA/current-account/terminal conditions).
+- Wiring of `dolo-plus-draft.yaml` (household) and `aggregate-draft.yaml` (aggregate) into a higher-level GE composition file. The household-block `r`, `w`, `N` parameters become inputs from the aggregate block; the household-block aggregate consumption $C_t$ becomes an input to the aggregate-block goods-market-clearing equation E.2.
+- A renewed Matsya pass (continue session `topics2026-siying99-ballpark`) on the full `bellman-excerpt.md` to flag any DDSL issues with §§3, 5, 6, 7 that did not surface in the household-block-only round 8 iteration.
+
+### 13.2 Rouwenhorst higher-level constructor (non-blocking spec gap)
+
+**Status.** The household YAML declares the idiosyncratic-productivity Markov shock as `@dist MarkovChain(Pi, e)` (Stage `shocks`, line 53), with the assumption that $\Pi$ is built externally from $(\rho_e, \sigma_\varepsilon, n_e)$ via Rouwenhorst.
+
+**Why this is a workaround, not a fudge.** A higher-level constructor of the form `@dist Rouwenhorst(rho_e, sigma_eps, n_e)` would be cleaner — the Markov chain $\Pi$ is fully specified by $(\rho_e, \sigma_\varepsilon, n_e)$ + the Rouwenhorst (1995) algorithm — but is **not yet canonical in the dolo-plus spec**. Conservative choice retained; revisit when the spec evolves.
+
+**Inline flag.** The YAML carries an inline `# unresolved: see bellman-excerpt.md §13.2` comment at line 53 (the `e_prime` declaration), per the CONTRIBUTING.md (line 44) requirement that workarounds be flagged at the point of divergence.
+
+### 13.3 Horizon: explicit declaration
+
+**Status.** The household YAML now carries an explicit `horizon: infinite-stationary` declaration in its preamble (per CONTRIBUTING.md / dolo-plus convention). The model is the infinite-horizon stationary problem of paper §2 (continuum of households, no death, no birth, fixed Markov productivity process); a terminal-period stage is therefore not present.
+
+**Why this is the right horizon choice for OpenHA.** The paper's analytical apparatus (§§3–6 in `bellman-excerpt.md`) treats the stochastic steady state with an MIT shock around it; the household block is the infinite-horizon stationary policy. A finite-horizon variant would require a terminal-period stage with bequest weight or warm-glow utility, neither of which appears in the paper. The infinite-stationary choice is therefore *paper-grounded*, not a default.
+
+### 13.4 Time-varying equilibrium prices declared as parameters
+
+**Status.** The household YAML declares the equilibrium prices `w`, `N`, `r` as `parameters` (calibration block) rather than as inputs from an aggregate stage.
+
+**Why this is consistent with §13.1.** This YAML covers the household block only; in a one-block compilation the prices that would in a full GE loop come from the aggregate block are necessarily exogenous to the household block. The follow-up `aggregate-draft.yaml` (§13.1) would supply them as time-varying exogenous inputs to the household stage. Inline comment at the YAML preamble records this; a `# unresolved: see bellman-excerpt.md §13.4` flag is **not** added at the parameter declarations themselves because the parameter form is the *correct* representation under the household-only scope, not a workaround.

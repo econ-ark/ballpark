@@ -9,13 +9,41 @@
 # Constructed via Matsya session topics2026-siying99-ballpark
 #   (turns 7–9, 2026-04-23; see verification.md).
 #
+# ------------------------------------------------------------
+# Horizon
+# ------------------------------------------------------------
+# This YAML encodes the infinite-horizon stationary household
+# problem of paper §2 (continuum of households, no death, no
+# birth, fixed Rouwenhorst-discretised AR(1) productivity
+# process). No terminal-period stage is declared — the rationale
+# is recorded in bellman-excerpt.md §13.3 ("Horizon: explicit
+# declaration").
+horizon: infinite-stationary
+#
+# ------------------------------------------------------------
+# Scope of this YAML — household block only (deliberate)
+# ------------------------------------------------------------
+# This file encodes the household three-stage period only.
+# The aggregate / general-equilibrium closure (CPI, real
+# exchange rate, real UIP, RoW demand, sticky-wages Phillips
+# curve, monetary rule, NFA, current account) is fully
+# specified in bellman-excerpt.md §§3–4 and consolidated as
+# E.1–E.16 in §7, but is intentionally NOT encoded here.
+# Rationale, follow-up plan, and consistency with index.md /
+# AGENTS.md: bellman-excerpt.md §13.1 ("Aggregate block:
+# out-of-scope for this YAML, deliberately"). Per
+# CONTRIBUTING.md, the Formalized tier explicitly allows a
+# one-stage / one-block YAML, so a household-only scope is
+# sufficient for promotion.
+#
 # Period composition: shocks -> cons -> disc
 # Between-period connector (twister): a_p[+] = (1 + r) * psi
 #
 # Notation: ASCII throughout. Perch tags: [<] arrival, (bare) decision, [>] continuation.
-# Time-varying equilibrium prices (w, N, r) are declared as parameters;
-# in a full GE loop these would be passed in from the aggregate block
-# (see bellman-excerpt.md §3 and §7 for the aggregate-block equations).
+# Time-varying equilibrium prices (w, N, r) are declared as parameters
+# (calibration block below) rather than as inputs from an aggregate
+# stage. This is the correct representation under the household-only
+# scope above, not a workaround — see bellman-excerpt.md §13.4.
 # ============================================================
 
 
@@ -50,7 +78,16 @@ symbols:
     e_out: '@in Xe'
 
   exogenous:
-    e_prime: '@dist MarkovChain(Pi, e)'   # Pi built from (rho_e, sigma_eps, n_e) via Rouwenhorst
+    # unresolved: a higher-level constructor of the form
+    #   e_prime: '@dist Rouwenhorst(rho_e, sigma_eps, n_e)'
+    # would be cleaner, but is not yet canonical in the dolo-plus
+    # spec. Conservative choice retained: Pi is assumed to be built
+    # externally from (rho_e, sigma_eps, n_e) via Rouwenhorst (1995)
+    # and supplied to MarkovChain. See bellman-excerpt.md §13.2 for
+    # the rationale and the revisit condition. Flagged here per
+    # CONTRIBUTING.md (line 44): workarounds are flagged inline at
+    # the point of divergence, not collected at the bottom of the file.
+    e_prime: '@dist MarkovChain(Pi, e)'   # workaround: Pi built from (rho_e, sigma_eps, n_e) via Rouwenhorst
 
   values:
     V[<]: '@in R'
@@ -310,17 +347,23 @@ calibration:
 
 
 # ============================================================
-# Open items (non-blocking; see verification.md round 8)
+# (Open items / workarounds: NOT collected here.)
 # ============================================================
-# 1. Rouwenhorst constructor syntax. We declared the Markov shock as
-#    `@dist MarkovChain(Pi, e)` with Pi assumed to be built externally
-#    from (rho_e, sigma_eps, n_e). A higher-level constructor of the
-#    form `@dist Rouwenhorst(rho_e, sigma_eps, n_e)` would be cleaner
-#    but is not yet canonical in the dolo-plus spec. Conservative
-#    choice retained; revisit when spec evolves.
-# 2. Aggregate block. This YAML covers only the household three-stage
-#    period. The aggregate / GE closure (CPI, real exchange rate, real
-#    UIP, RoW demand, production, sticky-wages Phillips curve, monetary
-#    rule, NFA, current account) is fully written out in
-#    bellman-excerpt.md §§3, 7. A separate aggregate-block YAML is the
-#    natural follow-up.
+# Per CONTRIBUTING.md (line 44), workarounds and unresolved features
+# are flagged inline at the point of divergence in the YAML — not
+# collected in a tail block. The two open items previously recorded
+# here have been migrated:
+#
+#   - Rouwenhorst higher-level constructor:
+#       inline `# unresolved:` comment at the `e_prime` declaration
+#       in Stage 1 (`shocks`) above; canonical record at
+#       bellman-excerpt.md §13.2.
+#
+#   - Aggregate block out-of-scope (deliberate scope choice for
+#     this PR, NOT a workaround): canonical record at
+#     bellman-excerpt.md §13.1; cross-referenced from index.md /
+#     OpenHA.md frontmatter and AGENTS.md "Formalization status".
+#
+# This block is retained as a deliberately-empty pointer so that a
+# reader trained on the previous file layout knows where to look.
+# ============================================================
