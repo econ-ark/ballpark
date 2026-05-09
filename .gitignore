@@ -129,3 +129,7 @@ dotfiles/
 
 # Copyrighted source material (papers, LaTeX from MathPix, etc.)
 source/
+
+# Mathpix-Markdown / pandoc-converted papers (derivatives of copyrighted PDFs;
+# useful local for AI ingestion but should not be redistributed)
+*.mmd

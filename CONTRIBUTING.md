@@ -22,15 +22,18 @@ A canonical ballpark item has three layers. The *exposition* layer is required; 
 
 ### 1. Exposition layer — required
 
-Four notebooks assembled by one `index.md`. Name them with the paper's citekey prefix, e.g. `benhabib2019_intro.ipynb`.
+Four notebooks assembled by one `<citekey>.md`, plus a `README.md` orientation file. Name the notebooks (and the assembler markdown file) with the paper's citekey prefix, e.g. `benhabib2019_intro.ipynb` and `benhabib2019.md`.
 
 | File | Content |
 |------|---------|
-| `index.md` | MyST page with `{include}` directives for the four notebooks below (in order), plus YAML frontmatter giving the rendered title. |
+| `README.md` | A short orientation file. Written in **GitHub-flavored markdown** (not MyST) so GitHub auto-renders it inline below the directory listing for anyone landing on the GitHub view of the entry. Use Unicode for math (e.g. `Π_r`, `g(·;τ,r)`, `Π_τ ⊗ Π_r`, `c ≤ a`) rather than `$...$`. Provides: (1) a **prominent callout link to the rendered MyST page** (e.g. `> 📖 Rendered version: [econ-ark.github.io/ballpark/<citekey>/](…)`) at the very top, so a directory-view reader can immediately jump to the proper rendered entry; (2) a brief reading guide for any technical artifacts in the directory — for entries with the Formalization layer, name the conventions used (dolo-plus YAML format, the [Matsya](https://github.com/econ-ark/matsya) iteration loop that produced the YAMLs, inline `# unresolved:` flags), the excerpt-plus-YAML pairing pattern, and where the construction audit trail lives; (3) a one-line index of the main files in the directory. Keep it short — orientation only, not duplication. |
+| `<citekey>.md` | MyST page with `{include}` directives for the four notebooks below (in order), plus YAML frontmatter giving the rendered title and metadata. **Name the file with the paper's citekey, not `index.md`** — mystmd derives the rendered URL slug from the filename, and a citekey-named file gives a clean URL like `/<citekey>/` (e.g. `/benhabib-et-al-2019/`); whereas multiple entries all named `index.md` would auto-collide and yield ugly slugs (`/index-1/`, `/index-2/`, …). |
 | `<citekey>_intro.ipynb` | Full citation with DOI link. **Original ballpark author** (name + date). **Updated by** (latest + date). 3-sentence pitch: why the paper is in-ballpark for Econ-ARK. |
 | `<citekey>_prior-literature.ipynb` | Where the paper sits in the foundational literature (Bewley / Huggett / Aiyagari / de Nardi / ...). Use `{cite:t}` citations rendered from `references.bib`. |
 | `<citekey>_summary.ipynb` | Non-technical motivation + findings overview (**required at Draft**), extended at Primer promotion with a **"The Model"** section stating the recursive formulation **explicitly**: no `u(c)` placeholders, explicit CRRA or EZ kernel, explicit bequest function, explicit transitions, explicit shock distributions, explicit constraint set. This "The Model" section is what the formalization layer will build on. |
 | `<citekey>_subsequent-literature.ipynb` | Research directions that followed the paper. Cite from `subsequent-literature.bib`. |
+
+**Audience and voice for `_intro.ipynb` and `_summary.ipynb`.** Write for a reader (PhD student or faculty researcher) who is deciding whether to invest 90 minutes in the paper itself. Two self-checks before submitting: (1) Does the first screen of `_summary.ipynb` give the paper's *headline quantitative result* — numbers, not adjectives? (2) Does it explain what makes the result credible — the identification strategy or theoretical mechanism, not just the methodology label? If either answer requires the reader to scroll past several paragraphs of prose to find, condense.
 
 The [Benhabib_et_al_2019](models/We-Would-Like-In-Econ-ARK/Benhabib_et_al_2019/) item is the reference instance of this layer.
 
@@ -67,7 +70,7 @@ The iteration is where the economics lives. `bellman-excerpt.md` on its own is a
 | File | Required? | Content |
 |------|-----------|---------|
 | `<citekey>.pdf` | required | The paper. If license forbids redistribution, replace with a DOI-only pointer in `_intro.ipynb`. |
-| `<citekey>.mmd` | recommended | Pandoc-converted markdown of the paper. Much easier for Cursor / Claude / Matsya to ingest than PDF. Produce via `pandoc <citekey>.pdf -o <citekey>.mmd` or equivalent. |
+| `<citekey>.mmd` | **local-only — gitignored, do not commit** | Markdown conversion of the paper PDF for AI ingestion (Cursor, Claude, Matsya). Produce locally via [Mathpix](https://mathpix.com/) (better for math-heavy papers) or `pandoc <citekey>.pdf -o <citekey>.mmd`. `*.mmd` is gitignored at the repo root because the markdown is a derivative work of the publisher's PDF and inherits its copyright. Each contributor maintains their own local copy. |
 | `references.bib` | required | Bib entries cited from `_prior-literature.ipynb` and `_summary.ipynb`. A superset is acceptable — uncited entries (e.g., a broader reading list the contributor maintains) do not need to be pruned. MyST renders only cited entries in the published bibliography. |
 | `self.bib` | recommended | The paper's own bib entry. Keeps the paper citation separable from its context. |
 | `subsequent-literature.bib` | required if the notebook is non-empty | Bib entries cited from `_subsequent-literature.ipynb`. |
@@ -81,9 +84,9 @@ If the formalization layer has stabilized and you have working code, add a `repl
 
 ## Machine-readable metadata (for AI indexing)
 
-Ballpark entries are designed to be discovered and cited by both humans and AI agents. The `index.md` frontmatter and an optional `AGENTS.md` provide the structured signals that make this work.
+Ballpark entries are designed to be discovered and cited by both humans and AI agents. The `<citekey>.md` frontmatter and an optional `AGENTS.md` provide the structured signals that make this work.
 
-### Required frontmatter fields on `index.md`
+### Required frontmatter fields on `<citekey>.md`
 
 ```yaml
 ---
@@ -128,7 +131,7 @@ requires: [CRRA, EGM, bequest-utility]     # model features — free-form tags
 
 ### `AGENTS.md` (required for items with a formalization layer; recommended otherwise)
 
-A short structured brief aimed at coding agents (Claude Code, Cursor, etc.) that a user's local session will read when the directory is opened. Distinct from the human-readable `index.md`. See the [Benhabib_et_al_2019 worked example](models/We-Would-Like-In-Econ-ARK/Benhabib_et_al_2019/AGENTS.md).
+A short structured brief aimed at coding agents (Claude Code, Cursor, etc.) that a user's local session will read when the directory is opened. Distinct from the human-readable `<citekey>.md`. See the [Benhabib_et_al_2019 worked example](models/We-Would-Like-In-Econ-ARK/Benhabib_et_al_2019/AGENTS.md).
 
 Purpose:
 
@@ -143,8 +146,8 @@ Copy the template below into `AGENTS.md` in your item directory and fill in the 
 
 | Section | Where its content comes from |
 |---|---|
-| **Paper** | `<citekey>_intro.ipynb` — citation, DOI, one-sentence pitch of why the paper is in-ballpark. Copy verbatim; this is the one place duplication with `index.md` is intentional, because the agent may open `AGENTS.md` first. |
-| **If a user asks to work on this item** | `<citekey>_summary.ipynb` (section "The Model") is the authoritative recursive statement. `<citekey>.mmd` is the AI-friendly paper source. If your formalization layer is present, point at `bellman-excerpt.md` as "read first" instead of the summary notebook. |
+| **Paper** | `<citekey>_intro.ipynb` — citation, DOI, one-sentence pitch of why the paper is in-ballpark. Copy verbatim; this is the one place duplication with `<citekey>.md` is intentional, because the agent may open `AGENTS.md` first. |
+| **If a user asks to work on this item** | `<citekey>_summary.ipynb` (section "The Model") is the authoritative recursive statement. `<citekey>.mmd` is the AI-friendly paper source — locally-produced (gitignored), so an agent may need to produce one from the PDF if not already present. If your formalization layer is present, point at `bellman-excerpt.md` as "read first" instead of the summary notebook. |
 | **Formalization status** | Tick which layer files you committed: `bellman-excerpt.md`, `dolo-plus-draft.yaml`, `verification.md`, `matsya-session.txt`. Be honest about what is not yet present. |
 | **Known model features requiring attention** | Pull from `verification.md` (the items you rejected or edited) and from the inline `# workaround:` / `# unresolved:` comments in `dolo-plus-draft.yaml`. This is the single most useful section for an agent — it is the list of things it should not re-discover. If the formalization layer is absent, list the model features you already know will be awkward (state-contingent shocks, mechanical deductions, non-standard normalizations, etc.). |
 | **Common next tasks** | List what you intentionally left undone. Examples from real items: *"add terminal-period stage to YAML"*, *"formalize the dynasty wrapper"*, *"add age-varying wage overrides"*. Cite the specific file or line a next-task should touch. Do **not** list tasks you would have liked to do but have no grounding for. |
@@ -155,7 +158,7 @@ Copy the template below into `AGENTS.md` in your item directory and fill in the 
 ````markdown
 # Ballpark entry: <Authors> (<Year>)
 
-> Structured brief for coding agents (Claude Code, Cursor, etc.). Human-facing content lives in [`index.md`](index.md).
+> Structured brief for coding agents (Claude Code, Cursor, etc.). Human-facing content lives in [`<citekey>.md`](<citekey>.md).
 
 ## Paper
 
@@ -167,7 +170,7 @@ Copy the template below into `AGENTS.md` in your item directory and fill in the 
 ## If a user asks to work on this item
 
 1. **Read first:** <file> — <why this is authoritative>.
-2. **Paper source for AI ingestion:** `<citekey>.mmd` (Pandoc-converted). Prefer this over `<citekey>.pdf`.
+2. **Paper source for AI ingestion:** `<citekey>.mmd` (locally-produced via Mathpix or pandoc; gitignored, not committed). Prefer this over `<citekey>.pdf` for AI ingestion; produce a local `.mmd` from the PDF if one isn't already present.
 
 ## Formalization status
 
@@ -198,7 +201,7 @@ Copy the template below into `AGENTS.md` in your item directory and fill in the 
 
 **AI-assisted drafting (recommended).** Once your formalization layer is present, ask a coding agent (Claude Code, Cursor) to draft `AGENTS.md` from your item's files:
 
-> Read `index.md`, `<citekey>_intro.ipynb`, `<citekey>_summary.ipynb`, `bellman-excerpt.md`, `dolo-plus-draft.yaml`, and `verification.md` in this directory. Draft an `AGENTS.md` following the template in the repo-root `CONTRIBUTING.md`. Do not invent content — if a section lacks a grounded source in these files, write **TBD** for that section and explain what you would need.
+> Read `<citekey>.md`, `<citekey>_intro.ipynb`, `<citekey>_summary.ipynb`, `bellman-excerpt.md`, `dolo-plus-draft.yaml`, and `verification.md` in this directory. Draft an `AGENTS.md` following the template in the repo-root `CONTRIBUTING.md`. Do not invent content — if a section lacks a grounded source in these files, write **TBD** for that section and explain what you would need.
 
 **Then review carefully.** Agents occasionally invent plausible-sounding "next tasks" or "workarounds" that are not grounded in your verification notes. Rewrite anything you cannot trace to a specific file. The point of `AGENTS.md` is that a later agent can trust it; that trust is wasted if you pass through hallucinations.
 
@@ -211,7 +214,7 @@ Copy the template below into `AGENTS.md` in your item directory and fill in the 
 ### Content-form conventions for LLM legibility
 
 - **Every committed `.ipynb` is also exported to `.md`** at build time. Reviewers and LLMs read the `.md`; the `.ipynb` remains authoritative.
-- **Paper ships as `.mmd` alongside `.pdf`** where license permits (Pandoc-converted markdown — much easier for Cursor / Claude / Matsya to ingest than PDF).
+- **`.mmd` files are local-only (gitignored).** A locally-produced Mathpix or pandoc conversion of the paper PDF is much easier for Cursor / Claude / Matsya to ingest, but `*.mmd` is gitignored at the repo root because the markdown is a derivative of the publisher's PDF and inherits its copyright. Each contributor produces and maintains their own local copy.
 - **Every equation carries an `:alt:` attribute** describing it in prose, for models that can't render LaTeX but can read HTML.
 - **Every figure has alt-text** (WCAG and LLM indexability are the same action).
 
@@ -232,7 +235,7 @@ If AI tools materially shaped the formalization layer, add `ai-provenance.md` do
 - `*.slides.html` — generated on demand; the source `.ipynb` is authoritative.
 - Duplicate summary notebooks from older naming conventions (e.g. both `<citekey>_summary.ipynb` and `<ShortName>_summary.ipynb`) — delete the duplicate at refactor time.
 - `<citekey>.zip` — the `.pdf` is enough; `.zip` is only appropriate if it contains replication code, in which case it belongs under `replication/`.
-- An item-level `README.md` duplicating the project `README.md` — `index.md` is the entry point; an item-level `README.md` is redundant.
+- An item-level `README.md` duplicating the project `README.md` — the entry's `<citekey>.md` is the entry point for site rendering, and `README.md` (per the row above) serves a different purpose: GitHub-directory orientation in GFM.
 
 ---
 
@@ -273,7 +276,7 @@ Each name presupposes the tier below it: a *primer* is a completed introductory 
 Qualifying checklist:
 
 - [ ] Item directory exists under `models/We-Would-Like-In-Econ-ARK/<citekey>/` (or `empirical/<citekey>/`).
-- [ ] `index.md` with required frontmatter (including `tier: draft`).
+- [ ] `<citekey>.md` with required frontmatter (including `tier: draft`). NOT named `index.md` — see Exposition layer above for the slug-collision rationale.
 - [ ] `<citekey>_intro.ipynb` with citation, DOI link, **Original ballpark author + date**, and a 3-sentence pitch of why the paper is in-ballpark for Econ-ARK.
 - [ ] `<citekey>_summary.ipynb` with a **non-technical motivation + findings overview** of the paper (a graduate student can tell from this notebook what the paper is about and what it finds, without having read the paper). The rigorous **"The Model"** section stating the explicit recursive formulation is **not** required at Draft — it is added at Primer promotion.
 - [ ] `references.bib` (may be empty at Draft).
@@ -291,9 +294,9 @@ Qualifying checklist — everything in Draft, plus:
 - [ ] `<citekey>_summary.ipynb` extended (the notebook already exists from Draft, carrying the non-technical motivation + findings overview) with a **"The Model"** section stating the recursive formulation **explicitly**: no `u(c)` placeholders, explicit CRRA or EZ kernel, explicit bequest function (if any), explicit transitions, explicit shock distributions, explicit constraint set.
 - [ ] `<citekey>_subsequent-literature.ipynb` + `subsequent-literature.bib`. **No hard citation count is required**, since recent papers may have few subsequent citations; the notebook should cite whatever subsequent work exists (typically 0–6 papers) and note explicitly if the paper is too recent to have accumulated much. (Paper eligibility itself is gated by the Google-Scholar-≥3 rule in "Before you start.")
 - [ ] `self.bib` with the paper's own bib entry.
-- [ ] `<citekey>.mmd` (Pandoc-converted markdown of the paper) unless license forbids — this is what Cursor / Claude / Matsya read most effectively.
-- [ ] `myst.yml` configured; `myst build` completes cleanly.
-- [ ] `index.md` `{include}`s all four exposition notebooks in order.
+- *(Note: `<citekey>.mmd` — a locally-produced Mathpix or pandoc conversion of the paper PDF — makes AI ingestion much smoother for Cursor / Claude / Matsya, but `*.mmd` is **gitignored** and not part of this checklist. Each contributor maintains their own local copy.)*
+- [ ] Root `myst.yml` updated to add the entry to its TOC (per-entry `myst.yml` is no longer required — the root config is authoritative for the site build); `myst build --html` at the repo root completes cleanly with the entry included.
+- [ ] `<citekey>.md` `{include}`s all four exposition notebooks in order.
 
 Primer is the current aspirational target for the typical legacy-slideware refactor. [`Benhabib_et_al_2019`](models/We-Would-Like-In-Econ-ARK/Benhabib_et_al_2019/) is the reference instance of this tier.
 
@@ -350,8 +353,8 @@ A `.github/workflows/ballpark-check.yml` action (forthcoming in a follow-up PR) 
 
 Per-tier mechanical gates the CI will enforce:
 
-- **Draft:** directory path correct; `index.md` frontmatter present with required fields and `tier:` value in controlled set; `<citekey>_intro.ipynb` exists and contains citation / DOI / author; `<citekey>_summary.ipynb` exists (non-technical motivation + findings overview — "The Model" heading is not yet required); `references.bib` exists; paper `.pdf` committed or DOI pointer present.
-- **Primer** (additive): the remaining exposition notebooks (`_prior-literature.ipynb`, `_subsequent-literature.ipynb`) exist; `_summary.ipynb` now contains a **"The Model"** heading; `_prior-literature.ipynb` resolves **3–6** unique `{cite:t}` references against bib files; `self.bib` and `subsequent-literature.bib` exist; `<citekey>.mmd` exists or license-note present; `myst.yml` present and `myst build` succeeds; `index.md` `{include}`s all four notebooks; every `{cite:t}` resolves; every referenced figure exists.
+- **Draft:** directory path correct; `<citekey>.md` frontmatter present with required fields and `tier:` value in controlled set; `<citekey>_intro.ipynb` exists and contains citation / DOI / author; `<citekey>_summary.ipynb` exists (non-technical motivation + findings overview — "The Model" heading is not yet required); `references.bib` exists; paper `.pdf` committed or DOI pointer present.
+- **Primer** (additive): the remaining exposition notebooks (`_prior-literature.ipynb`, `_subsequent-literature.ipynb`) exist; `_summary.ipynb` now contains a **"The Model"** heading; `_prior-literature.ipynb` resolves **3–6** unique `{cite:t}` references against bib files; `self.bib` and `subsequent-literature.bib` exist; **root** `myst.yml` includes the entry in its TOC, and `myst build --html` at the repo root succeeds with the entry built (per-entry `myst.yml` is no longer required); `<citekey>.md` `{include}`s all four notebooks; every `{cite:t}` resolves; every referenced figure exists. (`<citekey>.mmd` — gitignored, local-only — is no longer a Primer-tier CI check.)
 - **Formalized** (additive): `bellman-excerpt.md`, `dolo-plus-draft.yaml`, `verification.md`, `matsya-session.txt`, `AGENTS.md` all exist; `dolo-plus-draft.yaml` parses as YAML; `bellman-excerpt.md` contains a markdown table (heuristic: at least one pipe-delimited row with a Symbol column) and references all three perch names (`arrival`, `decision`, `continuation`); `AGENTS.md` contains the six required top-level sections (heading-based check).
 
 What CI does **not** check at Formalized (and therefore what the human reviewer is responsible for): the Bellman equation being correct, the perch decomposition being correct, the YAML workarounds being defensible, and `verification.md` genuinely comparing against the published paper.
@@ -381,8 +384,8 @@ These estimates guide course-project scoping: a full semester leaves ample room 
 
 The target tier determines the checklist. Copy the target tier's qualifying checklist from the section above into your PR body and tick each box with a file-line citation. **In addition**, every PR (regardless of tier) must confirm:
 
-- [ ] `index.md` `{include}`s exactly the four exposition notebooks, in order (T2 and above).
-- [ ] `myst.yml` builds the item without errors (`myst build` in the item directory).
+- [ ] `<citekey>.md` `{include}`s exactly the four exposition notebooks, in order (T2 and above).
+- [ ] Root `myst.yml` builds the full site without errors (`myst build --html` at the repo root, with `BASE_URL=/ballpark` for GitHub-Pages-style deploy).
 - [ ] Every `{cite:t}` reference resolves against the bib files.
 - [ ] Every figure the notebooks reference exists and renders.
 - [ ] `_intro.ipynb` carries visible **Original ballpark author** and (if applicable) **Updated by** lines.

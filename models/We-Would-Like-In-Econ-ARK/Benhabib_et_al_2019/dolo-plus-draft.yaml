@@ -1,0 +1,280 @@
+name: bbl_consumption_savings
+
+# ─────────────────────────────────────────────────────────────────────
+# Benhabib-Bisin-Luo (2019) household consumption-savings stage.
+#
+# Model: per online Appendix A.1 (= the authors' actual numerical
+# solution; see Open Issue #10 in bellman-excerpt.md for the
+# paper-§I-vs-appendix budget-equation discrepancy).
+#
+#   V_t(a) = max_c { u(c) + beta * V_{t+1}(a') }
+#   s.t.  a' = (1 + r) * (a - c) + w
+#         0 <= c <= a
+#
+# Timing: agent arrives with wealth a; consumes c <= a out of
+# beginning-of-period wealth; savings (a - c) earn return r;
+# earnings w arrive at end of period; next-period wealth is a'.
+#
+# Three-perch decomposition:
+#   arrival  (state a) → decision (state m = a, identity transition)
+#   decision (state m) → continuation (state a' = (1+r)(m-c) + w)
+# Within-life there are no shocks, and the arrival-to-decision
+# transition is identity, so the forward mover is a literal pass-
+# through (V[<] = V, dV[<] = dV — no chain-rule factor).
+#
+# Types (tau, r) are drawn at birth and fixed within life.
+# They enter only through calibration overrides (beta, r, w, sigma).
+#
+# Terminal period: V[>] and dV[>] are replaced by warm-glow bequest
+# e(a) = A * a^(1-mu)/(1-mu) via boundary wiring (see terminal block).
+# ─────────────────────────────────────────────────────────────────────
+
+symbols:
+  spaces:
+    Xa: '@def R+'          # raw wealth / end-of-period wealth
+    Xm: '@def R+'          # cash-on-hand
+
+  prestate:
+    a: '@in Xa'            # arrival: raw wealth (before return + earnings)
+
+  states:
+    m: '@in Xm'            # decision: cash-on-hand
+
+  poststates:
+    a_next: '@in Xa'       # continuation: end-of-period wealth
+
+  controls:
+    c: '@in R+'            # consumption
+
+  # NOTE: No exogenous block. Types (tau, r) are fixed at birth and
+  # enter only via calibration parameters. No within-period shocks.
+
+  values:
+    V[<]: '@in R'          # arrival-perch value
+    V: '@in R'             # decision-perch value
+    V[>]: '@in R'          # continuation-perch value
+  values_marginal:
+    dV[<]: '@in R'         # arrival-perch marginal value
+    dV: '@in R'            # decision-perch marginal value
+    dV[>]: '@in R'         # continuation-perch marginal value
+
+  parameters:
+    beta: '@in (0,1)'      # discount factor; paper: globally fixed at 0.97
+    r: '@in R+'            # rate of return; varies by r_type ∈ {1..5}, fixed within life
+    # NOTE on w: declared here as a scalar parameter, but the paper has a
+    # bracket-piecewise-constant age-varying earnings schedule w_t(tau).
+    # Paper §IIB: 10 deciles × 6 age brackets (Table 1); agents stay in the
+    # same decile for their whole lifetime. Each bracket spans 6 years; T=36
+    # = 6 brackets × 6 years; period t ↔ calendar age (24 + t), so working
+    # life is ages 25–60. Within a bracket, w is constant (the bracket
+    # average from PSID, Heathcote-Perri-Violante 2010).
+    # The actual schedule lives in `calibration_family.by_tau` below; the
+    # mechanism for picking up the right schedule entry at each (t, tau)
+    # pair on a repeated stage is Open Issue #5 (UNRESOLVED for syntax in
+    # the dolo-plus spec; matsya confirmed in 2026-04-27 review).
+    w: '@in R+'            # earnings; paper: bracket-piecewise w_t(tau), see below
+    sigma: '@in R+'        # CRRA; paper: globally fixed at 2
+
+equations:
+  # ── Arrival → Decision ──────────────────────────────────────────
+  # Identity (under appendix model): m and a denote the same state at
+  # decision time; m is just a perch label. The (1+r) factor moves to
+  # the dcsn_to_cntn transition where it actually applies (to savings).
+  arvl_to_dcsn_transition: |
+    m = a
+
+  # ── Decision → Continuation ─────────────────────────────────────
+  # Appendix-A.1 budget: savings (m - c) earn return r; earnings w
+  # arrive at end of period.
+  dcsn_to_cntn_transition: |
+    a_next = (1 + r) * (m - c) + w
+
+  # ── Backward mover: continuation → decision ────────────────────
+  # Standard EGM block under the appendix model. At t = T, V[>] and
+  # dV[>] are supplied by the terminal boundary specification (below).
+  #
+  # Under the appendix budget a' = (1+r)(m-c) + w:
+  #   FOC:   u'(c) = beta * (1+r) * V'(a')      ← (1+r) here
+  #   Inv.:  c     = (beta * (1+r) * dV[>])^(-1/sigma)
+  #   Rev.:  m     = c + (a_next - w) / (1+r)   ← inverse of the budget
+  #   Env.:  V'(m) = u'(c) = c^(-sigma)         ← no (1+r) factor here
+  cntn_to_dcsn_mover:
+    Bellman: |
+      V = max_{c}{c^(1-sigma)/(1-sigma) + beta * V[>]}
+    InvEuler: |
+      c[>] = (beta * (1 + r) * dV[>])^(-1/sigma)
+    cntn_to_dcsn_transition: |
+      m[>] = c[>] + (a_next - w) / (1 + r)
+    MarginalBellman: |
+      dV = c^(-sigma)
+
+  # ── Forward mover: decision → arrival ──────────────────────────
+  # Under the appendix model, m = a is identity, so the forward mover
+  # is a literal pass-through. No expectation (no within-life shocks),
+  # no chain-rule factor (identity transition has unit Jacobian).
+  # Matches matsya Turn 1's original `dV[<] = dV` advice.
+  dcsn_to_arvl_mover:
+    Bellman: |
+      V[<] = V
+    ShadowBellman: |
+      dV[<] = dV
+
+# ═══════════════════════════════════════════════════════════════════
+# TERMINAL BOUNDARY SPECIFICATION
+# ═══════════════════════════════════════════════════════════════════
+# At t = T, the continuation value V[>] is not supplied by a
+# successor stage but by the warm-glow bequest function:
+#   e(a) = A * a^(1-mu) / (1-mu),   e'(a) = A * a^(-mu)
+#
+# Discount-factor convention: the paper's terminal recursion (BBL §I)
+# is V_T(a) = u(c) + e(a') with NO beta on the bequest. The standard
+# Bellman wiring V = max_c {u(c) + beta * V[>]} introduces a beta
+# factor; we cancel it by absorbing 1/beta into the boundary weight.
+# Effective bequest weight at the boundary: A_tilde = A / beta. Then
+# beta * V[>] = e(a) exactly, matching the paper's V_T. Per
+# bellman-excerpt.md Open Issue #9, option (i): single-template
+# structure preserved, paper-faithful numerics. The paper's
+# calibrated A ≈ 0.0006 corresponds to A_tilde ≈ 0.000619. The
+# A_tilde absorption is used only at the terminal boundary; the
+# interior template is unchanged.
+#
+# Terminal Inverse-Euler then recovers the paper's c_T exactly
+# (beta cancels: beta * (A/beta) = A):
+#   c_T[>] = (beta * dV[>])^(-1/sigma)
+#          = A^(-1/sigma) * a_next^(mu/sigma)
+#
+# When mu = sigma, this simplifies; when mu ≠ sigma, EGM still
+# works because InvEuler inverts u'(c) = c^(-sigma) regardless
+# of the curvature of e(a).
+# ═══════════════════════════════════════════════════════════════════
+
+# unresolved: terminal-boundary block — Matsya's Turn 3 recommendation (use
+# the interior stage template with terminal boundary wiring V[>] and dV[>])
+# is structurally correct, but no canonical dolo-plus syntax for `terminal:`
+# blocks was located in the matsya `topics2026-benhabib-demo` session. The
+# block below expresses the intent; the keyword `terminal:` and its sub-keys
+# may need to be renamed once a canonical idiom is located. With the A/beta
+# absorption above, the economics is paper-faithful.
+terminal:
+  parameters:
+    A: '@in R+'                                    # bequest weight (paper: A ~ 0.0006)
+    mu: '@in R+'                                   # bequest curvature (paper: mu ~ 0.60)
+  V[>]: |
+    (A / beta) * a_next^(1-mu) / (1-mu)
+  dV[>]: |
+    (A / beta) * a_next^(-mu)
+
+# ═══════════════════════════════════════════════════════════════════
+# CALIBRATION-OVERRIDE PARAMETERIZED FAMILY (paper-calibrated)
+# ═══════════════════════════════════════════════════════════════════
+# BBL (2019) has 10 × 5 = 50 types drawn at birth from independent
+# intergenerational Markov chains over (tau, r). Within a life, both
+# are fixed. The 50 stage instances share (beta, sigma, mu, A, T) and
+# override only (r, w-schedule).
+#
+# Numerical values transcribed from the paper as follows:
+#   shared.beta, shared.sigma, shared.T  : paper Table 4 ("[..]" = fixed)
+#   shared.mu, shared.A                  : paper Table 4 (estimated)
+#   by_r_type.r                          : paper Table 4 "State space" row
+#   by_tau.w                             : paper Table 1
+#   age_bracket_to_period                : paper §IIB ("six age brackets")
+#   population.Pi_r.matrix               : online Appendix C.1 (full 5×5 matrix; downloaded 2026-04-27)
+#   population.Pi_tau                    : online Appendix B.2 (procedure only; matrix NOT tabulated)
+#
+# The compact form below replaces the verbose `instances: [...]` array
+# of 50 entries (49 of which would carry only redundant copies of the
+# shared parameters). The cartesian product is over `by_tau` × `by_r_type`.
+#
+# unresolved: the `calibration_family:` keyword and its sub-keys remain
+# SPECULATIVE per matsya review of 2026-04-27 — no canonical dolo-plus
+# syntax for type-indexed calibration families exists in the indexed
+# corpus. The structure below expresses the intent; sub-key names may
+# need to be renamed once a canonical idiom appears (likely a HAFiscal
+# AgentType-style mechanism).
+# ═══════════════════════════════════════════════════════════════════
+
+calibration_family:
+  description: |
+    BBL 50-instance family: tau ∈ {1..10} (earnings decile, paper Table 1)
+    × r_type ∈ {1..5} (rate-of-return state, paper Table 4). Each instance
+    is one finite-horizon Bellman problem; the shared parameters and the
+    bracket-piecewise w_t(tau) schedule are below.
+  index: [tau, r_type]
+  cardinality: {tau: 10, r_type: 5}
+
+  shared:                                          # all 50 instances use these
+    beta: 0.97                                     # paper Table 4 "[0.97]" = fixed
+    sigma: 2.0                                     # paper Table 4 "[2]" = fixed
+    mu: 0.5993                                     # paper Table 4 estimated (s.e. 0.0061)
+    A: 0.0006                                      # paper Table 4 estimated (s.e. 0.0004)
+    T: 36                                          # paper Table 4 "[36]" = fixed
+
+  by_r_type:                                       # paper Table 4 "State space" (top row)
+    1: {r: 0.0011}                                 # s.e. 0.0069
+    2: {r: 0.0094}                                 # s.e. 0.0118
+    3: {r: 0.0258}                                 # s.e. 0.0004
+    4: {r: 0.0560}                                 # s.e. 0.0059
+    5: {r: 0.0841}                                 # s.e. 0.0043
+    # implied moments (paper Table 4): E(r) = 3.06%, sigma(r) = 2.69%, rho(r) = 0.103
+
+  by_tau:                                          # paper Table 1, $thousands per year
+    description: |
+      w_t(tau) is bracket-piecewise-constant over t ∈ {1..36}: each w[k]
+      below applies to all periods in age-bracket k (1-indexed; see
+      `age_bracket_to_period` below). Source: PSID via Heathcote-Perri-
+      Violante (2010); detrended by year dummies (paper online Appx B.1).
+    1:  {w: [9.760,  11.55,  12.06,  12.81,  11.74,   8.222]}    # decile 0-10
+    2:  {w: [19.95,  24.01,  25.20,  26.42,  24.66,  19.08 ]}    # decile 10-20
+    3:  {w: [26.85,  32.58,  34.96,  36.46,  33.56,  26.78 ]}    # decile 20-30
+    4:  {w: [33.05,  40.33,  43.95,  45.55,  42.23,  34.39 ]}    # decile 30-40
+    5:  {w: [39.02,  47.70,  52.42,  54.37,  51.18,  42.96 ]}    # decile 40-50
+    6:  {w: [45.05,  54.84,  60.70,  63.09,  60.34,  51.91 ]}    # decile 50-60
+    7:  {w: [51.40,  65.10,  69.42,  72.89,  70.63,  61.65 ]}    # decile 60-70
+    8:  {w: [59.16,  73.06,  80.37,  85.09,  82.78,  74.35 ]}    # decile 70-80
+    9:  {w: [70.33,  87.21,  97.51,  103.5,  101.4,  93.42 ]}    # decile 80-90
+    10: {w: [100.3,  138.1,  169.5,  182.4,  183.4,  180.4 ]}    # decile 90-100
+
+  age_bracket_to_period:
+    description: |
+      Six age brackets, six years each, T = 36. Period index t maps to
+      calendar age (24 + t); working life is ages 25–60 inclusive.
+    brackets:
+      1: {ages: "25-30", periods: [1, 6]}
+      2: {ages: "31-36", periods: [7, 12]}
+      3: {ages: "37-42", periods: [13, 18]}
+      4: {ages: "43-48", periods: [19, 24]}
+      5: {ages: "49-54", periods: [25, 30]}
+      6: {ages: "55-60", periods: [31, 36]}
+
+  population:
+    description: |
+      Intergenerational Markov chains. Population-level / dynasty-layer
+      objects, NOT part of the within-lifetime Bellman. Handled at the
+      outer simulation layer that composes 50 pre-solved value functions.
+    Pi_r:
+      description: |
+        5 × 5 transition matrix for r. Full matrix from online Appendix C.1
+        (downloaded 2026-04-27 from https://www.aeaweb.org/articles/materials/10698).
+        Row-stochastic; row j is the transition probabilities P(r_i | r_j)
+        for i = 1..5. Diagonal matches paper Table 4 "Transition diagonal".
+        Off-diagonals: rows 1–4 are symmetric around the diagonal (decay
+        per paper footnote 13); row 5 has constant off-diagonals 0.2448.
+      matrix:
+        - [0.0338, 0.5013, 0.2600, 0.1349, 0.0700]
+        - [0.2876, 0.2676, 0.2876, 0.1129, 0.0443]
+        - [0.1158, 0.3163, 0.1360, 0.3163, 0.1158]
+        - [0.0446, 0.1136, 0.2894, 0.2630, 0.2894]
+        - [0.2448, 0.2448, 0.2448, 0.2448, 0.0208]
+      # standard errors on the diagonal (paper Table 4): [0.6162, 0.5570, 0.0699, 1.3659, 0.2678]
+    Pi_tau:
+      description: |
+        10 × 10 transition matrix for tau (earnings decile across
+        generations), from Chetty et al. (2014) reduced to a 10-state
+        chain (paper §IIB). Online Appendix B.2 describes the construction
+        procedure (collapse Chetty et al.'s 100×100 matrix into 10×10) but
+        does NOT tabulate the resulting matrix. The matrix would have to be
+        either (a) reconstructed from Chetty et al.'s Online Table 1 at
+        http://equality-of-opportunity.org/images/online_data_tables.xls,
+        or (b) extracted from the BBL replication package at
+        https://doi.org/10.3886/E113112V1.
+      # unresolved: full matrix entries (not in online Appendix B.2).

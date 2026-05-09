@@ -1,0 +1,33 @@
+topics2026-benhabib-demo
+
+# 6 turns as of 2026-04-27. Full transcript via:
+#   matsya sessions --show topics2026-benhabib-demo
+#
+# Turn 1 (2026-04-19): Identity forward mover idiom for the no-shock case.
+#   Initial recommendation V[<] = V; dV[<] = dV. Later corrected to
+#   dV[<] = (1+r)*dV after paper review (Open Issue #1).
+#
+# Turn 2 (2026-04-19): Parameterized family for type-indexed (tau, r)
+#   calibrations. Recommended Option (A) calibration-override family;
+#   instantiation mechanism flagged UNRESOLVED.
+#
+# Turn 3 (2026-04-19): Terminal warm-glow bequest closure. Recommended
+#   single-template + boundary wiring V[>] = e(a). Later refined post-
+#   paper-review with A/beta absorption to match paper's no-β-on-bequest
+#   convention (Open Issue #9, option (i)).
+#
+# Turn 4 (2026-04-19): Full Benhabib-Bisin-Luo household-stage YAML draft.
+#   First-pass dolo-plus-draft.yaml committed.
+#
+# Turn 5 (2026-04-27): Self-assessment of paper-side gaps in Turn-4 draft,
+#   with bellman-excerpt.md inlined as input. Produced 10-item checklist;
+#   3 unblockers flagged, including the (1+r) chain-rule factor on dV[<]
+#   (the most important — a propagating correctness bug).
+#
+# Turn 6 (2026-04-27): Definitive syntax-status review of residual UNRESOLVED
+#   items, with corrected dolo-plus-draft.yaml inlined. Confirmed 4 of 4
+#   spec-level items as definitively UNRESOLVED in the dolo-plus corpus
+#   (terminal block, β-aware boundary, calibration_family, per-age overrides).
+#   New finding: sub-equation naming conflict (ShadowBellman vs MarginalBellman)
+#   between the system prompt and the canonical example in
+#   `consumption_savings_iid.md` / `solving-conjugates.md`.
