@@ -1,0 +1,13 @@
+version: 1
+
+project:
+  title: "Monetary Policy with Heterogeneous Agents — Ballpark Entry"
+  bibliography:
+    - self.bib
+    - references.bib
+    - subsequent-literature.bib
+  toc:
+    - file: index.md
+
+site:
+  title: "Monetary Policy with Heterogeneous Agents — Ballpark Entry"
